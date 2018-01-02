@@ -1,0 +1,16 @@
+assets:
+
+modules:
+
+apps:
+  itkCampaignApp:
+    container: true
+    files:
+      - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignApp.js
+    dependencies:
+      - busModule
+      - mainModule
+      - ngRoute
+      - bw.paging
+      - pascalprecht.translate
+
