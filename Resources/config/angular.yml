@@ -1,4 +1,8 @@
 assets:
+  css:
+    - bundles/itkcampaign/assets/build/itkcampaign.min.css
+  js_prod:
+    - bundles/itkcampaign/assets/build/itkcampaign.min.js
 
 modules:
 
