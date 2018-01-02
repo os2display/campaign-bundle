@@ -1,0 +1,3 @@
+itk_campaign_homepage:
+    path:     /campaign
+    defaults: { _controller: ItkCampaignBundle:Default:index }
