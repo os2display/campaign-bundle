@@ -1,0 +1,21 @@
+{
+    "name": "itk-os2display/campaign-bundle",
+    "description": "Os2Display campaigns",
+    "type": "symfony-bundle",
+    "require": {
+        "symfony/symfony": "^2.8",
+        "doctrine/doctrine-bundle": "^1.2",
+        "os2display/admin-bundle": "^1.0"
+    },
+    "repositories": {
+        "os2display/admin-bundle": {
+            "type": "vcs",
+            "url": "https://github.com/os2display/admin-bundle"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Itk\\CampaignBundle\\": ""
+        }
+    }
+}
