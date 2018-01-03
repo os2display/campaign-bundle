@@ -11,6 +11,7 @@ var rename = require('gulp-rename');
 var yaml = require('js-yaml');
 var fs = require('fs');
 var header = require('gulp-header');
+var watch = require('gulp-watch');
 
 var adminBuildDir = 'Resources/public/assets/build';
 
@@ -32,7 +33,7 @@ gulp.task('sass', 'Compile the sass .', function () {
   'use strict';
 
   var adminBuildDir = 'Resources/public/assets/build';
-  var sassPath = 'sass/*.scss';
+  var sassPath = 'Resources/sass/*.scss';
 
   gulp.src(sassPath)
   .pipe(sass({
@@ -105,4 +106,11 @@ gulp.task('js-src', 'Report all source files for "js" task.', function () {
   adminJsPath.forEach(function (path) {
     process.stdout.write(path + '\n');
   });
+});
+
+/**
+ * Watch task for auto compiling changed files
+ */
+gulp.task('watch', function(){
+    gulp.watch('Resources/sass/*.scss', ['sass']);
 });

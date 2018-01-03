@@ -19,5 +19,9 @@
     "js-yaml": "^3.8.4",
     "jshint-stylish": "^2.0.1",
     "yargs": "^3.23.0"
+  },
+  "devDependencies": {
+    "bootstrap": "^4.0.0-beta.3",
+    "gulp-watch": "^4.3.11"
   }
 }
