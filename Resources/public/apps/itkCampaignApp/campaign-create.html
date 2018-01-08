@@ -1,12 +1,12 @@
 <div class="itk-campaign container">
-    <div class="row name">
+    <div class="row campaign-name">
         <div class="col-md-12">
             <label for="campaign-name" class="input-title">Campaign name</label>
             <input type="text" name="campaign-name" id="" value="Name of the campaign" class="input-type-text col-md-7">
             <p class="input-help">Create a unique and recognisable name for yor campaign</p>
         </div>
     </div>
-    <div class="row description">
+    <div class="row campaign-description">
         <div class="col-md-12">
             <label for="campaign-description" class="input-title">Campaign description</label>
             <div name="campaign-description" id="campaign-description" class="input-type-textarea col-md-7" contentEditable>Suspendisse eget purus vel arcu accumsan fringilla ac nec nisi. Proin mi nisl, porttitor eget nulla viverra, placerat ornare diam. Mauris quam nulla, euismod sit amet malesuada id, ultricies non ex. Curabitur mattis ipsum vitae elit blandit maximus. Duis convallis vulputate justo dapibus luctus.
@@ -14,9 +14,9 @@
             <p class="input-help">Give a short description of the campaign</p>
         </div>
     </div>
-    <div class="row schedule">
+    <div class="row campaign-schedule">
         <div class="col-md-12">
-            <label for="campaign-schedule" class="input-title">Campaign description</label>
+            <label for="campaign-schedule" class="input-title">Campaign schedule</label>
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-sub-title">
@@ -30,7 +30,7 @@
                     </div>
                     <p class="input-help">Choose when the campaign should start</p>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 d-none d-md-block">
                     <span class="align-middle">
                         <i class="material-icons">arrow_forward</i>
                     </span>
@@ -50,17 +50,45 @@
             </div>
         </div>
     </div>
-    <div class="row content">
-            <div class="col-md-12">
-                <label for="campaign-content" class="input-title">Campaign content</label>
-                <p class="input-help">Give a short description of the campaign</p>
-                <div name="campaign-content" id="campaign-content" class="content-slides">
-                </div>
-                
+    <div class="row campaign-channels">
+        <div class="col-md-12">
+            <label for="campaign-channels" class="input-title">
+                Campaign channels
+            </label>
+            <p class="input-help">
+                Choose the channels containing the slides for your campaign.
+            </p>
+            <button class="input-btn-add"><i class="material-icons">add </i>Channel</button>
+            <div id="campaign-channels" class="channels">
+                <!-- TODO: Show added channels -->
             </div>
         </div>
+    </div>
+    <div class="row campaign-screens">
+        <div class="col-md-12">
+            <label for="campaign-screens" class="input-title">
+                Screens
+            </label>
+            <p class="input-help">
+                Give a short description of the campaign
+            </p>
+            <button class="input-btn-add"><i class="material-icons">add </i> Screen</button>
+            <button class="input-btn-add"><i class="material-icons">add </i> Screen group</button>
+            <div id="campaign-screens" class="screens">
+                <!-- TODO: Show added screens -->
+            </div>
+        </div>
+    </div>
+    <div class="row campaign-actions">
+        <div class="col-md-12">
+            <label for="campaign-actions" class="input-title">
+                Save your campaign
+            </label>
+            <div class="create-slide--buttons">
+                <form data-ng-submit="submitStep()" class="create-slide--form ng-pristine ng-valid">
+                    <input type="submit" class="create-slide--button" value="Fortsæt">
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-
-{{ 'menu.campaign' | translate }}
