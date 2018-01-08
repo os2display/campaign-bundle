@@ -7,6 +7,65 @@
 
     &.container {
         display: block;
+        margin-left: -15px;
+        margin-right: -15px; 
     }
     
+    .input {
+        &-title {
+            font-weight: 100;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: .5rem;
+        }
+        &-sub-title {
+            font-size: 1rem;
+            display: block;
+            color: $black;
+            max-width: 700px;
+        }
+        &-type-text {
+            background: $gray-100;
+            border: 0;
+            border-bottom: 1px solid $gray-300;
+            font-size: 2rem;
+            font-weight: 900;
+            display: block;
+            margin-top: .5rem;
+            padding-bottom: 1rem;
+            padding-left: 0;
+            &:focus {
+                outline: none;
+                box-shadow: none !important;
+                border: 0px !important;
+                border-bottom: 1px solid $gray-300;
+            } 
+        }
+        &-type-textarea {
+            background: $gray-100;
+            border: 0;
+            border-bottom: 1px solid $gray-300;
+            font-size: 1.2rem;
+            display: block;
+            margin-top: .5rem;
+            padding-bottom: 1rem;
+            padding-left: 0;
+            color: $black;
+            &:focus {
+                outline: none;
+                box-shadow: none !important;
+                border: 0px !important;
+                border-bottom: 1px solid $gray-300;
+            } 
+        }
+        &-help {
+            font-weight: 100;
+            font-size: .85rem;
+            display: block;
+            color: $gray-700;
+            margin-top: .5rem;
+            margin-bottom: 3rem;
+        }
+    }
+
 }
