@@ -1,4 +1,8 @@
 {
+  "action": {
+    "campaign_save": "Gem din kampagne",
+    "save": "Gem"
+  },
   "campaign": {
     "fields": {
       "name": "Kampagnenavn",
@@ -7,13 +11,22 @@
       "description_help": "Vælg en kort beskrivelse af kampagnen",
       "schedule": "Planlægning",
       "schedule_start": "Fra",
-      "schedule_start_help": "Vælg hvornår din kampagne skal starte",
+      "schedule_start_help": "Vælg hvornår kampagnen skal starte",
       "schedule_end": "Til",
-      "schedule_end_help": "Vælg hvornår din kampagne skal slutte"
+      "schedule_end_help": "Vælg hvornår kampagnen skal slutte",
+      "channels": "Kanaler",
+      "channels_help": "Vælg kanalerne der skal vises i kampagnen",
+      "screens": "Skærme",
+      "screens_help": "Vælg skærme eller grupper af skærme der skal vise i kampagnen"
     }
   },
   "menu": {
     "campaign": "Kampagne",
     "campaign_create": "Opret kampagne"
+  },
+  "type": {
+    "channel": "Kanal",
+    "screen": "Skærm",
+    "screen_group": "Gruppe"
   }
 }

@@ -16,7 +16,7 @@
     </div>
     <div class="row campaign-schedule">
         <div class="col-md-12">
-            <label for="campaign-schedule" class="input-title">{{ 'campaign.fields.schedule' | translate}}</label>
+            <label class="input-title">{{ 'campaign.fields.schedule' | translate}}</label>
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-sub-title">
@@ -47,12 +47,12 @@
     <div class="row campaign-channels">
         <div class="col-md-12">
             <label for="campaign-channels" class="input-title">
-                Campaign channels
+                {{ 'campaign.fields.channels' | translate }}
             </label>
             <p class="input-help">
-                Choose the channels containing the slides for your campaign.
+                {{ 'campaign.fields.channels_help' | translate }}
             </p>
-            <button class="input-btn-add"><i class="material-icons">add </i>Channel</button>
+            <button class="input-btn-add"><i class="material-icons">add </i>{{ 'type.channel' | translate }}</button>
             <div id="campaign-channels" class="channels">
                 <!-- TODO: Show added channels -->
             </div>
@@ -61,26 +61,26 @@
     <div class="row campaign-screens">
         <div class="col-md-12">
             <label for="campaign-screens" class="input-title">
-                Screens
+                {{ 'campaign.fields.screens' | translate }}
             </label>
             <p class="input-help">
-                Give a short description of the campaign
+                {{ 'campaign.fields.screens_help' | translate }}
             </p>
-            <button class="input-btn-add"><i class="material-icons">add </i> Screen</button>
-            <button class="input-btn-add"><i class="material-icons">add </i> Screen group</button>
+            <button class="input-btn-add"><i class="material-icons">add </i> {{ 'type.screen' | translate }}</button>
+            <button class="input-btn-add"><i class="material-icons">add </i> {{ 'type.screen_group' | translate }}</button>
             <div id="campaign-screens" class="screens">
-                <!-- TODO: Show added screens -->
+                <!-- TODO: Show added screens and screen groups -->
             </div>
         </div>
     </div>
     <div class="row campaign-actions">
         <div class="col-md-12">
-            <label for="campaign-actions" class="input-title">
-                Save your campaign
+            <label class="input-title">
+                {{ 'action.campaign_save' | translate }}
             </label>
             <div class="create-slide--buttons">
                 <form data-ng-submit="submitStep()" class="create-slide--form ng-pristine ng-valid">
-                    <input type="submit" class="create-slide--button" value="Fortsæt">
+                    <input type="submit" class="create-slide--button" value="{{ 'action.save' | translate }}">
                 </form>
             </div>
         </div>
