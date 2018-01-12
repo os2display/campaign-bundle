@@ -1,4 +1,17 @@
 {
+  "campaign": {
+    "fields": {
+      "name": "Kampagnenavn",
+      "name_help": "Vælg et unikt og genkendeligt navn til kampagnen",
+      "description": "Beskrivelse",
+      "description_help": "Vælg en kort beskrivelse af kampagnen",
+      "schedule": "Planlægning",
+      "schedule_start": "Fra",
+      "schedule_start_help": "Vælg hvornår din kampagne skal starte",
+      "schedule_end": "Til",
+      "schedule_end_help": "Vælg hvornår din kampagne skal slutte"
+    }
+  },
   "menu": {
     "campaign": "Kampagne",
     "campaign_create": "Opret kampagne"

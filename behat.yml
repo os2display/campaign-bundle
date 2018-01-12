@@ -1,0 +1,36 @@
+default:
+  calls:
+    error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
+
+  suites:
+    campaign_features:
+      mink_session: default
+      type: symfony_bundle
+      bundle: ItkCampaignBundle
+      paths: [src/Itk/CampaignBundle/Features/campaign/]
+      contexts:
+        - Os2Display\CoreBundle\Features\Context\FeatureContext: ["@doctrine"]
+        - Behat\MinkExtension\Context\MinkContext
+        - behatch:context:rest
+        - behatch:context:json
+      filters:
+        tags: @campaign
+
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        env: acceptance
+        debug: true
+        path: Features/Fixtures/Project/app/AppKernel.php
+        bootstrap: Features/Fixtures/Project/app/bootstrap.php
+    Behat\MinkExtension:
+      base_url: https://admin.os2display.vm/
+      sessions:
+        default:
+          symfony2: ~
+        selenium2:
+          selenium2: ~
+      show_cmd: open -a /Applications/Firefox.app/ %s
+      files_path: "%paths.base%/Features/files"
+
+    Behatch\Extension: ~

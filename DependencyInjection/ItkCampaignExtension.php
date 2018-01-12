@@ -4,6 +4,8 @@ namespace Itk\CampaignBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Os2Display\CoreBundle\DependencyInjection\Os2DisplayBaseExtension;
+use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Config\FileLocator;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -20,5 +22,12 @@ class ItkCampaignExtension extends Os2DisplayBaseExtension
         $this->dir = __DIR__;
 
         parent::load($configs, $container);
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator($this->dir . '/../Resources/config'));
+
+        // If test environment, inject mocks.
+        if ($container->getParameter('kernel.environment') == 'acceptance') {
+            $loader->load('services_acceptance.yml');
+        }
     }
 }

@@ -1,0 +1,5 @@
+services:
+  os2display.utility_service:
+    class: Itk\CampaignBundle\Features\Mocks\UtilityService
+    arguments: ['@os2display.authentication_service']
+

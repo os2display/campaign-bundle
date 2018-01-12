@@ -17,4 +17,5 @@ apps:
       - ngRoute
       - bw.paging
       - pascalprecht.translate
+      - datetimePicker
 
