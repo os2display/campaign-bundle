@@ -172,6 +172,7 @@ class MiddlewareCommunication extends BaseService
         // Push channels
         $channels = $doctrine->getRepository('Os2DisplayCoreBundle:Channel')->findAll();
 
+        // Get all campaigns
         foreach ($channels as $channel) {
             $data = $serializer->serialize(
                 $channel,
@@ -184,10 +185,7 @@ class MiddlewareCommunication extends BaseService
         }
 
         // Push shared channels
-        $sharedChannels = $doctrine->getRepository(
-            'Os2DisplayCoreBundle:SharedChannel'
-        )
-            ->findAll();
+        $sharedChannels = $doctrine->getRepository('Os2DisplayCoreBundle:SharedChannel')->findAll();
 
         foreach ($sharedChannels as $sharedChannel) {
             $data = $serializer->serialize(

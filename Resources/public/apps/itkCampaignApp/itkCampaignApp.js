@@ -27,10 +27,11 @@ angular.module('itkCampaignApp').config(['$routeProvider', '$translateProvider',
         templateUrl: appUrl + 'campaign-overview.html' + '?' + window.config.version
     })
     .when('/campaign/create', {
-        templateUrl: appUrl + 'campaign-create.html' + '?' + window.config.version
+        controller: 'ItkCampaignController',
+        templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     })
     .when('/campaign/{id}', {
-        templateUrl: appUrl + 'campaign-edit.html' + '?' + window.config.version
+        templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     });
 }]);
 

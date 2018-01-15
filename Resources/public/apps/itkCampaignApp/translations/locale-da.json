@@ -10,14 +10,20 @@
       "description": "Beskrivelse",
       "description_help": "Vælg en kort beskrivelse af kampagnen",
       "schedule": "Planlægning",
-      "schedule_start": "Fra",
-      "schedule_start_help": "Vælg hvornår kampagnen skal starte",
-      "schedule_end": "Til",
-      "schedule_end_help": "Vælg hvornår kampagnen skal slutte",
+      "schedule_from": "Fra",
+      "schedule_from_help": "Vælg hvornår kampagnen skal starte",
+      "schedule_to": "Til",
+      "schedule_to_help": "Vælg hvornår kampagnen skal slutte",
       "channels": "Kanaler",
       "channels_help": "Vælg kanalerne der skal vises i kampagnen",
       "screens": "Skærme",
       "screens_help": "Vælg skærme eller grupper af skærme der skal vise i kampagnen"
+    }
+  },
+  "common": {
+    "error": {
+      "forbidden": "Du har ikke adgang til denne side",
+      "not_found": "Siden blev ikke fundet"
     }
   },
   "menu": {

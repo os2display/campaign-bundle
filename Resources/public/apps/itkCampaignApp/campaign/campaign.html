@@ -2,14 +2,14 @@
     <div class="row campaign-name">
         <div class="col-md-12">
             <label for="campaign-name" class="input-title">{{ 'campaign.fields.name' | translate}}</label>
-            <input type="text" name="campaign-name" id="campaign-name" value="Name of the campaign" class="input-type-text col-md-7">
+            <input type="text" name="campaign-name" id="campaign-name" ng-model="campaign.title" class="input-type-text col-md-7">
             <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
         </div>
     </div>
     <div class="row campaign-description">
         <div class="col-md-12">
             <label for="campaign-description" class="input-title">{{ 'campaign.fields.description' | translate}}</label>
-            <div name="campaign-description" id="campaign-description" class="input-type-textarea col-md-7" contentEditable>Suspendisse eget purus vel arcu accumsan fringilla ac nec nisi. Proin mi nisl, porttitor eget nulla viverra, placerat ornare diam. Mauris quam nulla, euismod sit amet malesuada id, ultricies non ex. Curabitur mattis ipsum vitae elit blandit maximus. Duis convallis vulputate justo dapibus luctus.
+            <div id="campaign-description" class="input-type-textarea col-md-7" contenteditable data-ng-model="campaign.description">
             </div>
             <p class="input-help">{{ 'campaign.fields.description_help' | translate}}</p>
         </div>
@@ -20,12 +20,12 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="input-sub-title">
-                        <p>{{ 'campaign.fields.schedule_start' | translate}}</p>
+                        <p>{{ 'campaign.fields.schedule_from' | translate}}</p>
                     </div>
 
-                    <input type="text" data-ng-model="schedule_start" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+                    <input type="text" data-if="campaign" data-ng-model="campaign.schedule_from" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-                    <p class="input-help">{{ 'campaign.fields.schedule_start_help' | translate }}</p>
+                    <p class="input-help">{{ 'campaign.fields.schedule_from_help' | translate }}</p>
                 </div>
                 <div class="col-md-1 d-none d-md-block">
                     <span class="align-middle">
@@ -34,12 +34,12 @@
                 </div>
                 <div class="col-md-4">
                     <div class="input-sub-title">
-                        <p>{{ 'campaign.fields.schedule_end' | translate}}</p>
+                        <p>{{ 'campaign.fields.schedule_to' | translate}}</p>
                     </div>
 
-                    <input type="text" data-ng-model="schedule_end" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+                    <input type="text" data-if="campaign" data-ng-model="campaign.schedule_to" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-                    <p class="input-help">{{ 'campaign.fields.schedule_end_help' | translate }}</p>
+                    <p class="input-help">{{ 'campaign.fields.schedule_to_help' | translate }}</p>
                 </div>
             </div>
         </div>
