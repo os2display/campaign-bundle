@@ -5,3 +5,7 @@ services:
     arguments: ['@service_container', '@os2display.template_service', '@os2display.utility_service']
     tags:
       - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
+
+  os2display.campaign_manager:
+    class: Itk\CampaignBundle\Service\CampaignManager
+    arguments: ['@os2display.entity_service', '@os2display.security_manager', '@doctrine.orm.entity_manager']
