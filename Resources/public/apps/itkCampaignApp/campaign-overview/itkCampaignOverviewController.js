@@ -3,6 +3,7 @@
  * Controller for the campaign create/edit.
  */
 
+// @TODO: Cleanup DI.
 angular.module('itkCampaignApp').controller('ItkCampaignController', [
     'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', 'userService',
     function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService) {
@@ -27,31 +28,13 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             return;
         }
 
-        var id = $routeParams.id;
-
-        $scope.campaign = null;
-
-        if (id) {
-            // Load the entity else create a new.
-            $scope.getEntity('campaign', id).then(
-                function (campaign) {
-                    $scope.campaign = campaign;
-                },
-                function (err) {
-                    // @TODO: Report error.
-                }
-            );
-        }
-        else {
-            $scope.campaign = {
-                title: '',
-                description: '',
-                schedule_from: null,
-                schedule_to: null,
-                channels: [],
-                screens: [],
-                groups: []
-            };
-        }
+        $scope.getEntities('campaign').then(
+            function (campaigns) {
+                $scope.campaigns = campaigns;
+            },
+            function (err) {
+                console.error(err);
+            }
+        )
     }
 ]);

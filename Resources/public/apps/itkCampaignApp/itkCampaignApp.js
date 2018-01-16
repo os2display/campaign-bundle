@@ -24,13 +24,15 @@ angular.module('itkCampaignApp').config(['$routeProvider', '$translateProvider',
     $routeProvider
     // Dashboard
     .when('/campaign', {
-        templateUrl: appUrl + 'campaign-overview.html' + '?' + window.config.version
+        controller: 'ItkCampaignOverviewController',
+        templateUrl: appUrl + 'campaign-overview/campaign-overview.html' + '?' + window.config.version
     })
     .when('/campaign/create', {
         controller: 'ItkCampaignController',
         templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     })
     .when('/campaign/{id}', {
+        controller: 'ItkCampaignController',
         templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     });
 }]);
