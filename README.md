@@ -29,5 +29,16 @@ composer require itk-os2display/campaign-bundle
 Enable the bundle in `AppKernel.php`, by adding ItkCampaignBundle to $bundles.
 
 ```sh
+new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 new Itk\CampaignBundle\ItkCampaignBundle()
+```
+
+Enable `timestampable` and `blameable` in your configuration:
+
+```yaml
+stof_doctrine_extensions:
+    orm:
+        default:
+            timestampable: true
+            blameable: true
 ```
