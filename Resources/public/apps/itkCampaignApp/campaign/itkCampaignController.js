@@ -35,8 +35,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             // Load the entity else create a new.
             $scope.getEntity('campaign', {'id': id}).then(
                 function (campaign) {
-                    $scope.campaign = campaign;
-                    // @TODO: Handle dates.
+                    $scope.campaign = convertCampaignDatesToTimestamps(campaign);
                 },
                 function (err) {
                     // @TODO: Report error.
@@ -127,12 +126,30 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             }
         };
 
+        function convertCampaignDatesToTimestamps(campaign) {
+            campaign.schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);
+            campaign.schedule_to = parseInt(new Date(campaign.schedule_to) / 1000);
+
+            return campaign;
+        }
+
+        function convertCampaignDatesToUTC(campaign) {
+            campaign.schedule_from = new Date(campaign.schedule_from * 1000).toUTCString();
+            campaign.schedule_to = new Date(campaign.schedule_to * 1000).toUTCString();
+
+            return campaign;
+        }
+
         /**
          * Save the campaign.
          */
         $scope.save = function () {
-            if ($scope.campaign.id === null) {
-                $scope.createEntity('campaign', $scope.campaign).then(
+            var campaign = angular.copy($scope.campaign);
+
+            campaign = convertCampaignDatesToUTC(campaign);
+
+            if ($scope.campaign.id === undefined) {
+                $scope.createEntity('campaign', campaign).then(
                     function (data) {
                         console.log("success", data);
                     },
@@ -142,7 +159,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 );
             }
             else {
-                $scope.updateEntity('campaign', $scope.campaign).then(
+                $scope.updateEntity('campaign', campaign).then(
                     function (data) {
                         console.log("success", data);
                     },

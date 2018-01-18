@@ -1,23 +1,24 @@
 <div class="itk-campaign container">
+    <!-- TODO: Implement existing search with filters -->
+    <!--
     <div class="row">
         <div class="col-md-12">
             <div class="search" style="margin-bottom: 30px;">
-                <!-- Search placeholder -->
-                <!-- TODO: Implement existing search with filters -->
                 <input type="text" class="input" placeholder="Søg" />
             </div>
         </div>
     </div>
+    -->
     <div class="row">
         <div class="col-md-12">
             <div class="listview">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="listview-tools">
-                            <a href="#" class="tool tool-help" data-tooltip="Help">
+                            <a data-ng-click="help()" class="tool tool-help" data-tooltip="Help">
                                 <i class="material-icons">help</i>
                             </a>
-                            <a href="#" class="tool tool-delete float-right">
+                            <a data-ng-click="delete()" class="tool tool-delete float-right">
                                 <i class="material-icons">delete</i>
                             </a>
                         </div>
@@ -38,9 +39,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="checkbox"><input type="checkbox" name="" id=""></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017</td>
+                                <tr data-ng-repeat="campaign in campaigns">
+                                    <td class="checkbox"><input type="checkbox" name="" id="campaign-{{campaign.id}}"></td>
+                                    <td class="name"><a data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</td>
                                     <td class="screens">
                                         <div class="textcrop">
                                             Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
@@ -50,89 +51,9 @@
                                         </div>
                                     </td>
                                     <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="checkbox"><input type="checkbox" name="" id=""></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017 laaaaaaaaang titel</a></td>
-                                    <td class="screens">
-                                        <div class="textcrop">
-                                            Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
-                                        </div>
-                                        <div class="showmore">
-                                            <a href=""><i class="material-icons">more_vert</i></a>
-                                        </div>
-                                    </td>
-                                    <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
-                                </tr>
-                                <tr class="table-active">
-                                    <td class="checkbox"><input type="checkbox" name="" id="" checked></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017</a></td>
-                                    <td class="screens">
-                                        <div class="textcrop">
-                                            Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
-                                        </div>
-                                        <div class="showmore">
-                                            <a href=""><i class="material-icons">more_vert</i></a>
-                                        </div>
-                                    </td>
-                                    <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="checkbox"><input type="checkbox" name="" id=""></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017</a></td>
-                                    <td class="screens">
-                                        <div class="textcrop">
-                                            Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
-                                        </div>
-                                        <div class="showmore">
-                                            <a href=""><i class="material-icons">more_vert</i></a>
-                                        </div>
-                                    </td>
-                                    <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="checkbox"><input type="checkbox" name="" id=""></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017</a></td>
-                                    <td class="screens">
-                                        <div class="textcrop">
-                                            Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
-                                        </div>
-                                        <div class="showmore">
-                                            <a href=""><i class="material-icons">more_vert</i></a>
-                                        </div>
-                                    </td>
-                                    <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="checkbox"><input type="checkbox" name="" id=""></td>
-                                    <td class="name"><a href="#">Afslutning - Kultuhovedstad 2017</a></td>
-                                    <td class="screens">
-                                        <div class="textcrop">
-                                            Dokk1 - niveau 1, Dokk1 - niveau 2, Flere skærme
-                                        </div>
-                                        <div class="showmore">
-                                            <a href=""><i class="material-icons">more_vert</i></a>
-                                        </div>
-                                    </td>
-                                    <td class="status"><div class="badge badge-secondary"><span class="badge-indicator active"></span>Aktiv</div></td>
-                                    <td class="date-start">08:00 08/12/2017</td>
-                                    <td class="date-end">19:00 09/12/2017</td>
-                                    <td class="tools"><a href="#"><i class="material-icons">edit</i></a></td>
+                                    <td class="date-start">{{campaign.schedule_from | date:'HH:mm dd/MM/yy' }}</td>
+                                    <td class="date-end">{{campaign.schedule_to | date:'HH:mm dd/MM/yy' }}</td>
+                                    <td class="tools"><a data-ng-href="{{'/#/campaign/' + campaign.id}}"><i class="material-icons">edit</i></a></td>
                                 </tr>
                             </tbody>
                         </table>

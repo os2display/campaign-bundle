@@ -1,4 +1,4 @@
-<div class="itk-campaign container">
+<div class="itk-campaign container" data-ng-if="campaign !== null">
   <div class="row campaign-name">
     <div class="col-md-12">
       <label for="campaign-name" class="input-title">{{ 'campaign.fields.name' |
@@ -29,7 +29,7 @@
             <p>{{ 'campaign.fields.schedule_from' | translate}}</p>
           </div>
 
-          <input type="text" data-if="campaign"
+          <input type="text"
                  data-ng-model="campaign.schedule_from" datetime-picker=""
                  config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
@@ -46,7 +46,7 @@
             <p>{{ 'campaign.fields.schedule_to' | translate}}</p>
           </div>
 
-          <input type="text" data-if="campaign"
+          <input type="text"
                  data-ng-model="campaign.schedule_to" datetime-picker=""
                  config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
