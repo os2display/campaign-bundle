@@ -33,9 +33,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
 
         if (id) {
             // Load the entity else create a new.
-            $scope.getEntity('campaign', id).then(
+            $scope.getEntity('campaign', {'id': id}).then(
                 function (campaign) {
                     $scope.campaign = campaign;
+                    // @TODO: Handle dates.
                 },
                 function (err) {
                     // @TODO: Report error.
@@ -46,8 +47,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             $scope.campaign = {
                 title: '',
                 description: '',
-                schedule_from: null,
-                schedule_to: null,
+                schedule_from: new Date().getDate(),
+                schedule_to: new Date().getDate(),
                 channels: [],
                 screens: [],
                 groups: []
@@ -73,6 +74,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             });
         };
 
+        /**
+         * Remove channel from campaign.
+         * @param channel
+         */
         $scope.removeChannel = function (channel) {
             var index = $scope.campaign.channels.indexOf(channel);
 
@@ -99,5 +104,43 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 });
             });
         };
+
+        /**
+         * Remove screen from campaign.
+         * @param screen
+         */
+        $scope.removeScreen = function (screen) {
+            var index = $scope.campaign.screens.indexOf(screen);
+
+            if (index !== -1) {
+                $scope.campaign.screens.splice(screen, 1);
+            }
+        };
+
+        /**
+         * Save the campaign.
+         */
+        $scope.save = function () {
+            if ($scope.campaign.id === null) {
+                $scope.createEntity('campaign', $scope.campaign).then(
+                    function (data) {
+                        console.log("success", data);
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+            }
+            else {
+                $scope.updateEntity('campaign', $scope.campaign).then(
+                    function (data) {
+                        console.log("success", data);
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+            }
+        }
     }
 ]);

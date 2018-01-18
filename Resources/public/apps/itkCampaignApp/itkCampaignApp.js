@@ -31,7 +31,7 @@ angular.module('itkCampaignApp').config(['$routeProvider', '$translateProvider',
         controller: 'ItkCampaignController',
         templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     })
-    .when('/campaign/{id}', {
+    .when('/campaign/:id', {
         controller: 'ItkCampaignController',
         templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
     });
