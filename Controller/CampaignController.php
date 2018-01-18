@@ -84,7 +84,7 @@ class CampaignController extends ApiController
     /**
      * @Rest\Put("/{id}", name="api_campaign_edit")
      *
-     * @Security("is_granted('UPDATE', campaign)")
+     * @ Security("is_granted('UPDATE', campaign)")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
@@ -111,7 +111,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Delete("/{id}", name="api_campaign_delete")
      *
-     * @Security("is_granted('DELETE', campaign)")
+     * @ Security("is_granted('DELETE', campaign)")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
@@ -125,7 +125,7 @@ class CampaignController extends ApiController
         return $this->view(NULL, Codes::HTTP_NO_CONTENT);
     }
 
-
+    // @FIXME: Hook into ApiController's method.
     protected function setApiData($object)
     {
         if (is_array($object)) {
@@ -133,7 +133,6 @@ class CampaignController extends ApiController
                 $this->setApiData($item, true);
             }
         } elseif ($object instanceof Campaign) {
-            // $object->setApiData([__METHOD__]);
         }
 
         return $object;

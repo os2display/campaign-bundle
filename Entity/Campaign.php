@@ -91,13 +91,6 @@ class Campaign extends ApiEntity implements GroupableEntity
     private $screens;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Group")
-     * @ORM\JoinTable(name="ik_campaign_group")
-     */
-    private $groups;
-
-    /**
      * Get id
      *
      * @return integer
