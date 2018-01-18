@@ -44,11 +44,17 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             );
         }
         else {
+            var now = new Date();
+            now.setMilliseconds(0);
+            now.setSeconds(0);
+            now.setMinutes(0);
+            now = parseInt(now / 1000);
+
             $scope.campaign = {
                 title: '',
                 description: '',
-                schedule_from: new Date().getDate(),
-                schedule_to: new Date().getDate(),
+                schedule_from: now,
+                schedule_to: now + 24 * 60 * 60,
                 channels: [],
                 screens: [],
                 groups: []
@@ -59,6 +65,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
          * Display modal to add channels.
          */
         $scope.addChannels = function () {
+            if (!$scope.campaign.channels) {
+                $scope.campaign.channels = [];
+            }
+
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
