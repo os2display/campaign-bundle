@@ -3,9 +3,6 @@
     "description": "Os2Display campaigns",
     "type": "symfony-bundle",
     "require": {
-        "symfony/symfony": "^2.8",
-        "doctrine/doctrine-bundle": "^1.2",
-        "os2display/core-bundle": "^1.0",
         "os2display/admin-bundle": "^1.0",
         "stof/doctrine-extensions-bundle": "^1.3"
     },

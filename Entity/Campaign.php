@@ -6,12 +6,14 @@
 
 namespace Itk\CampaignBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Os2Display\CoreBundle\Entity\ApiEntity;
-use Os2Display\CoreBundle\Traits\Groupable;
 use JMS\Serializer\Annotation\Groups;
+use Os2Display\CoreBundle\Entity\ApiEntity;
+use Os2Display\CoreBundle\Entity\GroupableEntity;
+use Os2Display\CoreBundle\Traits\Groupable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,12 +23,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="ik_campaign")
  * @ORM\Entity
+ * @ORM\AttributeOverrides(
+ *   @ORM\AttributeOverride(name="createdBy",
+ *     column=@ORM\Column(name="user")
+ *   )
+ * )
  */
-class Campaign extends ApiEntity //implements GroupableEntity
+class Campaign extends ApiEntity implements GroupableEntity
 {
     use BlameableEntity;
     use TimestampableEntity;
-//    use Groupable;
+    use Groupable;
 
     /**
      * Id.
