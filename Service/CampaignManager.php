@@ -4,7 +4,10 @@ namespace Itk\CampaignBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Itk\CampaignBundle\Entity\Campaign;
+use Os2Display\CoreBundle\Entity\Channel;
+use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Exception\DuplicateEntityException;
+use Os2Display\CoreBundle\Services\EntityManagerService;
 use Os2Display\CoreBundle\Services\EntityService;
 use Os2Display\CoreBundle\Services\GroupManager;
 use Os2Display\CoreBundle\Services\SecurityManager;
@@ -25,12 +28,14 @@ class CampaignManager
     protected $securityMananager;
     protected $groupManager;
     protected $entityManager;
+    protected $entityManagerService;
 
-    public function __construct(EntityService $entityService, SecurityManager $securityManager, GroupManager $groupManager, EntityManagerInterface $entityManager) {
+    public function __construct(EntityService $entityService, SecurityManager $securityManager, GroupManager $groupManager, EntityManagerInterface $entityManager, EntityManagerService $entityManagerService) {
         $this->entityService = $entityService;
         $this->securityMananager = $securityManager;
         $this->groupManager = $groupManager;
         $this->entityManager = $entityManager;
+        $this->entityManagerService = $entityManagerService;
     }
 
     public function createCampaign($data) {
@@ -49,6 +54,13 @@ class CampaignManager
             $this->groupManager->replaceGroups($data['groups'], $campaign);
             unset($data['groups']);
         }
+        if (isset($data['channels'])) {
+            $data['channels'] = $this->entityManagerService->loadEntities($data['channels'], Channel::class);
+        }
+        if (isset($data['screens'])) {
+            $data['screens'] = $this->entityManagerService->loadEntities($data['screens'], Screen::class);
+        }
+
         $this->entityService->setValues($campaign, $data, self::$editableProperties);
         $this->entityService->validateEntity($campaign);
 
