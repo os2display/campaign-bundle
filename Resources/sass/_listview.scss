@@ -102,6 +102,12 @@
                                     &.active {
                                         background-color: $green;
                                     }
+                                    &.future {
+                                        background-color: $blue;
+                                    }
+                                    &.expired {
+                                        background-color: $gray-500;
+                                    }
                                 }
                             }
                         }

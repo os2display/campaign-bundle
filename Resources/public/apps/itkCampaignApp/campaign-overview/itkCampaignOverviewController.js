@@ -31,6 +31,26 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
         $scope.getEntities('campaign').then(
             function (campaigns) {
                 $scope.campaigns = campaigns;
+
+                var now = parseInt(new Date() / 1000);
+
+                for (var key in $scope.campaigns) {
+                    var campaign = $scope.campaigns[key];
+                    var schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);
+                    var schedule_to = parseInt(new Date(campaign.schedule_to) / 1000);
+
+                    if (schedule_from <= now && schedule_to > now) {
+                        campaign.status = 'active';
+                    }
+                    else {
+                        if (schedule_to < now) {
+                            campaign.status = 'expired';
+                        }
+                        else {
+                            campaign.status = 'future';
+                        }
+                    }
+                }
             },
             function (err) {
                 console.error(err);

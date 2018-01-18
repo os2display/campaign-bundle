@@ -172,6 +172,8 @@ class MiddlewareCommunication extends BaseService
         // Push channels
         $channels = $doctrine->getRepository('Os2DisplayCoreBundle:Channel')->findAll();
 
+        $campaigns = $doctrine->getRepository('ItkCampaignBundle:Campaign')->findAll();
+
         // Get all campaigns
         foreach ($channels as $channel) {
             $data = $serializer->serialize(
