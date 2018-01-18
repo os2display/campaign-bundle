@@ -29,7 +29,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Get("", name="api_campaign_index")
      *
-     * @ Security("is_granted('LIST', 'campaign')")
+     * @Security("is_granted('LIST', 'campaign')")
      *
      */
     public function indexAction()
@@ -44,7 +44,9 @@ class CampaignController extends ApiController
      *
      * @Rest\Post("", name="api_campaign_new")
      *
-     * @ Security("has_role('ROLE_CAMPAIGN_ADMIN')")
+     * @ FIXME: Why does "is_granted" not work? (Apparently the Voter is not invoked).
+     * @ Security("is_granted('CREATE', 'campaign')")
+     * @Security("has_role('ROLE_CAMPAIGN_ADMIN')")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Campaign
@@ -72,7 +74,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Get("/{id}", name="api_campaign_show")
      *
-     * @ Security("is_granted('READ', campaign)")
+     * @Security("is_granted('READ', campaign)")
      *
      * @return \Os2Display\CoreBundle\Entity\Campaign
      */
@@ -125,7 +127,7 @@ class CampaignController extends ApiController
         return $this->view(NULL, Codes::HTTP_NO_CONTENT);
     }
 
-
+    // @FIXME: Hook into ApiController's method.
     protected function setApiData($object)
     {
         if (is_array($object)) {
@@ -133,7 +135,6 @@ class CampaignController extends ApiController
                 $this->setApiData($item, true);
             }
         } elseif ($object instanceof Campaign) {
-            // $object->setApiData([__METHOD__]);
         }
 
         return $object;

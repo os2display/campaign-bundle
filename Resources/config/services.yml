@@ -8,4 +8,20 @@ services:
 
   os2display.campaign_manager:
     class: Itk\CampaignBundle\Service\CampaignManager
-    arguments: ['@os2display.entity_service', '@os2display.security_manager', '@doctrine.orm.entity_manager']
+    arguments:
+      - '@os2display.entity_service'
+      - '@os2display.security_manager'
+      - '@os2display.group_manager'
+      - '@doctrine.orm.entity_manager'
+      - '@os2display.entity_manager'
+
+  os2display.campaign_edit_voter:
+    class: Itk\CampaignBundle\Security\EditVoter
+    # parent: os2display.edit_voter
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@security.access.decision_manager'
+      - '@os2display.security_manager'
+    # public: false
+    tags:
+      - { name: security.voter }

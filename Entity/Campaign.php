@@ -6,12 +6,14 @@
 
 namespace Itk\CampaignBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Os2Display\CoreBundle\Entity\ApiEntity;
-use Os2Display\CoreBundle\Traits\Groupable;
 use JMS\Serializer\Annotation\Groups;
+use Os2Display\CoreBundle\Entity\ApiEntity;
+use Os2Display\CoreBundle\Entity\GroupableEntity;
+use Os2Display\CoreBundle\Traits\Groupable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,12 +23,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="ik_campaign")
  * @ORM\Entity
+ * @ORM\AttributeOverrides(
+ *   @ORM\AttributeOverride(name="createdBy",
+ *     column=@ORM\Column(name="user")
+ *   )
+ * )
  */
-class Campaign extends ApiEntity //implements GroupableEntity
+class Campaign extends ApiEntity implements GroupableEntity
 {
     use BlameableEntity;
     use TimestampableEntity;
-//    use Groupable;
+    use Groupable;
 
     /**
      * Id.
@@ -71,6 +78,7 @@ class Campaign extends ApiEntity //implements GroupableEntity
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Groups({"api", "api-bulk"})
      * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Channel")
      * @ORM\JoinTable(name="ik_campaign_channel")
      */
@@ -78,17 +86,11 @@ class Campaign extends ApiEntity //implements GroupableEntity
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Groups({"api", "api-bulk"})
      * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Screen")
      * @ORM\JoinTable(name="ik_campaign_screen")
      */
     private $screens;
-
-    /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Group")
-     * @ORM\JoinTable(name="ik_campaign_group")
-     */
-    private $groups;
 
     /**
      * Get id
@@ -163,4 +165,46 @@ class Campaign extends ApiEntity //implements GroupableEntity
 
         return $this;
     }
+
+  /**
+   * @return mixed
+   */
+  public function getDescription() {
+    return $this->description;
+  }
+
+  /**
+   * @param mixed $description
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+  }
+
+  /**
+   * @return \Doctrine\Common\Collections\ArrayCollection
+   */
+  public function getChannels() {
+    return $this->channels;
+  }
+
+  /**
+   * @param \Doctrine\Common\Collections\ArrayCollection $channels
+   */
+  public function setChannels($channels) {
+    $this->channels = $channels;
+  }
+
+  /**
+   * @return \Doctrine\Common\Collections\ArrayCollection
+   */
+  public function getScreens() {
+    return $this->screens;
+  }
+
+  /**
+   * @param \Doctrine\Common\Collections\ArrayCollection $screens
+   */
+  public function setScreens($screens) {
+    $this->screens = $screens;
+  }
 }
