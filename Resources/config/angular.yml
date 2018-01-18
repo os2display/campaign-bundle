@@ -4,20 +4,25 @@ assets:
   js_prod:
     - bundles/itkcampaign/assets/build/itkcampaign.min.js
 
-modules:
-
 apps:
   itkCampaignApp:
     container: true
     files:
       - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignApp.js
       - bundles/itkcampaign/apps/itkCampaignApp/directives/contenteditable.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewController.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignController.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.js
     dependencies:
+      - ngRoute
+      - ngAnimate
+      - ngSanitize
       - busModule
       - mainModule
-      - ngRoute
       - bw.paging
       - pascalprecht.translate
       - datetimePicker
       - angularModalService
+      - styleguideComponentsModule
+      - ikShared

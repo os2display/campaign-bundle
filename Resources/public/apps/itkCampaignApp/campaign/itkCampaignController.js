@@ -53,5 +53,51 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 groups: []
             };
         }
+
+        /**
+         * Display modal to add channels.
+         */
+        $scope.addChannels = function () {
+            busService.$emit('bodyService.addClass', 'is-locked');
+
+            ModalService.showModal({
+                templateUrl: "bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.html",
+                controller: "ItkCampaignModalAddChannel",
+                inputs: {
+                    channels: $scope.campaign.channels
+                }
+            }).then(function (modal) {
+                modal.close.then(function () {
+                    busService.$emit('bodyService.removeClass', 'is-locked');
+                });
+            });
+        };
+
+        $scope.removeChannel = function (channel) {
+            var index = $scope.campaign.channels.indexOf(channel);
+
+            if (index !== -1) {
+                $scope.campaign.channels.splice(channel, 1);
+            }
+        };
+
+        /**
+         * Display modal to add screens.
+         */
+        $scope.addScreens = function () {
+            busService.$emit('bodyService.addClass', 'is-locked');
+
+            ModalService.showModal({
+                templateUrl: "bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.html",
+                controller: "ItkCampaignModalAddScreen",
+                inputs: {
+                    screens: $scope.campaign.screens
+                }
+            }).then(function (modal) {
+                modal.close.then(function () {
+                    busService.$emit('bodyService.removeClass', 'is-locked');
+                });
+            });
+        };
     }
 ]);

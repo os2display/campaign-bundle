@@ -1,10 +1,10 @@
 /**
  * @file
- * Controller for the campaign create/edit.
+ * Controller for the campaign overview.
  */
 
 // @TODO: Cleanup DI.
-angular.module('itkCampaignApp').controller('ItkCampaignController', [
+angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
     'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', 'userService',
     function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService) {
         'use strict';

@@ -1,88 +1,128 @@
 <div class="itk-campaign container">
-    <div class="row campaign-name">
-        <div class="col-md-12">
-            <label for="campaign-name" class="input-title">{{ 'campaign.fields.name' | translate}}</label>
-            <input type="text" name="campaign-name" id="campaign-name" ng-model="campaign.title" class="input-type-text col-md-7">
-            <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
-        </div>
+  <div class="row campaign-name">
+    <div class="col-md-12">
+      <label for="campaign-name" class="input-title">{{ 'campaign.fields.name' |
+        translate}}</label>
+      <input type="text" name="campaign-name" id="campaign-name"
+             ng-model="campaign.title" class="input-type-text col-md-7">
+      <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
     </div>
-    <div class="row campaign-description">
-        <div class="col-md-12">
-            <label for="campaign-description" class="input-title">{{ 'campaign.fields.description' | translate}}</label>
-            <div id="campaign-description" class="input-type-textarea col-md-7" contenteditable data-ng-model="campaign.description">
-            </div>
-            <p class="input-help">{{ 'campaign.fields.description_help' | translate}}</p>
-        </div>
+  </div>
+  <div class="row campaign-description">
+    <div class="col-md-12">
+      <label for="campaign-description" class="input-title">{{
+        'campaign.fields.description' | translate}}</label>
+      <div id="campaign-description" class="input-type-textarea col-md-7"
+           contenteditable data-ng-model="campaign.description">
+      </div>
+      <p class="input-help">{{ 'campaign.fields.description_help' |
+        translate}}</p>
     </div>
-    <div class="row campaign-schedule">
-        <div class="col-md-12">
-            <label class="input-title">{{ 'campaign.fields.schedule' | translate}}</label>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="input-sub-title">
-                        <p>{{ 'campaign.fields.schedule_from' | translate}}</p>
-                    </div>
+  </div>
+  <div class="row campaign-schedule">
+    <div class="col-md-12">
+      <label class="input-title">{{ 'campaign.fields.schedule' |
+        translate}}</label>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-sub-title">
+            <p>{{ 'campaign.fields.schedule_from' | translate}}</p>
+          </div>
 
-                    <input type="text" data-if="campaign" data-ng-model="campaign.schedule_from" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+          <input type="text" data-if="campaign"
+                 data-ng-model="campaign.schedule_from" datetime-picker=""
+                 config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-                    <p class="input-help">{{ 'campaign.fields.schedule_from_help' | translate }}</p>
-                </div>
-                <div class="col-md-1 d-none d-md-block">
+          <p class="input-help">{{ 'campaign.fields.schedule_from_help' |
+            translate }}</p>
+        </div>
+        <div class="col-md-1 d-none d-md-block">
                     <span class="align-middle">
                         <i class="material-icons">arrow_forward</i>
                     </span>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-sub-title">
-                        <p>{{ 'campaign.fields.schedule_to' | translate}}</p>
-                    </div>
+        </div>
+        <div class="col-md-4">
+          <div class="input-sub-title">
+            <p>{{ 'campaign.fields.schedule_to' | translate}}</p>
+          </div>
 
-                    <input type="text" data-if="campaign" data-ng-model="campaign.schedule_to" datetime-picker="" config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+          <input type="text" data-if="campaign"
+                 data-ng-model="campaign.schedule_to" datetime-picker=""
+                 config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-                    <p class="input-help">{{ 'campaign.fields.schedule_to_help' | translate }}</p>
-                </div>
-            </div>
+          <p class="input-help">{{ 'campaign.fields.schedule_to_help' |
+            translate }}</p>
         </div>
+      </div>
     </div>
-    <div class="row campaign-channels">
-        <div class="col-md-12">
-            <label for="campaign-channels" class="input-title">
-                {{ 'campaign.fields.channels' | translate }}
-            </label>
-            <p class="input-help">
-                {{ 'campaign.fields.channels_help' | translate }}
-            </p>
-            <button class="input-btn-add"><i class="material-icons">add </i>{{ 'type.channel' | translate }}</button>
-            <div id="campaign-channels" class="channels">
-                <!-- TODO: Show added channels -->
-            </div>
+  </div>
+  <div class="row campaign-channels">
+    <div class="col-md-12">
+      <label for="campaign-channels" class="input-title">
+        {{ 'campaign.fields.channels' | translate }}
+      </label>
+      <p class="input-help">
+        {{ 'campaign.fields.channels_help' | translate }}
+      </p>
+      <button class="input-btn-add" data-ng-click="addChannels()">
+        <i class="material-icons">add </i>
+        {{ 'type.channel' | translate }}
+      </button>
+      <div id="campaign-channels" class="channels">
+        <div class="overview--channel channel-remove"
+             data-ng-repeat="channel in campaign.channels">
+          <img class="overview--channel-remove"
+               data-ng-click="removeChannel(channel)"
+               src="bundles/os2displayadmin/images/icons/cancel-icon.png">
+          <ik-channel class="overview--channel-container"
+                      ik-channel="channel"
+                      ik-width="{{channel.orientation == 'portrait' ? 150 : 300 }}"
+                      ik-single-slide="true"></ik-channel>
+
         </div>
+      </div>
     </div>
-    <div class="row campaign-screens">
-        <div class="col-md-12">
-            <label for="campaign-screens" class="input-title">
-                {{ 'campaign.fields.screens' | translate }}
-            </label>
-            <p class="input-help">
-                {{ 'campaign.fields.screens_help' | translate }}
-            </p>
-            <button class="input-btn-add"><i class="material-icons">add </i> {{ 'type.screen' | translate }}</button>
-            <button class="input-btn-add"><i class="material-icons">add </i> {{ 'type.screen_group' | translate }}</button>
-            <div id="campaign-screens" class="screens">
-                <!-- TODO: Show added screens and screen groups -->
-            </div>
+  </div>
+  <div class="row campaign-screens">
+    <div class="col-md-12">
+      <label for="campaign-screens" class="input-title">
+        {{ 'campaign.fields.screens' | translate }}
+      </label>
+      <p class="input-help">
+        {{ 'campaign.fields.screens_help' | translate }}
+      </p>
+      <button class="input-btn-add" data-ng-click="addScreens()">
+        <i class="material-icons">add </i>
+        {{ 'type.screen' | translate }}
+      </button>
+      <button class="input-btn-add">
+        <i class="material-icons">add </i>
+        {{ 'type.screen_group' | translate }}
+      </button>
+      <div id="campaign-screens" class="screens">
+        <div class="overview--screen"
+             data-ng-repeat="screen in campaign.screens">
+          <img class="overview--channel-remove"
+               data-ng-click="removeScreen(screen)"
+               src="bundles/os2displayadmin/images/icons/cancel-icon.png">
+          <ik-screen class="overview--channel-container"
+                      ik-screen="channel"></ik-screen>
         </div>
+      </div>
     </div>
-    <div class="row campaign-actions">
-        <div class="col-md-12">
-            <label class="input-title">
-                {{ 'action.campaign_save' | translate }}
-            </label>
-            <div class="create-slide--buttons">
-                <form data-ng-submit="submitStep()" class="create-slide--form ng-pristine ng-valid">
-                    <input type="submit" class="create-slide--button" value="{{ 'action.save' | translate }}">
-                </form>
-            </div>
-        </div>
+  </div>
+  <div class="row campaign-actions">
+    <div class="col-md-12">
+      <label class="input-title">
+        {{ 'action.campaign_save' | translate }}
+      </label>
+      <div class="create-slide--buttons">
+        <form data-ng-submit="submitStep()"
+              class="create-slide--form ng-pristine ng-valid">
+          <input type="submit" class="create-slide--button"
+                 value="{{ 'action.save' | translate }}">
+        </form>
+      </div>
     </div>
+  </div>
 </div>
