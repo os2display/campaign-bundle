@@ -29,7 +29,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Get("", name="api_campaign_index")
      *
-     * @ Security("is_granted('LIST', 'campaign')")
+     * @Security("is_granted('LIST', 'campaign')")
      *
      */
     public function indexAction()
@@ -44,7 +44,9 @@ class CampaignController extends ApiController
      *
      * @Rest\Post("", name="api_campaign_new")
      *
-     * @ Security("has_role('ROLE_CAMPAIGN_ADMIN')")
+     * @ FIXME: Why does "is_granted" not work? (Apparently the Voter is not invoked).
+     * @ Security("is_granted('CREATE', 'campaign')")
+     * @Security("has_role('ROLE_CAMPAIGN_ADMIN')")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Campaign
@@ -72,7 +74,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Get("/{id}", name="api_campaign_show")
      *
-     * @ Security("is_granted('READ', campaign)")
+     * @Security("is_granted('READ', campaign)")
      *
      * @return \Os2Display\CoreBundle\Entity\Campaign
      */
@@ -84,7 +86,7 @@ class CampaignController extends ApiController
     /**
      * @Rest\Put("/{id}", name="api_campaign_edit")
      *
-     * @ Security("is_granted('UPDATE', campaign)")
+     * @Security("is_granted('UPDATE', campaign)")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
@@ -111,7 +113,7 @@ class CampaignController extends ApiController
      *
      * @Rest\Delete("/{id}", name="api_campaign_delete")
      *
-     * @ Security("is_granted('DELETE', campaign)")
+     * @Security("is_granted('DELETE', campaign)")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
