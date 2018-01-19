@@ -263,7 +263,8 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $this->doctrine->getManager()->clear();
     }
 
-    private function channelPushedToScreen($channel, $screen, $result = true) {
+    private function channelPushedToScreen($channel, $screen, $result = true)
+    {
         $requests = $this->container->get('os2display.utility_service')
             ->getAllRequests('middleware');
 

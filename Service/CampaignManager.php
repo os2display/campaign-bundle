@@ -31,7 +31,8 @@ class CampaignManager
     protected $entityManager;
     protected $entityManagerService;
 
-    public function __construct(EntityService $entityService, SecurityManager $securityManager, GroupManager $groupManager, EntityManagerInterface $entityManager, EntityManagerService $entityManagerService) {
+    public function __construct(EntityService $entityService, SecurityManager $securityManager, GroupManager $groupManager, EntityManagerInterface $entityManager, EntityManagerService $entityManagerService)
+    {
         $this->entityService = $entityService;
         $this->securityMananager = $securityManager;
         $this->groupManager = $groupManager;
@@ -39,17 +40,20 @@ class CampaignManager
         $this->entityManagerService = $entityManagerService;
     }
 
-    public function createCampaign($data) {
+    public function createCampaign($data)
+    {
         $campaign = new Campaign();
 
         return $this->persistCampaign($campaign, $data);
     }
 
-    public function updateCampaign(Campaign $campaign, $data) {
+    public function updateCampaign(Campaign $campaign, $data)
+    {
         return $this->persistCampaign($campaign, $data);
     }
 
-    private function persistCampaign(Campaign $campaign, $data) {
+    private function persistCampaign(Campaign $campaign, $data)
+    {
         $data = $this->normalizeData($data);
         if (isset($data['groups'])) {
             $this->groupManager->setGroups($data['groups'], $campaign);
@@ -84,7 +88,8 @@ class CampaignManager
         return $campaign;
     }
 
-    private function normalizeData($data) {
+    private function normalizeData($data)
+    {
         if (isset($data['schedule_from']) && is_scalar($data['schedule_from'])) {
             $data['schedule_from'] = new \DateTime($data['schedule_from']);
         }
