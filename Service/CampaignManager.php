@@ -51,7 +51,7 @@ class CampaignManager
     private function persistCampaign(Campaign $campaign, $data) {
         $data = $this->normalizeData($data);
         if (isset($data['groups'])) {
-            $this->groupManager->replaceGroups($data['groups'], $campaign);
+            $this->groupManager->setGroups($data['groups'], $campaign);
             unset($data['groups']);
         }
         if (isset($data['channels'])) {
@@ -70,6 +70,8 @@ class CampaignManager
             throw new DuplicateEntityException('Campaign already exists.', $data);
         }
 
+        // Trick to make sure that entity is persisted.
+        $campaign->setUpdatedAt(new \DateTime());
         $this->entityManager->persist($campaign);
         $this->entityManager->flush();
 
