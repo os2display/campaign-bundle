@@ -18,10 +18,10 @@ Feature: campaign
       | user1    | user1    | ROLE_USER                      | 1: GROUP_ROLE_ADMIN, 2: GROUP_ROLE_USER, 3: GROUP_ROLE_USER |
       | user2    | user2    | ROLE_USER                      | 1: GROUP_ROLE_USER, 2: GROUP_ROLE_USER, 4: GROUP_ROLE_USER  |
 
-    And the following 'Os2Display\CoreBundle\Entity\Channel' entities exist:
+    And the following 'Os2Display\CoreBundle\Entity\Channel' entities identified by 'id' exist:
       | id | title             |  createdAt | modifiedAt |
-      | 11 | The first channel | 2001-01-01 | 2001-01-01 |
-      | 12 | Channel 2         | 2001-01-01 | 2001-01-01 |
+      |  1 | The first channel | 2001-01-01 | 2001-01-01 |
+      |  3 | Channel 3         | 2001-01-01 | 2001-01-01 |
 
     And the following 'Os2Display\CoreBundle\Entity\Screen' entities exist:
       | id | title            | description | token      | activationCode |  createdAt | modifiedAt |
@@ -99,7 +99,7 @@ Feature: campaign
     And I send a "PUT" request to "/api/campaign/1" with body:
     """
     {
-      "channels": [1,2]
+      "channels": [1,3]
     }
     """
     Then the response status code should be 200
