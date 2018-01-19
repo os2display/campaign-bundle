@@ -21,6 +21,7 @@ class CampaignManager
       'schedule_to',
       'channels',
       'screens',
+      'screen_groups',
       'groups',
     ];
 
@@ -59,6 +60,11 @@ class CampaignManager
         }
         if (isset($data['screens'])) {
             $data['screens'] = $this->entityManagerService->loadEntities($data['screens'], Screen::class);
+        }
+        if (isset($data['screen_groups'])) {
+            $groups = $this->groupManager->loadGroups($data['screen_groups'], $campaign->getScreenGroups());
+            $campaign->setScreenGroups($groups);
+            unset($data['screen_groups']);
         }
 
         $this->entityService->setValues($campaign, $data, self::$editableProperties);
