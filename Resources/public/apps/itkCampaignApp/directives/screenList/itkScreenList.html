@@ -1,8 +1,8 @@
 <section class="overview--section">
   <div class="overview--filter">
-    <label class="overview--filter-label">Filtrér på:</label>
+    <label class="overview--filter-label">{{ 'screen_list.filter' | translate}}</label>
     <form class="overview--form full-width" accept-charset="UTF-8">
-      <input placeholder="Angiv del af titlen for at filtrere listen"
+      <input placeholder="{{ 'screen_list.filter_placeholder' | translate }}"
              class="overview--filter-field"
              type="text"
              size="30"
@@ -34,17 +34,17 @@
     </div>
   </div>
   <div class="overview--sorting">
-    <label class="overview--sort-label">Sorter på:</label>
+    <label class="overview--sort-label">{{ 'screen_list.sort' | translate }}</label>
     <div class="overview--sort-links">
       <span class="overview--newest"
             data-ng-class="{'is-active': sort.created_at === 'desc'}"
-            data-ng-click="setSort('created_at', 'desc')">Nyeste</span>
+            data-ng-click="setSort('created_at', 'desc')">{{ 'screen_list.sort_newest' | translate }}</span>
       <span class="overview--oldest"
             data-ng-class="{'is-active': sort.created_at === 'asc'}"
-            data-ng-click="setSort('created_at', 'asc')">Ældste</span>
+            data-ng-click="setSort('created_at', 'asc')">{{ 'screen_list.sort_oldest' | translate }}</span>
       <span class="overview--alphabetical"
             data-ng-class="{'is-active': sort.title}"
-            data-ng-click="setSort('title', 'asc')">A-Å</span>
+            data-ng-click="setSort('title', 'asc')">{{ 'screen_list.sort_alphabetic' | translate }}</span>
     </div>
   </div>
 
@@ -75,9 +75,9 @@
                                                               id=""
                                                               data-ng-click="clickAllCheckbox()">
                       </th>
-                      <th scope="col">Skærm</th>
-                      <th scope="col">Beskrivelse</th>
-                      <th scope="col">Er med i gruppe</th>
+                      <th scope="col">{{ 'screen_list.fields.screen' | translate }}</th>
+                      <th scope="col">{{ 'screen_list.fields.description' | translate }}</th>
+                      <th scope="col">{{ 'screen_list.fields.in_group' | translate }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -111,7 +111,7 @@
     </div>
     <div class="overview--section" data-ng-show="!loading"
          ng-if="screens.length === 0">
-      Ingen resultater.
+      {{ 'common.messages.no_results'}}
     </div>
   </div>
   <ik-pager></ik-pager>

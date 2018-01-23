@@ -1,8 +1,11 @@
 <div class="itk-campaign">
   <popup>
-    <itk-screen-list selected-screens="screens" overlay="true"></itk-screen-list>
+    <itk-screen-list selected-screens="screens"
+                     overlay="true"></itk-screen-list>
 
-    <a class="button-link" title="Annullér" ng-click="closeModal()">
-      {{ 'common.action.finish' | translate }}</a>
+    <a class="button-link" title="{{ 'common.action.finish' | translate }}"
+       ng-click="closeModal()">
+      {{ 'common.action.finish' | translate }}
+    </a>
   </popup>
 </div>

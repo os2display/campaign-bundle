@@ -25,13 +25,34 @@
       "expired": "Udløbet"
     }
   },
+  "campaign_modal_add_screen_group": {
+    "fields": {
+      "group": "Gruppenavn",
+      "screens_in_group": "Skærme i gruppen"
+    }
+  },
+  "campaign_overview": {
+    "fields": {
+      "name": "Kampagnenavn",
+      "screens": "Skærme",
+      "status": "Status",
+      "from": "Start",
+      "to": "Slut",
+      "tools": "Værktøjer"
+    },
+    "filter_placeholder": "Filtrér"
+  },
   "common": {
     "action": {
       "finish": "Afslut"
     },
     "error": {
+      "could_not_load_results": "Kunne ikke hente søgeresultater.",
       "forbidden": "Du har ikke adgang til denne side",
       "not_found": "Siden blev ikke fundet"
+    },
+    "messages": {
+      "no_results": "Ingen resultater."
     }
   },
   "menu": {
@@ -44,6 +65,19 @@
     "campaign_load_error": "Kampagnen kunne ikke hentes",
     "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
     "campaign_updated_error": "Kampagnen blev ikke gemt"
+  },
+  "screen_list": {
+    "filter": "Filtrér på:",
+    "filter_placeholder": "Angiv del af titlen for at filtrere listen",
+    "sort": "Sorter på:",
+    "sort_newest": "Nyeste",
+    "sort_oldest": "Ældste",
+    "sort_alphabetic": "A-Å",
+    "fields": {
+      "screen": "Skærm",
+      "description": "Beskrivelse",
+      "in_group": "Er med i gruppe"
+    }
   },
   "type": {
     "channel": "Kanal",

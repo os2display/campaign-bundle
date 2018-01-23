@@ -1,14 +1,14 @@
 /**
  * @file
- * Screen overview directive.
+ * Screen list.
  */
 
 /**
  * Directive to show the Screen overview.
  */
 angular.module('itkCampaignApp').directive('itkScreenList', [
-    'busService',
-    function (busService) {
+    'busService', '$translate',
+    function (busService, $translate) {
         'use strict';
 
         return {
@@ -69,7 +69,7 @@ angular.module('itkCampaignApp').directive('itkScreenList', [
                                 function (reason) {
                                     busService.$emit('log.error', {
                                         'cause': reason,
-                                        'msg': 'Kunne ikke hente søgeresultater.'
+                                        'msg': $translate('common.error.could_not_load_results')
                                     });
                                     $scope.loading = false;
                                 }

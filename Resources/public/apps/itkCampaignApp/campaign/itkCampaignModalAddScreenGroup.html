@@ -24,12 +24,13 @@
                                                             id=""
                                                             data-ng-click="clickAllCheckbox()">
                     </th>
-                    <th scope="col">Gruppenavn</th>
-                    <th scope="col">Skærme i gruppen</th>
+                    <th scope="col">{{ 'campaign_modal_add_screen_group.fields.group' | translate }}</th>
+                    <th scope="col">{{ 'campaign_modal_add_screen_group.fields.screens_in_group' | translate }}</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr data-ng-repeat="group in availableGroups" data-ng-class="{'table-active': groupSelected(group)}">
+                  <tr data-ng-repeat="group in availableGroups"
+                      data-ng-class="{'table-active': groupSelected(group)}">
                     <td class="checkbox"><input type="checkbox" name=""
                                                 id="campaign-{{group.id}}"
                                                 ng-checked="groupSelected(group)"
@@ -39,7 +40,7 @@
                     <td class="screens">
                       <div class="textcrop">
                         <div
-                            ng-repeat="screen in group.screens">{{ screen.title }}{{ !$last ? ',' : ''}}
+                            ng-repeat="screen in group.screens">{{ screen.title }}{{ !$last ? ', ' : ''}}
                         </div>
                       </div>
                     </td>
@@ -53,7 +54,8 @@
       </div>
     </div>
 
-    <a class="button-link" title="Annullér" ng-click="closeModal()">
+    <a class="button-link" title="{{ 'common.action.finish' | translate }}"
+       ng-click="closeModal()">
       {{ 'common.action.finish' | translate }}</a>
   </popup>
 </div>
