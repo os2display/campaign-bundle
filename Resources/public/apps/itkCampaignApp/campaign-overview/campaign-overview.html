@@ -18,7 +18,7 @@
                  data-tooltip="Help">
                 <i class="material-icons">help</i>
               </a>
-              <a data-ng-click="deleteCampaigns()"
+              <a data-ng-click="deleteCampaigns()" data-ng-if="showDelete()"
                  class="tool tool-delete float-right">
                 <i class="material-icons">delete</i>
               </a>
@@ -31,6 +31,7 @@
               <thead class="thead-light">
               <tr>
                 <th scope="col" class=""><input type="checkbox" name="" id=""
+                                                data-ng-model="allCheckbox"
                                                 data-ng-click="clickAllCheckbox()">
                 </th>
                 <th scope="col" class="">
@@ -65,6 +66,7 @@
                 <td class="checkbox">
                   <input type="checkbox" name="" id="campaign-{{campaign.id}}"
                          class="js-campaign-checkbox"
+                         data-ng-click="clickCheckbox()"
                          data-ng-model="selectedCampaigns[campaign.id]">
                 </td>
                 <td class="name"><a

@@ -1,6 +1,7 @@
 <section class="overview--section">
   <div class="overview--filter">
-    <label class="overview--filter-label">{{ 'screen_list.filter' | translate}}</label>
+    <label
+        class="overview--filter-label">{{ 'screen_list.filter' | translate}}</label>
     <form class="overview--form full-width" accept-charset="UTF-8">
       <input placeholder="{{ 'screen_list.filter_placeholder' | translate }}"
              class="overview--filter-field"
@@ -34,7 +35,8 @@
     </div>
   </div>
   <div class="overview--sorting">
-    <label class="overview--sort-label">{{ 'screen_list.sort' | translate }}</label>
+    <label
+        class="overview--sort-label">{{ 'screen_list.sort' | translate }}</label>
     <div class="overview--sort-links">
       <span class="overview--newest"
             data-ng-class="{'is-active': sort.created_at === 'desc'}"
@@ -51,7 +53,8 @@
   <div>
     <div class="spinner overview--spinner" data-ng-show="loading"></div>
     <div class="itk-screen-list--results">
-      <div class="itk-campaign itk-screen-list--results container" data-ng-show="!loading">
+      <div class="itk-campaign itk-screen-list--results container"
+           data-ng-show="!loading">
         <div class="row">
           <div class="col-md-12">
             <div class="listview">
@@ -70,10 +73,13 @@
                   <table class="table table-hover table-responsive">
                     <thead class="thead-light">
                     <tr>
-                      <th scope="col" class="col-md-1"><input type="checkbox"
-                                                              name=""
-                                                              id=""
-                                                              data-ng-click="clickAllCheckbox()">
+                      <th scope="col" class="col-md-1">
+                        <!--
+                        <input type="checkbox"
+                               name=""
+                               id=""
+                               data-ng-click="clickAllCheckbox()">
+                        -->
                       </th>
                       <th scope="col">{{ 'screen_list.fields.screen' | translate }}</th>
                       <th scope="col">{{ 'screen_list.fields.description' | translate }}</th>
@@ -81,11 +87,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr data-ng-repeat="screen in screens" data-ng-class="{'table-active': screenSelected(screen)}">
-                      <td class="checkbox"><input type="checkbox" name=""
-                                                  id="campaign-{{screen.id}}"
-                                                  ng-checked="screenSelected(screen)"
-                                                  ng-click="clickScreen(screen)">
+                    <tr data-ng-repeat="screen in screens"
+                        data-ng-class="{'table-active': screenSelected(screen)}">
+                      <td class="checkbox">
+                        <input type="checkbox" name=""
+                               id="campaign-{{screen.id}}"
+                               ng-checked="screenSelected(screen)"
+                               ng-click="clickScreen(screen)">
                       </td>
                       <td class="name">{{ screen.title }}</td>
                       <td class="description">

@@ -155,7 +155,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
 
             ModalService.showModal({
                 templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.html',
-                controller: 'ItkCampaignModal',
+                controller: 'ItkCampaignModalAddScreenGroup',
                 inputs: {
                     screenGroups: $scope.campaign.screen_groups
                 }

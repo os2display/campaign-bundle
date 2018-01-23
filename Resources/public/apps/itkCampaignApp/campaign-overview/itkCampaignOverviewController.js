@@ -15,6 +15,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
         $scope.search = {
             title: ''
         };
+        $scope.allCheckbox = false;
 
         // Extend Os2Display/AdminBundle: BaseApiController.
         $controller('BaseApiController', {$scope: $scope});
@@ -35,7 +36,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             return;
         }
 
-        function refreshCampaignList() {
+        function refreshCampaignList () {
             $scope.loading = true;
 
             // Load all accessible campaign entities.
@@ -102,7 +103,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
 
             var campaignCheckboxes = angular.element('.js-campaign-checkbox');
 
-            angular.forEach(campaignCheckboxes, function(element){
+            angular.forEach(campaignCheckboxes, function (element) {
                 var id = element.id;
                 var checked = element.checked;
 
@@ -173,14 +174,23 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
         };
 
         /**
+         * Should delete button be shown?
+         */
+        $scope.showDelete = function () {
+            return Object.values($scope.selectedCampaigns).reduce(function (sum, value) {
+                return sum + (value ? 1 : 0);
+            }, 0);
+        };
+
+        /**
          * If less than all checkboxes are selected, select all.
          * Else select none.
          */
-        $scope.clickAllCheckbox = function () {
+        $scope.clickAllCheckbox = function (checkbox) {
             var campaignCheckboxes = angular.element('.js-campaign-checkbox');
             var checkedCampaigns = [];
 
-            angular.forEach(campaignCheckboxes, function(element){
+            angular.forEach(campaignCheckboxes, function (element) {
                 var id = element.id;
                 var checked = element.checked;
 
@@ -200,16 +210,38 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             });
 
             if (checkedCampaigns.length === $scope.campaigns.length) {
-                angular.forEach(campaignCheckboxes, function(element){
+                angular.forEach(campaignCheckboxes, function (element) {
                     element.checked = false;
                 });
+
+                $scope.selectedCampaigns = $scope.campaigns.reduce(function (sum, campaign) {
+                    sum[campaign.id] = false;
+                    return sum;
+                }, {});
+
+                $scope.allCheckbox = false;
             }
             else {
-                angular.forEach(campaignCheckboxes, function(element){
+                angular.forEach(campaignCheckboxes, function (element) {
                     element.checked = true;
                 });
-            }
 
+                $scope.selectedCampaigns = $scope.campaigns.reduce(function (sum, campaign) {
+                    sum[campaign.id] = true;
+                    return sum;
+                }, {});
+
+                $scope.allCheckbox = true;
+            }
+        };
+
+        /**
+         * Check if allCheckbox should be enabled.
+         */
+        $scope.clickCheckbox = function() {
+            $scope.allCheckbox = Object.values($scope.selectedCampaigns).reduce(function (sum, value) {
+                return sum + (value ? 1 : 0);
+            }, 0) === $scope.campaigns.length;
         };
     }
 ]);
