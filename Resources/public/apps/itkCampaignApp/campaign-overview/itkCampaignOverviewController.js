@@ -70,8 +70,20 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             $scope.loading = false;
         });
 
+        /**
+         * Display help modal.
+         */
         $scope.help = function () {
-            // Display help modal.
+            busService.$emit('bodyService.addClass', 'is-locked');
+
+            ModalService.showModal({
+                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/modalHelp.html',
+                controller: 'ItkCampaignModalBase'
+            }).then(function (modal) {
+                modal.close.then(function () {
+                    busService.$emit('bodyService.removeClass', 'is-locked');
+                });
+            });
         };
 
         $scope.deleteCampaigns = function () {
