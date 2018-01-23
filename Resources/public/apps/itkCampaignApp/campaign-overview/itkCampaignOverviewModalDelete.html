@@ -1,0 +1,18 @@
+<div class="itk-campaign">
+  <popup>
+    {{ 'campaign_overview.comfirm_delete' | translate }}
+
+    <div data-ng-repeat="campaign in campaigns">
+      {{campaign.title}}
+    </div>
+
+    <a class="button-link" title="{{ 'common.action.confirm' | translate }}"
+       ng-click="confirm()">
+      {{ 'common.action.confirm' | translate }}
+    </a>
+    <a class="button-link" title="{{ 'common.action.cancel' | translate }}"
+       ng-click="closeModal()">
+      {{ 'common.action.cancel' | translate }}
+    </a>
+  </popup>
+</div>

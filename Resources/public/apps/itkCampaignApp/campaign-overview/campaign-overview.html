@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="search" style="margin-bottom: 30px;">
-        <input type="text" class="input" placeholder="{{ 'campaign_overview.filter_placeholder' | translate }}"
+        <input type="text" class="input"
+               placeholder="{{ 'campaign_overview.filter_placeholder' | translate }}"
                data-ng-model="search.title"/>
       </div>
     </div>
@@ -35,20 +36,36 @@
                 <th scope="col" class="">
                   <a data-ng-click="flipSortOrder()">
                     {{ 'campaign_overview.fields.name' | translate }}
-                    <i class="material-icons">arrow_drop_down</i>
+                    <i class="material-icons"
+                       data-ng-if="sortOrder">arrow_drop_down</i>
+                    <i class="material-icons"
+                       data-ng-if="!sortOrder">arrow_drop_up</i>
                   </a>
                 </th>
-                <th scope="col" class="w-20"><a href="">{{ 'campaign_overview.fields.screens' | translate }}</a></th>
-                <th scope="col" class="w-5"><a href="">{{ 'campaign_overview.fields.status' | translate }}</a></th>
-                <th scope="col" class="w-15"><a href="">{{ 'campaign_overview.fields.from' | translate }}</a></th>
-                <th scope="col" class="w-15"><a href="">{{ 'campaign_overview.fields.to' | translate }}</a></th>
-                <th scope="col" class="w-10"><a href="">{{ 'campaign_overview.fields.tools' | translate }}</a></th>
+                <th scope="col" class="w-20"><a
+                    href="">{{ 'campaign_overview.fields.screens' | translate }}</a>
+                </th>
+                <th scope="col" class="w-5"><a
+                    href="">{{ 'campaign_overview.fields.status' | translate }}</a>
+                </th>
+                <th scope="col" class="w-15"><a
+                    href="">{{ 'campaign_overview.fields.from' | translate }}</a>
+                </th>
+                <th scope="col" class="w-15"><a
+                    href="">{{ 'campaign_overview.fields.to' | translate }}</a>
+                </th>
+                <th scope="col" class="w-10"><a
+                    href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+                </th>
               </tr>
               </thead>
               <tbody data-ng-if="!loading">
-              <tr data-ng-repeat="campaign in campaigns | filter:search">
+              <tr data-ng-repeat="campaign in campaigns | filter:search | orderBy:(sortOrder ? '' : '-') + 'title'"
+                  data-ng-class="{'table-active': selectedCampaigns[campaign.id]}">
                 <td class="checkbox">
-                  <input type="checkbox" name="" id="campaign-{{campaign.id}}">
+                  <input type="checkbox" name="" id="campaign-{{campaign.id}}"
+                         class="js-campaign-checkbox"
+                         data-ng-model="selectedCampaigns[campaign.id]">
                 </td>
                 <td class="name"><a
                     data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</a>
@@ -88,5 +105,3 @@
     </div>
   </div>
 </div>
-
-

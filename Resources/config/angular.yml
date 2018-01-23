@@ -12,6 +12,7 @@ apps:
       - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignModalBase.js
       - bundles/itkcampaign/apps/itkCampaignApp/directives/contenteditable.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewController.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewModalDelete.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignController.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.js

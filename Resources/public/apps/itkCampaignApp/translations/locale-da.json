@@ -41,10 +41,13 @@
       "to": "Slut",
       "tools": "Værktøjer"
     },
-    "filter_placeholder": "Filtrér"
+    "filter_placeholder": "Filtrér",
+    "confirm_delete": "Bekræft at du vil slette følgende kampagner"
   },
   "common": {
     "action": {
+      "cancel": "Annullér",
+      "confirm": "Bekræft",
       "finish": "Afslut"
     },
     "error": {
@@ -65,7 +68,9 @@
     "campaign_created_error": "Kampagnen blev ikke gemt",
     "campaign_load_error": "Kampagnen kunne ikke hentes",
     "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
-    "campaign_updated_error": "Kampagnen blev ikke gemt"
+    "campaign_updated_error": "Kampagnen blev ikke gemt",
+    "campaign_delete_success": "Kampagnerne blev slettet",
+    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke"
   },
   "screen_list": {
     "filter": "Filtrér på:",
