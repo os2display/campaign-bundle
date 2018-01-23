@@ -1,14 +1,11 @@
 <div class="itk-campaign container">
-    <!-- TODO: Implement existing search with filters -->
-    <!--
     <div class="row">
         <div class="col-md-12">
             <div class="search" style="margin-bottom: 30px;">
-                <input type="text" class="input" placeholder="Søg" />
+                <input type="text" class="input" placeholder="Filtrer" data-ng-model="search.title"/>
             </div>
         </div>
     </div>
-    -->
     <div class="row">
         <div class="col-md-12">
             <div class="listview">
@@ -18,7 +15,7 @@
                             <a data-ng-click="help()" class="tool tool-help" data-tooltip="Help">
                                 <i class="material-icons">help</i>
                             </a>
-                            <a data-ng-click="delete()" class="tool tool-delete float-right">
+                            <a data-ng-click="deleteCampaigns()" class="tool tool-delete float-right">
                                 <i class="material-icons">delete</i>
                             </a>
                         </div>
@@ -39,9 +36,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-ng-repeat="campaign in campaigns">
+                                <tr data-ng-repeat="campaign in campaigns | filter:search">
                                     <td class="checkbox"><input type="checkbox" name="" id="campaign-{{campaign.id}}"></td>
-                                    <td class="name"><a data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</td>
+                                    <td class="name"><a data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</a></td>
                                     <td class="screens">
                                         <div class="textcrop">
                                             @TODO

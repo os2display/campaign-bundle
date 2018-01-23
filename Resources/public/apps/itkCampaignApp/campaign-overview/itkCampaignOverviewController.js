@@ -28,6 +28,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             return;
         }
 
+        $scope.search = {
+            title: ''
+        };
+
         $scope.getEntities('campaign').then(
             function (campaigns) {
                 $scope.campaigns = campaigns;
@@ -55,6 +59,34 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             function (err) {
                 console.error(err);
             }
-        )
+        );
+
+        $scope.help = function () {
+            // Display help modal.
+        };
+
+        $scope.deleteCampaigns = function () {
+            // Get selected campaigns.
+
+            // Prompt user for confirm.
+
+            // Delete selected.
+
+            // Refresh list.
+        };
+
+        $scope.flipSortOrder = function () {
+            // Flip sort order.
+
+            // Make arrow go up/down.
+        };
+
+        $scope.clickAllCheckbox = function () {
+            // Find all checkboxes.
+
+            // If at least one is filled, deselect all.
+
+            // Else select all.
+        };
     }
 ]);

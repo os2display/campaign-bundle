@@ -1,8 +1,8 @@
 <div class="itk-campaign container" data-ng-if="campaign !== null">
   <div class="row campaign-name">
     <div class="col-md-12">
-      <label for="campaign-name" class="input-title">{{ 'campaign.fields.name' |
-        translate}}</label>
+      <label for="campaign-name"
+             class="input-title">{{ 'campaign.fields.name' | translate}}</label>
       <input type="text" name="campaign-name" id="campaign-name"
              ng-model="campaign.title" class="input-type-text col-md-7">
       <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
@@ -10,19 +10,18 @@
   </div>
   <div class="row campaign-description">
     <div class="col-md-12">
-      <label for="campaign-description" class="input-title">{{
-        'campaign.fields.description' | translate}}</label>
+      <label for="campaign-description"
+             class="input-title">{{ 'campaign.fields.description' | translate}}</label>
       <div id="campaign-description" class="input-type-textarea col-md-7"
            contenteditable data-ng-model="campaign.description">
       </div>
-      <p class="input-help">{{ 'campaign.fields.description_help' |
-        translate}}</p>
+      <p class="input-help">{{ 'campaign.fields.description_help' | translate}}</p>
     </div>
   </div>
   <div class="row campaign-schedule">
     <div class="col-md-12">
-      <label class="input-title">{{ 'campaign.fields.schedule' |
-        translate}}</label>
+      <label
+          class="input-title">{{ 'campaign.fields.schedule' | translate}}</label>
       <div class="row">
         <div class="col-md-4">
           <div class="input-sub-title">
@@ -33,8 +32,7 @@
                  data-ng-model="campaign.schedule_from" datetime-picker=""
                  config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-          <p class="input-help">{{ 'campaign.fields.schedule_from_help' |
-            translate }}</p>
+          <p class="input-help">{{ 'campaign.fields.schedule_from_help' | translate }}</p>
         </div>
         <div class="col-md-1 d-none d-md-block">
                     <span class="align-middle">
@@ -48,10 +46,9 @@
 
           <input type="text"
                  data-ng-model="campaign.schedule_to" datetime-picker=""
-                 config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+                 data-config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
-          <p class="input-help">{{ 'campaign.fields.schedule_to_help' |
-            translate }}</p>
+          <p class="input-help">{{ 'campaign.fields.schedule_to_help' | translate }}</p>
         </div>
       </div>
     </div>
@@ -76,8 +73,8 @@
                src="bundles/os2displayadmin/images/icons/cancel-icon.png">
           <ik-channel class="overview--channel-container"
                       ik-channel="channel"
-                      ik-width="{{channel.orientation == 'portrait' ? 150 : 300 }}"
-                      ik-single-slide="true"></ik-channel>
+                      ik-width="300"
+                      ik-single-slide="false"></ik-channel>
 
         </div>
       </div>
@@ -95,7 +92,7 @@
         <i class="material-icons">add </i>
         {{ 'type.screen' | translate }}
       </button>
-      <button class="input-btn-add">
+      <button class="input-btn-add" data-ng-click="addScreenGroups()">
         <i class="material-icons">add </i>
         {{ 'type.screen_group' | translate }}
       </button>
@@ -106,7 +103,16 @@
                data-ng-click="removeScreen(screen)"
                src="bundles/os2displayadmin/images/icons/cancel-icon.png">
           <ik-screen class="overview--channel-container"
-                      ik-screen="channel"></ik-screen>
+                     ik-screen="screen"></ik-screen>
+        </div>
+      </div>
+      <div id="campaign-screen-groups" class="screens">
+        <div class="overview--screen"
+             data-ng-repeat="screenGroup in campaign.screenGroups">
+          <img class="overview--channel-remove"
+               data-ng-click="removeScreenGroup(screenGroup)"
+               src="bundles/os2displayadmin/images/icons/cancel-icon.png">
+          {{ screenGroup.title }}
         </div>
       </div>
     </div>

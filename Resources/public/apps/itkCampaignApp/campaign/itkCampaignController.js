@@ -56,6 +56,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 schedule_to: now + 24 * 60 * 60,
                 channels: [],
                 screens: [],
+                screenGroups: [],
                 groups: []
             };
         }
@@ -99,6 +100,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
          * Display modal to add screens.
          */
         $scope.addScreens = function () {
+            if (!$scope.campaign.screens) {
+                $scope.campaign.screens = [];
+            }
+
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
@@ -125,6 +130,42 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 $scope.campaign.screens.splice(screen, 1);
             }
         };
+
+        /**
+         * Display modal to add screenGroups.
+         */
+        $scope.addScreenGroups = function () {
+            if (!$scope.campaign.screenGroups) {
+                $scope.campaign.screenGroups = [];
+            }
+
+            busService.$emit('bodyService.addClass', 'is-locked');
+
+            ModalService.showModal({
+                templateUrl: "bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.html",
+                controller: "ItkCampaignModalAddScreenGroup",
+                inputs: {
+                    screenGroups: $scope.campaign.screenGroups
+                }
+            }).then(function (modal) {
+                modal.close.then(function () {
+                    busService.$emit('bodyService.removeClass', 'is-locked');
+                });
+            });
+        };
+
+        /**
+         * Remove screenGroup from campaign.
+         * @param screenGroup
+         */
+        $scope.removeScreenGroup = function (screenGroup) {
+            var index = $scope.campaign.screenGroups.indexOf(screenGroup);
+
+            if (index !== -1) {
+                $scope.campaign.screenGroups.splice(screenGroup, 1);
+            }
+        };
+
 
         function convertCampaignDatesToTimestamps(campaign) {
             campaign.schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);

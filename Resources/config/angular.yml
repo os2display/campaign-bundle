@@ -14,6 +14,8 @@ apps:
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignController.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.js
       - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.js
+      - bundles/itkcampaign/apps/itkCampaignApp/directives/screenList/itkScreenList.js
     dependencies:
       - ngRoute
       - ngAnimate
