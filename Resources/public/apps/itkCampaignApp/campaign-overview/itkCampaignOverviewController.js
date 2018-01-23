@@ -9,6 +9,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
     function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService) {
         'use strict';
 
+        $scope.loading = true;
+
         // Extend Os2Display/AdminBundle: BaseApiController.
         $controller('BaseApiController', {$scope: $scope});
 
@@ -39,27 +41,34 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
                 var now = parseInt(new Date() / 1000);
 
                 for (var key in $scope.campaigns) {
-                    var campaign = $scope.campaigns[key];
-                    var schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);
-                    var schedule_to = parseInt(new Date(campaign.schedule_to) / 1000);
+                    if ($scope.campaigns.hasOwnProperty(key)) {
+                        var campaign = $scope.campaigns[key];
+                        var schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);
+                        var schedule_to = parseInt(new Date(campaign.schedule_to) / 1000);
 
-                    if (schedule_from <= now && schedule_to > now) {
-                        campaign.status = 'active';
-                    }
-                    else {
-                        if (schedule_to < now) {
-                            campaign.status = 'expired';
+                        if (schedule_from <= now && schedule_to > now) {
+                            campaign.status = 'active';
                         }
                         else {
-                            campaign.status = 'future';
+                            if (schedule_to < now) {
+                                campaign.status = 'expired';
+                            }
+                            else {
+                                campaign.status = 'future';
+                            }
                         }
                     }
                 }
             },
             function (err) {
-                console.error(err);
+                busService.$emit('log.error', {
+                    cause: err.code,
+                    msg: $translate('common.error.could_not_load_results')
+                });
             }
-        );
+        ).then(function () {
+            $scope.loading = false;
+        });
 
         $scope.help = function () {
             // Display help modal.

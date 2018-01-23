@@ -35,6 +35,7 @@
     "fields": {
       "name": "Kampagnenavn",
       "screens": "Skærme",
+      "screens_and_screen_groups": "Skærme og skærmgrupper",
       "status": "Status",
       "from": "Start",
       "to": "Slut",

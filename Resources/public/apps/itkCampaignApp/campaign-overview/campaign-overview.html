@@ -45,7 +45,7 @@
                 <th scope="col" class="w-10"><a href="">{{ 'campaign_overview.fields.tools' | translate }}</a></th>
               </tr>
               </thead>
-              <tbody>
+              <tbody data-ng-if="!loading">
               <tr data-ng-repeat="campaign in campaigns | filter:search">
                 <td class="checkbox">
                   <input type="checkbox" name="" id="campaign-{{campaign.id}}">
@@ -58,10 +58,15 @@
                     <span ng-repeat="screen in campaign.screens">
                       {{ screen.title }}{{ !$last ? ', ' : ''}}
                     </span>
+                    <span ng-repeat="group in campaign.screen_groups">
+                      {{ group.title }}{{ !$last ? ', ' : ''}}
+                    </span>
                   </div>
+                  <!-- @TODO:
                   <div class="showmore">
                     <a href=""><i class="material-icons">more_vert</i></a>
                   </div>
+                  -->
                 </td>
                 <td class="status">
                   <div class="badge badge-secondary"><span
@@ -76,6 +81,7 @@
               </tr>
               </tbody>
             </table>
+            <div class="spinner overview--spinner" data-ng-show="loading"></div>
           </div>
         </div>
       </div>
