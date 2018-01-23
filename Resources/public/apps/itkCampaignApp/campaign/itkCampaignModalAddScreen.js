@@ -12,9 +12,6 @@ angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreen', [
 
         // Toggle select of screen.
         function toggleScreen(screen) {
-            console.log($scope.screens);
-            console.log(screen);
-
             $timeout(function () {
                 var index = null;
 
@@ -28,7 +25,6 @@ angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreen', [
                     $scope.screens.splice(index, 1);
                 }
                 else {
-                    console.log("push");
                     $scope.screens.push(screen);
                 }
             });

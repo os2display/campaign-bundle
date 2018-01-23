@@ -26,6 +26,9 @@
     }
   },
   "common": {
+    "action": {
+      "finish": "Afslut"
+    },
     "error": {
       "forbidden": "Du har ikke adgang til denne side",
       "not_found": "Siden blev ikke fundet"
@@ -34,6 +37,13 @@
   "menu": {
     "campaign": "Kampagne",
     "campaign_create": "Opret kampagne"
+  },
+  "messages": {
+    "campaign_created": "Kampagnen blev oprettet",
+    "campaign_created_error": "Kampagnen blev ikke gemt",
+    "campaign_load_error": "Kampagnen kunne ikke hentes",
+    "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
+    "campaign_updated_error": "Kampagnen blev ikke gemt"
   },
   "type": {
     "channel": "Kanal",
