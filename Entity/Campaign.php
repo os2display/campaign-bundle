@@ -7,6 +7,7 @@
 namespace Itk\CampaignBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -93,6 +94,14 @@ class Campaign extends ApiEntity implements GroupableEntity
     private $screens;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @Groups({"api", "api-bulk"})
+     * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Group")
+     * @ORM\JoinTable(name="ik_campaign_group")
+     */
+    private $screenGroups;
+
+    /**
      * Get id
      *
      * @return integer
@@ -166,45 +175,67 @@ class Campaign extends ApiEntity implements GroupableEntity
         return $this;
     }
 
-  /**
-   * @return mixed
-   */
-  public function getDescription() {
-    return $this->description;
-  }
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-  /**
-   * @param mixed $description
-   */
-  public function setDescription($description) {
-    $this->description = $description;
-  }
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 
-  /**
-   * @return \Doctrine\Common\Collections\ArrayCollection
-   */
-  public function getChannels() {
-    return $this->channels;
-  }
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChannels()
+    {
+        return $this->channels;
+    }
 
-  /**
-   * @param \Doctrine\Common\Collections\ArrayCollection $channels
-   */
-  public function setChannels($channels) {
-    $this->channels = $channels;
-  }
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $channels
+     */
+    public function setChannels($channels)
+    {
+        $this->channels = $channels;
+    }
 
-  /**
-   * @return \Doctrine\Common\Collections\ArrayCollection
-   */
-  public function getScreens() {
-    return $this->screens;
-  }
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getScreens()
+    {
+        return $this->screens;
+    }
 
-  /**
-   * @param \Doctrine\Common\Collections\ArrayCollection $screens
-   */
-  public function setScreens($screens) {
-    $this->screens = $screens;
-  }
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $screens
+     */
+    public function setScreens($screens)
+    {
+        $this->screens = $screens;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getScreenGroups()
+    {
+        return $this->screenGroups;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $screenGroups
+     */
+    public function setScreenGroups($screenGroups)
+    {
+        $this->screenGroups = $screenGroups;
+    }
 }

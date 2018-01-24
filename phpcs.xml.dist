@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="dokk1">
+  <description>PHP CodeSniffer configuration for OS2Display</description>
+
+  <file>Command/</file>
+  <file>Controller/</file>
+  <file>DependencyInjection/</file>
+  <file>Entity/</file>
+  <file>Features/</file>
+  <file>Resources/</file>
+  <file>Security/</file>
+  <file>Service/</file>
+
+  <exclude-pattern>*/app/cache/*</exclude-pattern>
+  <exclude-pattern>*/app/AppKernel.php</exclude-pattern>
+  <exclude-pattern>*/assets/build/*</exclude-pattern>
+
+  <!-- Show progress -->
+  <arg value="p"/>
+	<arg name="report" value="summary"/>
+
+  <rule ref="PSR2"/>
+</ruleset>

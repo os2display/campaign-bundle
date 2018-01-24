@@ -41,8 +41,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                     // @TODO: Report error.
                 }
             );
-        }
-        else {
+        } else {
             $scope.campaign = {
                 title: '',
                 description: '',

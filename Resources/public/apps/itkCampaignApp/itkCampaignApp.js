@@ -45,7 +45,8 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
         'use strict';
 
         // Register listener for requests for Main Menu items
-        busService.$on('menuApp.requestMainMenuItems', function requestMainMenuItems(event, args) {
+        busService.$on('menuApp.requestMainMenuItems', function requestMainMenuItems(event, args)
+        {
             if (userService.hasRole('ROLE_ADMIN')) {
                 busService.$emit('menuApp.returnMainMenuItems', [
                     {
