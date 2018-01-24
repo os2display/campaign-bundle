@@ -220,6 +220,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 ).then(
                     function() {
                         $scope.loading = false;
+                        window.scrollTo(0, 0);
                     }
                 );
             }
@@ -241,6 +242,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                 ).then(
                     function() {
                         $scope.loading = false;
+                        window.scrollTo(0, 0);
                     }
                 );
             }

@@ -18,9 +18,9 @@
                  data-tooltip="Help">
                 <i class="material-icons">help</i>
               </a>
-              <a data-ng-click="deleteCampaigns()" data-ng-if="showDelete()"
+              <a data-ng-click="deleteCampaigns()"
                  class="tool tool-delete float-right">
-                <i class="material-icons">delete</i>
+                <i class="material-icons" data-ng-class="{'inactive': !showDelete()}">delete</i>
               </a>
             </div>
           </div>

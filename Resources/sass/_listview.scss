@@ -15,6 +15,10 @@
                 line-height: 60px;
                 color: $black;
                 @include transition-in(color);
+
+                &.inactive {
+                    color: $gray-500;
+                }
             }
             &:hover {
                 background: $gray-300;
@@ -29,6 +33,8 @@
             }
             &-delete {
                 border-left: 1px solid $gray-300;
+
+
             }
         }
     }
@@ -104,9 +110,11 @@
                                     &.active {
                                         background-color: $green;
                                     }
+                                    // @TODO: Pick color.
                                     &.future {
                                         background-color: $blue;
                                     }
+                                    // @TODO: Pick color.
                                     &.expired {
                                         background-color: $red;
                                     }

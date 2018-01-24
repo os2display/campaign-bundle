@@ -99,6 +99,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
          * Delete selected campaigns.
          */
         $scope.deleteCampaigns = function () {
+            if (!$scope.showDelete()) {
+                return;
+            }
+
             var selectedCampaigns = [];
 
             var campaignCheckboxes = angular.element('.js-campaign-checkbox');
