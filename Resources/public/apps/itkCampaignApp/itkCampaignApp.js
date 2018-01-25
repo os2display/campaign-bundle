@@ -88,7 +88,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 
                 if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
                     var message = apiData.active_campaigns.reduce(function (sum, campaign) {
-                        return sum + '<p>' + campaign.title + ': ' + campaign.schedule_from + ' - ' + campaign.schedule_to + '</p>';
+                        return sum + '<p>' + $translate.instant('messages.active_campaign_short', { title: campaign.title}) + ' ' + $filter('date')(campaign.schedule_to, 'medium') + ' </p>';
                     }, '');
 
                     var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';
