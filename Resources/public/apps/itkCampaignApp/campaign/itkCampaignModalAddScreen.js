@@ -15,23 +15,23 @@ angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreen', [
             $timeout(function () {
                 var index = null;
 
-                screens.forEach(function (slideScreen, screenIndex) {
+                $scope.screens.forEach(function (slideScreen, screenIndex) {
                     if (screen.id === slideScreen.id) {
                         index = screenIndex;
                     }
                 });
 
                 if (index !== null) {
-                    screens.splice(index, 1);
+                    $scope.screens.splice(index, 1);
                 }
                 else {
-                    screens.push(screen);
+                    $scope.screens.push(screen);
                 }
             });
         }
 
         // Register event listener for clickSlide.
-        $scope.$on('screenOverview.clickScreen', function (event, screen) {
+        $scope.$on('itkScreenList.clickScreen', function (event, screen) {
             toggleScreen(screen);
         });
 

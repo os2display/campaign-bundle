@@ -1,0 +1,16 @@
+<popup>
+  {{ 'campaign_overview.confirm_delete' | translate }}
+
+  <div data-ng-repeat="campaign in campaigns">
+    <strong>{{campaign.title}}</strong>
+  </div>
+
+  <a class="button-link" title="{{ 'common.action.confirm' | translate }}"
+     ng-click="confirm()">
+    {{ 'common.action.confirm' | translate }}
+  </a>
+  <a class="button-link" title="{{ 'common.action.cancel' | translate }}"
+     ng-click="closeModal()">
+    {{ 'common.action.cancel' | translate }}
+  </a>
+</popup>

@@ -2,6 +2,8 @@
 @import "_custom-bootstrap";
 @import "_listview";
 @import "_popup";
+@import "_screen-list";
+@import "_itk-campaign-info";
 
 .itk-campaign {
   &.container {
@@ -93,5 +95,4 @@
       margin-bottom: 1rem;
     }
   }
-
 }

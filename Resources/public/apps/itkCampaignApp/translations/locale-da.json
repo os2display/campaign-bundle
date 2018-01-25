@@ -18,17 +18,75 @@
       "channels_help": "Vælg kanalerne der skal vises i kampagnen",
       "screens": "Skærme",
       "screens_help": "Vælg skærme eller grupper af skærme der skal vises i kampagnen"
+    },
+    "status": {
+      "active": "Aktiv",
+      "future": "Fremtidig",
+      "expired": "Udløbet"
     }
   },
+  "campaign_modal_add_screen_group": {
+    "fields": {
+      "group": "Gruppenavn",
+      "screens_in_group": "Skærme i gruppen"
+    }
+  },
+  "campaign_overview": {
+    "fields": {
+      "name": "Kampagnenavn",
+      "screens": "Skærme",
+      "screens_and_screen_groups": "Skærme og skærmgrupper",
+      "status": "Status",
+      "from": "Start",
+      "to": "Slut",
+      "tools": "Værktøjer"
+    },
+    "filter_placeholder": "Filtrér",
+    "confirm_delete": "Bekræft at du vil slette følgende kampagner:"
+  },
   "common": {
+    "action": {
+      "cancel": "Annullér",
+      "confirm": "Bekræft",
+      "finish": "Afslut"
+    },
     "error": {
+      "could_not_load_results": "Kunne ikke hente søgeresultater.",
       "forbidden": "Du har ikke adgang til denne side",
       "not_found": "Siden blev ikke fundet"
+    },
+    "messages": {
+      "no_results": "Ingen resultater."
     }
   },
   "menu": {
     "campaign": "Kampagne",
     "campaign_create": "Opret kampagne"
+  },
+  "messages": {
+    "campaign_created": "Kampagnen blev oprettet",
+    "campaign_created_error": "Kampagnen blev ikke gemt",
+    "campaign_load_error": "Kampagnen kunne ikke hentes",
+    "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
+    "campaign_updated_error": "Kampagnen blev ikke gemt",
+    "campaign_delete_success": "Kampagnerne blev slettet",
+    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke",
+    "active_campaign": "Aktiv kampagne slutter",
+    "active_campaign_see": "Kampagne: ",
+    "active_campaign_short": "Aktiv kampagne '{{title}}' slutter"
+  },
+  "screen_list": {
+    "filter": "Filtrér på:",
+    "filter_placeholder": "Angiv del af titlen for at filtrere listen",
+    "sort": "Sorter på:",
+    "sort_newest": "Nyeste",
+    "sort_oldest": "Ældste",
+    "sort_alphabetic": "A-Å",
+    "fields": {
+      "screen": "Skærm",
+      "description": "Beskrivelse",
+      "in_group": "Er med i gruppe"
+    }
   },
   "type": {
     "channel": "Kanal",

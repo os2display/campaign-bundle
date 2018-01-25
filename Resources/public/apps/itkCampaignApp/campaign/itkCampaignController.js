@@ -4,9 +4,11 @@
  */
 
 angular.module('itkCampaignApp').controller('ItkCampaignController', [
-    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', 'userService',
-    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService) {
+    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter',
+    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter) {
         'use strict';
+
+        $scope.loading = true;
 
         // Extend Os2Display/AdminBundle: BaseApiController.
         $controller('BaseApiController', {$scope: $scope});
@@ -15,8 +17,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
         var $translate = $filter('translate');
 
         // Check role.
-        // @TODO: Replace with new CAMPAIGN role.
-        if (!$scope.requireRole('ROLE_ADMIN')) {
+        if (!$scope.requireRole('ROLE_CAMPAIGN_ADMIN')) {
             busService.$emit('log.error', {
                 timeout: 5000,
                 cause: 403,
@@ -33,35 +34,57 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
 
         if (id) {
             // Load the entity else create a new.
-            $scope.getEntity('campaign', id).then(
+            $scope.getEntity('campaign', {'id': id}).then(
                 function (campaign) {
-                    $scope.campaign = campaign;
+                    $scope.campaign = convertCampaignDatesToTimestamps(campaign);
                 },
                 function (err) {
-                    // @TODO: Report error.
+                    $location.path('/#/campaign');
+                    busService.$emit('log.error', {
+                        cause: err.code,
+                        msg: $translate('messages.campaign_load_error')
+                    });
+                }
+            ).then(
+                function () {
+                    $scope.loading = false;
                 }
             );
-        } else {
+        }
+        else {
+            var now = new Date();
+            now.setMilliseconds(0);
+            now.setSeconds(0);
+            now.setMinutes(0);
+            now = parseInt(now / 1000);
+
             $scope.campaign = {
                 title: '',
                 description: '',
-                schedule_from: null,
-                schedule_to: null,
+                schedule_from: now,
+                schedule_to: now + 24 * 60 * 60,
                 channels: [],
                 screens: [],
+                screen_groups: [],
                 groups: []
             };
+
+            $scope.loading = false;
         }
 
         /**
          * Display modal to add channels.
          */
         $scope.addChannels = function () {
+            if (!$scope.campaign.channels) {
+                $scope.campaign.channels = [];
+            }
+
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: "bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.html",
-                controller: "ItkCampaignModalAddChannel",
+                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.html',
+                controller: 'ItkCampaignModalAddChannel',
                 inputs: {
                     channels: $scope.campaign.channels
                 }
@@ -72,6 +95,10 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             });
         };
 
+        /**
+         * Remove channel from campaign.
+         * @param channel
+         */
         $scope.removeChannel = function (channel) {
             var index = $scope.campaign.channels.indexOf(channel);
 
@@ -84,11 +111,15 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
          * Display modal to add screens.
          */
         $scope.addScreens = function () {
+            if (!$scope.campaign.screens) {
+                $scope.campaign.screens = [];
+            }
+
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: "bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.html",
-                controller: "ItkCampaignModalAddScreen",
+                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.html',
+                controller: 'ItkCampaignModalAddScreen',
                 inputs: {
                     screens: $scope.campaign.screens
                 }
@@ -97,6 +128,123 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                     busService.$emit('bodyService.removeClass', 'is-locked');
                 });
             });
+        };
+
+        /**
+         * Remove screen from campaign.
+         * @param screen
+         */
+        $scope.removeScreen = function (screen) {
+            var index = $scope.campaign.screens.indexOf(screen);
+
+            if (index !== -1) {
+                $scope.campaign.screens.splice(screen, 1);
+            }
+        };
+
+        /**
+         * Display modal to add screenGroups.
+         */
+        $scope.addScreenGroups = function () {
+            if (!$scope.campaign.screen_groups) {
+                $scope.campaign.screen_groups = [];
+            }
+
+            busService.$emit('bodyService.addClass', 'is-locked');
+
+            ModalService.showModal({
+                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.html',
+                controller: 'ItkCampaignModalAddScreenGroup',
+                inputs: {
+                    screenGroups: $scope.campaign.screen_groups
+                }
+            }).then(function (modal) {
+                modal.close.then(function () {
+                    busService.$emit('bodyService.removeClass', 'is-locked');
+                });
+            });
+        };
+
+        /**
+         * Remove screenGroup from campaign.
+         * @param screenGroup
+         */
+        $scope.removeScreenGroup = function (screenGroup) {
+            var index = $scope.campaign.screen_groups.indexOf(screenGroup);
+
+            if (index !== -1) {
+                $scope.campaign.screen_groups.splice(screenGroup, 1);
+            }
+        };
+
+        function convertCampaignDatesToTimestamps (campaign) {
+            campaign.schedule_from = parseInt(new Date(campaign.schedule_from) / 1000);
+            campaign.schedule_to = parseInt(new Date(campaign.schedule_to) / 1000);
+
+            return campaign;
+        }
+
+        function convertCampaignDatesToUTC (campaign) {
+            campaign.schedule_from = new Date(campaign.schedule_from * 1000).toUTCString();
+            campaign.schedule_to = new Date(campaign.schedule_to * 1000).toUTCString();
+
+            return campaign;
+        }
+
+        /**
+         * Save the campaign.
+         */
+        $scope.save = function () {
+            var campaign = angular.copy($scope.campaign);
+
+            campaign = convertCampaignDatesToUTC(campaign);
+
+            $scope.loading = true;
+
+            if ($scope.campaign.id === undefined) {
+                $scope.createEntity('campaign', campaign).then(
+                    function () {
+                        busService.$emit('log.info', {
+                            cause: 200,
+                            timeout: 3000,
+                            msg: $translate('messages.campaign_created')
+                        });
+                    },
+                    function (err) {
+                        busService.$emit('log.error', {
+                            cause: err.code,
+                            msg: $translate('messages.campaign_created_error')
+                        });
+                    }
+                ).then(
+                    function() {
+                        $scope.loading = false;
+                        window.scrollTo(0, 0);
+                    }
+                );
+            }
+            else {
+                $scope.updateEntity('campaign', campaign).then(
+                    function () {
+                        busService.$emit('log.info', {
+                            cause: 200,
+                            timeout: 3000,
+                            msg: $translate('messages.campaign_updated')
+                        });
+                    },
+                    function (err) {
+                        busService.$emit('log.error', {
+                            cause: err.code,
+                            msg: $translate('messages.campaign_updated_error')
+                        });
+                    }
+                ).then(
+                    function() {
+                        $scope.loading = false;
+                        window.scrollTo(0, 0);
+                    }
+                );
+            }
         };
     }
 ]);

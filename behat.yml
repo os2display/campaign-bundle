@@ -10,11 +10,12 @@ default:
       paths: [src/Itk/CampaignBundle/Features/campaign/]
       contexts:
         - Os2Display\CoreBundle\Features\Context\FeatureContext: ["@doctrine"]
+        - Itk\CampaignBundle\Features\Context\CampaignContext: ["@doctrine"]
         - Behat\MinkExtension\Context\MinkContext
         - behatch:context:rest
         - behatch:context:json
       filters:
-        tags: @campaign
+        tags: '@campaign'
     api_features:
       mink_session: default
       type: symfony_bundle
@@ -27,7 +28,7 @@ default:
         - behatch:context:rest
         - behatch:context:json
       filters:
-        tags: @api
+        tags: '@api'
 
   extensions:
     Behat\Symfony2Extension:
