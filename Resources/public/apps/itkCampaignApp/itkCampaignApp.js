@@ -31,7 +31,7 @@ angular.module('itkCampaignApp').config([
                 controller: 'ItkCampaignController',
                 templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
             })
-            .when('/campaign/{id}', {
+            .when('/campaign/:id', {
                 controller: 'ItkCampaignController',
                 templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
             });
@@ -41,8 +41,8 @@ angular.module('itkCampaignApp').config([
 // Setup the app.
 // Register menu items.
 angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
-    'busService', 'userService', '$translate',
-    function (busService, userService, $translate) {
+    'busService', 'userService', '$translate', '$filter',
+    function (busService, userService, $translate, $filter) {
         'use strict';
 
         // Register listener for requests for Main Menu items
@@ -84,10 +84,10 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 
         busService.$on('itkHeader.list.element.requestItems', function (event, data) {
             if (data.type === 'screen') {
-                var returnEvent = 'itkCampaignApp-' + new Date().getTime();
+                var apiData = data.entity.api_data;
 
-                busService.$once(returnEvent, function (event, campaigns) {
-                    var message = campaigns.reduce(function (sum, campaign) {
+                if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
+                    var message = apiData.active_campaigns.reduce(function (sum, campaign) {
                         return sum + '<p>' + campaign.title + ': ' + campaign.schedule_from + ' - ' + campaign.schedule_to + '</p>';
                     }, '');
 
@@ -104,23 +104,17 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                         html: html,
                         type: 'warning'
                     });
-                });
-
-                // @TODO: Replace with correct API call.
-                busService.$emit('apiService.getEntities', {
-                    type: 'campaign',
-                    returnEvent: returnEvent
-                });
+                }
             }
         });
 
         busService.$on('itkHeader.entity.requestItems', function (event, data) {
             if (data.type === 'screen') {
-                var returnEvent = 'itkCampaignApp-' + new Date().getTime();
+                var apiData = data.entity.api_data;
 
-                busService.$once(returnEvent, function (event, campaigns) {
-                    var message = campaigns.reduce(function (sum, campaign) {
-                        return sum + '<p>' + campaign.title + ': ' + campaign.schedule_from + ' - ' + campaign.schedule_to + '</p>';
+                if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
+                    var message = apiData.active_campaigns.reduce(function (sum, campaign) {
+                        return sum + '<p>' + $translate.instant('messages.active_campaign') + ' ' + $filter('date')(campaign.schedule_to, 'medium') + ' (' + $translate.instant('messages.active_campaign_see') + '<a href="/#/campaign/' + campaign.id + '">' + campaign.title + '</a>)</p>';
                     }, '');
 
                     var html =
@@ -136,13 +130,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                         html: html,
                         type: 'warning'
                     });
-                });
-
-                // @TODO: Replace with correct API call.
-                busService.$emit('apiService.getEntities', {
-                    type: 'campaign',
-                    returnEvent: returnEvent
-                });
+                }
             }
         });
     }

@@ -70,7 +70,9 @@
     "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
     "campaign_updated_error": "Kampagnen blev ikke gemt",
     "campaign_delete_success": "Kampagnerne blev slettet",
-    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke"
+    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke",
+    "active_campaign": "Aktiv kampagne slutter",
+    "active_campaign_see": "Åben kampagnen: "
   },
   "screen_list": {
     "filter": "Filtrér på:",
