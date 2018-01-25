@@ -4,38 +4,39 @@
  */
 
 // Create module and configure routing and translations.
-angular.module('itkCampaignApp').config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
-    'use strict';
+angular.module('itkCampaignApp').config([
+    '$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
+        'use strict';
 
-    var appUrl = 'bundles/itkcampaign/apps/itkCampaignApp/';
+        var appUrl = 'bundles/itkcampaign/apps/itkCampaignApp/';
 
-    // Set up translations.
-    $translateProvider
-    .useSanitizeValueStrategy('escape')
-    .useStaticFilesLoader({
-        prefix: appUrl + 'translations/locale-',
-        suffix: '.json'
-    })
-    .preferredLanguage('da')
-    .fallbackLanguage('da')
-    .forceAsyncReload(true);
+        // Set up translations.
+        $translateProvider
+            .useSanitizeValueStrategy('escape')
+            .useStaticFilesLoader({
+                prefix: appUrl + 'translations/locale-',
+                suffix: '.json'
+            })
+            .preferredLanguage('da')
+            .fallbackLanguage('da')
+            .forceAsyncReload(true);
 
-    // Register routes
-    $routeProvider
-    // Dashboard
-    .when('/campaign', {
-        controller: 'ItkCampaignOverviewController',
-        templateUrl: appUrl + 'campaign-overview/campaign-overview.html' + '?' + window.config.version
-    })
-    .when('/campaign/create', {
-        controller: 'ItkCampaignController',
-        templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
-    })
-    .when('/campaign/:id', {
-        controller: 'ItkCampaignController',
-        templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
-    });
-}]);
+        // Register routes
+        $routeProvider
+            .when('/campaign', {
+                controller: 'ItkCampaignOverviewController',
+                templateUrl: appUrl + 'campaign-overview/campaign-overview.html' + '?' + window.config.version
+            })
+            .when('/campaign/create', {
+                controller: 'ItkCampaignController',
+                templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
+            })
+            .when('/campaign/{id}', {
+                controller: 'ItkCampaignController',
+                templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
+            });
+    }
+]);
 
 // Setup the app.
 // Register menu items.
@@ -45,8 +46,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
         'use strict';
 
         // Register listener for requests for Main Menu items
-        busService.$on('menuApp.requestMainMenuItems', function requestMainMenuItems(event, args)
-        {
+        busService.$on('menuApp.requestMainMenuItems', function requestMainMenuItems (event, args) {
             if (userService.hasRole('ROLE_ADMIN')) {
                 busService.$emit('menuApp.returnMainMenuItems', [
                     {
@@ -80,6 +80,70 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                     items: items
                 }
             ]);
+        });
+
+        busService.$on('itkHeader.list.element.requestItems', function (event, data) {
+            if (data.type === 'screen') {
+                var returnEvent = 'itkCampaignApp-' + new Date().getTime();
+
+                busService.$once(returnEvent, function (event, campaigns) {
+                    var message = campaigns.reduce(function (sum, campaign) {
+                        return sum + '<p>' + campaign.title + ': ' + campaign.schedule_from + ' - ' + campaign.schedule_to + '</p>';
+                    }, '');
+
+                    var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';
+
+                    var html =
+                        '<div class="itk-campaign-info">' +
+                        '  <div tooltips tooltip-template="' + message + '" tooltip-side="top">' +
+                        '    <img class="itk-campaign-info--icon" src="' + iconSource + '" title="">' +
+                        '  </div>' +
+                        '</div>';
+
+                    busService.$emit(data.returnEvent, {
+                        html: html,
+                        type: 'warning'
+                    });
+                });
+
+                // @TODO: Replace with correct API call.
+                busService.$emit('apiService.getEntities', {
+                    type: 'campaign',
+                    returnEvent: returnEvent
+                });
+            }
+        });
+
+        busService.$on('itkHeader.entity.requestItems', function (event, data) {
+            if (data.type === 'screen') {
+                var returnEvent = 'itkCampaignApp-' + new Date().getTime();
+
+                busService.$once(returnEvent, function (event, campaigns) {
+                    var message = campaigns.reduce(function (sum, campaign) {
+                        return sum + '<p>' + campaign.title + ': ' + campaign.schedule_from + ' - ' + campaign.schedule_to + '</p>';
+                    }, '');
+
+                    var html =
+                        '<div class="message itk-campaign-info--message">' +
+                        '  <div class="message--inner is-info">' +
+                        '    <div class="message--content">' +
+                        message +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>';
+
+                    busService.$emit(data.returnEvent, {
+                        html: html,
+                        type: 'warning'
+                    });
+                });
+
+                // @TODO: Replace with correct API call.
+                busService.$emit('apiService.getEntities', {
+                    type: 'campaign',
+                    returnEvent: returnEvent
+                });
+            }
         });
     }
 ]);
