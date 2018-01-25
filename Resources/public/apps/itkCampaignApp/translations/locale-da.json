@@ -6,8 +6,10 @@
   "campaign": {
     "fields": {
       "name": "Kampagnenavn",
+      "name_placeholder": "Min kampagne 1",
       "name_help": "Vælg et unikt og genkendeligt navn til kampagnen",
       "description": "Beskrivelse",
+      "description_placeholder": "Beskrivelse af min kampagne 1",
       "description_help": "Vælg en kort beskrivelse af kampagnen",
       "schedule": "Planlægning",
       "schedule_from": "Fra",
@@ -23,6 +25,16 @@
       "active": "Aktiv",
       "future": "Fremtidig",
       "expired": "Udløbet"
+    },
+    "modal": {
+        "addchannel": {
+            "title": "Tilføj kanaler",
+            "description": "Vælg kanalerne du vil tilføje ved at markere dem nedenfor. Luk derefter vinduet."
+        },
+        "addscreen": {
+            "title": "Tilføj skærme",
+            "description": "Vælg skærmene du vil aktivere kampagnen på ved at markere dem nedenfor. Luk derefter vinduet."
+        }
     }
   },
   "campaign_modal_add_screen_group": {
@@ -41,6 +53,11 @@
       "to": "Slut",
       "tools": "Værktøjer"
     },
+      "help": {
+        "title": "Hjælp til kampagner",
+        "description": "Med kampagner har du mulighed for helt at overtage en eller flere skærme, som i forvejen et opsat til at vise indholde fra kanaler. Således vil alt andet indhold end den givne kampagne være skjult i hele kampagne perioenden. Efter kampagne perionden vil skærmene vende tilbage til det opringeligt planlagte indhold.",
+        "close": "Luk vinduet"
+        },
     "filter_placeholder": "Filtrér",
     "confirm_delete": "Bekræft at du vil slette følgende kampagner:"
   },
@@ -48,7 +65,8 @@
     "action": {
       "cancel": "Annullér",
       "confirm": "Bekræft",
-      "finish": "Afslut"
+      "finish": "Afslut",
+      "close": "Luk"
     },
     "error": {
       "could_not_load_results": "Kunne ikke hente søgeresultater.",
