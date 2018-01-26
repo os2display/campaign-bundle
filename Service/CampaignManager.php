@@ -90,31 +90,13 @@ class CampaignManager
 
     private function normalizeData($data)
     {
-        if (isset($data['schedule_from'])) {
-            $data['schedule_from'] = $this->getDatetime($data['schedule_from']);
+        if (isset($data['schedule_from']) && is_scalar($data['schedule_from'])) {
+            $data['schedule_from'] = new \DateTime($data['schedule_from']);
         }
-        if (isset($data['schedule_to'])) {
-            $data['schedule_to'] = $this->getDatetime($data['schedule_to']);
+        if (isset($data['schedule_to']) && is_scalar($data['schedule_to'])) {
+            $data['schedule_to'] = new \DateTime($data['schedule_to']);
         }
 
         return $data;
-    }
-
-    private function getDatetime($value) {
-        $date = null;
-        if ($value instanceof \DateTime) {
-            $date = $value;
-        } elseif (is_string($value)) {
-            $date = new \DateTime($value);
-        } elseif (is_integer($value)) {
-            $date = new \DateTime();
-            $date->setTimestamp($value);
-        }
-
-        if ($date !== null) {
-            $date->setTimezone(new \DateTimeZone('UTC'));
-        }
-
-        return $date;
     }
 }

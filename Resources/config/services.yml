@@ -25,6 +25,8 @@ services:
     # public: false
     tags:
       - { name: security.voter }
+<<<<<<< HEAD
+=======
 
   os2display.campaign.service.api_data:
     class: Itk\CampaignBundle\Service\ApiDataService
@@ -38,3 +40,4 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+>>>>>>> feature/campaign

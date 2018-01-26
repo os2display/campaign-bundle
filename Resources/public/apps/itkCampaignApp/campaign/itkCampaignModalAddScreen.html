@@ -1,11 +1,14 @@
 <div class="itk-campaign">
-  <popup>
-    <itk-screen-list selected-screens="screens"
-                     overlay="true"></itk-screen-list>
-
-    <a class="button-link" title="{{ 'common.action.finish' | translate }}"
-       ng-click="closeModal()">
-      {{ 'common.action.finish' | translate }}
-    </a>
-  </popup>
+    <popup>
+        <button class="btn btn-close" ng-click="closeModal()">{{ 'common.action.close' | translate }}<i class="material-icons">close</i></button>
+        <h1>{{ 'campaign.modal.addscreen.title' | translate }}</h1>
+        <p>{{ 'campaign.modal.addscreen.description' | translate }}</p>
+        <div class="modal-content">
+            <!-- TODO: Is it possible to show the list without the top toolbar? -->
+            <itk-screen-list selected-screens="screens" overlay="true"></itk-screen-list>
+        </div>
+        <div class="modal-actions">
+            <button class="button-link confirm" ng-click="closeModal()">{{ 'common.action.finish' | translate }}</button>
+        </div>
+    </popup>
 </div>

@@ -42,7 +42,7 @@ class Campaign extends ApiEntity implements GroupableEntity
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"api", "api-bulk"})
      */
     private $id;
 
@@ -50,7 +50,7 @@ class Campaign extends ApiEntity implements GroupableEntity
      * Title.
      *
      * @ORM\Column(name="title", type="string")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"api", "api-bulk"})
      * @Assert\NotBlank()
      */
     private $title;
@@ -59,20 +59,20 @@ class Campaign extends ApiEntity implements GroupableEntity
      * Description.
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"api", "api-bulk"})
      */
     private $description;
 
     /**
      * @ORM\Column(name="schedule_from", type="datetime")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"api", "api-bulk"})
      * @Assert\DateTime()
      */
     private $scheduleFrom;
 
     /**
      * @ORM\Column(name="schedule_to", type="datetime")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"api", "api-bulk"})
      * @Assert\DateTime()
      */
     private $scheduleTo;
