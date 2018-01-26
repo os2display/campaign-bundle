@@ -49,7 +49,9 @@
   .popup--dialog {
     max-width: 90%;
   }
-
+  .overview--section, .overview--filter, .overview--sorting, .overview--channels {
+    max-width: 100%;
+  }
   .overview--filter-field {
     border: 1px solid #ddd;
     display: block;
@@ -73,6 +75,7 @@
     overflow: hidden;
     text-align: left;
     width: 100%;
+    display: block;
   }
 
   .xdsoft_datetimepicker .xdsoft_label {
