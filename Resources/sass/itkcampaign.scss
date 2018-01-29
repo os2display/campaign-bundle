@@ -3,6 +3,7 @@
 @import "_listview";
 @import "_popup";
 @import "_screen-list";
+@import "_itk-campaign-info";
 
 .itk-campaign {
   &.container {
@@ -105,7 +106,7 @@
         margin-right: 2em;
         margin-bottom: 2em;
         &-remove {
-            cursor: pointer; 
+            cursor: pointer;
         }
     }
     .preview--channel {
@@ -113,7 +114,7 @@
         &:hover {
             box-shadow: 0 0 16px rgba(0,0,0,.16);
             @include transition-in(box-shadow);
-        }        
+        }
     }
   }
   .screens {
@@ -121,7 +122,7 @@
         margin-right: 2em;
         margin-bottom: 2em;
         &-remove {
-            cursor: pointer;  
+            cursor: pointer;
         }
     }
     .overview--screen-wrapper {
@@ -129,7 +130,7 @@
         &:hover {
             box-shadow: 0 0 16px rgba(0,0,0,.16);
             @include transition-in(box-shadow);
-        }        
+        }
     }
   }
   .overview--channel-link.is-selected .overview--overlay {

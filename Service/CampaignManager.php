@@ -15,14 +15,14 @@ use Os2Display\CoreBundle\Services\SecurityManager;
 class CampaignManager
 {
     protected static $editableProperties = [
-      'title',
-      'description',
-      'schedule_from',
-      'schedule_to',
-      'channels',
-      'screens',
-      'screen_groups',
-      'groups',
+        'title',
+        'description',
+        'schedule_from',
+        'schedule_to',
+        'channels',
+        'screens',
+        'screen_groups',
+        'groups',
     ];
 
     protected $entityService;
@@ -31,8 +31,13 @@ class CampaignManager
     protected $entityManager;
     protected $entityManagerService;
 
-    public function __construct(EntityService $entityService, SecurityManager $securityManager, GroupManager $groupManager, EntityManagerInterface $entityManager, EntityManagerService $entityManagerService)
-    {
+    public function __construct(
+        EntityService $entityService,
+        SecurityManager $securityManager,
+        GroupManager $groupManager,
+        EntityManagerInterface $entityManager,
+        EntityManagerService $entityManagerService
+    ) {
         $this->entityService = $entityService;
         $this->securityMananager = $securityManager;
         $this->groupManager = $groupManager;
@@ -60,24 +65,44 @@ class CampaignManager
             unset($data['groups']);
         }
         if (isset($data['channels'])) {
-            $data['channels'] = $this->entityManagerService->loadEntities($data['channels'], Channel::class);
+            $data['channels'] = $this->entityManagerService->loadEntities(
+                $data['channels'],
+                Channel::class
+            );
         }
         if (isset($data['screens'])) {
-            $data['screens'] = $this->entityManagerService->loadEntities($data['screens'], Screen::class);
+            $data['screens'] = $this->entityManagerService->loadEntities(
+                $data['screens'],
+                Screen::class
+            );
         }
         if (isset($data['screen_groups'])) {
-            $groups = $this->groupManager->loadGroups($data['screen_groups'], $campaign->getScreenGroups());
+            $groups = $this->groupManager->loadGroups(
+                $data['screen_groups'],
+                $campaign->getScreenGroups()
+            );
             $campaign->setScreenGroups($groups);
             unset($data['screen_groups']);
         }
 
-        $this->entityService->setValues($campaign, $data, self::$editableProperties);
+        $this->entityService->setValues(
+            $campaign,
+            $data,
+            self::$editableProperties
+        );
         $this->entityService->validateEntity($campaign);
 
         $repository = $this->entityManager->getRepository(Campaign::class);
-        $anotherCampaign = $repository->findOneBy(['title' => $campaign->getTitle()]);
-        if ($anotherCampaign && $anotherCampaign->getId() !== $campaign->getId()) {
-            throw new DuplicateEntityException('Campaign already exists.', $data);
+        $anotherCampaign = $repository->findOneBy(
+            ['title' => $campaign->getTitle()]
+        );
+
+        if ($anotherCampaign &&
+            $anotherCampaign->getId() !== $campaign->getId()) {
+            throw new DuplicateEntityException(
+                'Campaign already exists.',
+                $data
+            );
         }
 
         // Trick to make sure that entity is persisted.
@@ -90,13 +115,32 @@ class CampaignManager
 
     private function normalizeData($data)
     {
-        if (isset($data['schedule_from']) && is_scalar($data['schedule_from'])) {
-            $data['schedule_from'] = new \DateTime($data['schedule_from']);
+        if (isset($data['schedule_from'])) {
+            $data['schedule_from'] = $this->getDatetime($data['schedule_from']);
         }
-        if (isset($data['schedule_to']) && is_scalar($data['schedule_to'])) {
-            $data['schedule_to'] = new \DateTime($data['schedule_to']);
+        if (isset($data['schedule_to'])) {
+            $data['schedule_to'] = $this->getDatetime($data['schedule_to']);
         }
 
         return $data;
+    }
+
+    private function getDatetime($value)
+    {
+        $date = null;
+        if ($value instanceof \DateTime) {
+            $date = $value;
+        } elseif (is_string($value)) {
+            $date = new \DateTime($value);
+        } elseif (is_integer($value)) {
+            $date = new \DateTime();
+            $date->setTimestamp($value);
+        }
+
+        if ($date !== null) {
+            $date->setTimezone(new \DateTimeZone('UTC'));
+        }
+
+        return $date;
     }
 }

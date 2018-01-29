@@ -5,8 +5,8 @@
 
 // @TODO: Cleanup DI.
 angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
-    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', 'userService', '$q',
-    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService, $q) {
+    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', '$q',
+    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, $q) {
         'use strict';
 
         $scope.loading = true;
@@ -24,8 +24,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
         var $translate = $filter('translate');
 
         // Check role.
-        // @TODO: Replace with new CAMPAIGN role.
-        if (!$scope.requireRole('ROLE_ADMIN')) {
+        if (!$scope.requireRole('ROLE_CAMPAIGN_ADMIN')) {
             busService.$emit('log.error', {
                 timeout: 5000,
                 cause: 403,
