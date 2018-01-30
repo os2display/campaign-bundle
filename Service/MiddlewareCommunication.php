@@ -8,10 +8,11 @@
 
 namespace Itk\CampaignBundle\Service;
 
-use Os2Display\CoreBundle\Events\CronEvent;
 use JMS\Serializer\SerializationContext;
 use Os2Display\CoreBundle\Entity\Channel;
+use Os2Display\CoreBundle\Entity\ChannelScreenRegion;
 use Os2Display\CoreBundle\Entity\SharedChannel;
+use Itk\CampaignBundle\Entity\Campaign;
 use Symfony\Component\DependencyInjection\Container;
 use Os2Display\CoreBundle\Services\TemplateService;
 use Os2Display\CoreBundle\Services\UtilityService;
@@ -25,6 +26,31 @@ use Os2Display\CoreBundle\Services\MiddlewareCommunication as BaseService;
  */
 class MiddlewareCommunication extends BaseService
 {
+    // @TODO: Move these to constructor dependecy injection, instead of using container.
+    protected $middlewarePath;
+    protected $doctrine;
+    protected $serializer;
+
+    /**
+     * Constructor.
+     *
+     * @param Container $container
+     *   The service container.
+     * @param TemplateService $templateService
+     *   The template service.
+     * @param UtilityService $utilityService
+     *   The utility service.
+     */
+    public function __construct(Container $container, TemplateService $templateService, UtilityService $utilityService)
+    {
+        parent::__construct($container, $templateService, $utilityService);
+
+        $this->middlewarePath = $this->container->getParameter('middleware_host').
+            $this->container->getParameter('middleware_path');
+        $this->doctrine  = $this->container->get('doctrine');
+        $this->serializer = $this->container->get('jms_serializer');
+    }
+
     /**
      * Find Id's of the screen using a channel.
      *
@@ -68,9 +94,6 @@ class MiddlewareCommunication extends BaseService
         // Calculate hash of content, used to avoid unnecessary push.
         $sha1 = sha1($data);
 
-        $middlewarePath = $this->container->getParameter('middleware_host').
-            $this->container->getParameter('middleware_path');
-
         // Check if the channel should be pushed.
         if ($force || $sha1 !== $channel->getLastPushHash()) {
             // Get screen ids.
@@ -81,7 +104,7 @@ class MiddlewareCommunication extends BaseService
             // $lastPushTime will be reset later on in this function.
             if (count($screenIds) > 0) {
                 $curlResult = $this->utilityService->curl(
-                    $middlewarePath.'/channel/'.$id,
+                    $this->middlewarePath.'/channel/'.$id,
                     'POST',
                     $data,
                     'middleware'
@@ -103,7 +126,7 @@ class MiddlewareCommunication extends BaseService
                     foreach ($lastPushScreensArray as $lastPushScreenId) {
                         if (!in_array($lastPushScreenId, $screenIds)) {
                             $curlResult = $this->utilityService->curl(
-                                $middlewarePath.'/channel/'.$id.'/screen/'.$lastPushScreenId,
+                                $this->middlewarePath.'/channel/'.$id.'/screen/'.$lastPushScreenId,
                                 'DELETE',
                                 json_encode(array()),
                                 'middleware'
@@ -134,7 +157,7 @@ class MiddlewareCommunication extends BaseService
                 // will automatically remove it from any screen connected to the
                 // middleware that displays is currently.
                 $curlResult = $this->utilityService->curl(
-                    $middlewarePath.'/channel/'.$id,
+                    $this->middlewarePath.'/channel/'.$id,
                     'DELETE',
                     json_encode(array()),
                     'middleware'
@@ -156,6 +179,34 @@ class MiddlewareCommunication extends BaseService
         }
     }
 
+    private function applyCampaigns($channel, $campaigns)
+    {
+        // Is the channel affected by the campaign?
+
+        // Get screen ids.
+        $screenIds = $this->getScreenIdsOnChannel($channel);
+
+        $channelId = $channel->getId();
+
+        return $channel;
+    }
+
+    private function channelShouldBePushed($channel)
+    {
+        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
+            return false;
+        }
+
+        $a = 1;
+
+        if (is_null($channel->getLastPushHash()) && empty(json_decode($channel->getLastPushScreens()))) {
+            return false;
+        }
+
+        return true;
+    }
+
+
     /**
      * Pushes the channels for each screen to the middleware.
      *
@@ -164,33 +215,81 @@ class MiddlewareCommunication extends BaseService
      */
     public function pushToScreens($force = false)
     {
-        // Get doctrine handle
-        $doctrine = $this->container->get('doctrine');
+        $now = new \DateTime();
 
-        $serializer = $this->container->get('jms_serializer');
+        $queryBuilder = $this->doctrine
+            ->getManager()
+            ->createQueryBuilder();
 
-        // Push channels
-        $channels = $doctrine->getRepository('Os2DisplayCoreBundle:Channel')->findAll();
+        // @TODO: Optimize which channels should be examined.
+        // Get channels that are currently pushed to screens,
+        // or should be pushed to screens.
+        $activeChannels =
+            $queryBuilder->select('c')
+            ->from(Channel::class, 'c')
+            ->getQuery()->getResult();
 
-        $campaigns = $doctrine->getRepository('ItkCampaignBundle:Campaign')->findAll();
+        $queryBuilder = $this->doctrine
+            ->getManager()
+            ->createQueryBuilder();
 
-        // Get all campaigns
-        foreach ($channels as $channel) {
-            $data = $serializer->serialize(
-                $channel,
-                'json',
-                SerializationContext::create()
-                    ->setGroups(array('middleware'))
-            );
+        $activeCampaigns = $queryBuilder->select('campaign')
+            ->from(Campaign::class, 'campaign')
+            ->where(':now between campaign.scheduleFrom and campaign.scheduleTo')
+            ->setParameter('now', $now)
+            ->getQuery()->getResult();
 
-            $this->pushChannel($channel, $data, $channel->getId(), $force);
+        foreach ($activeChannels as $channel) {
+            // Apply campaign changes.
+            $channel = $this->applyCampaigns($channel, $activeCampaigns);
+
+            // Make sure it makes sense to push channel.
+            if (!$this->channelShouldBePushed($channel)) {
+                continue;
+            }
+
+            // Get screen ids.
+            $screenIds = $this->getScreenIdsOnChannel($channel);
+
+            if (count($screenIds) > 0) {
+                $data = $this->serializer->serialize(
+                    $channel,
+                    'json',
+                    SerializationContext::create()
+                        ->setGroups(array('middleware'))
+                );
+
+                $this->pushChannel($channel, $data, $channel->getId(), $force);
+            } else {
+                if (!is_null($channel->getLastPushHash())) {
+                    // Channel don't have any screens, so delete from the middleware. This
+                    // will automatically remove it from any screen connected to the
+                    // middleware that displays is currently.
+                    $curlResult = $this->utilityService->curl(
+                        $this->middlewarePath.'/channel/'.$channel->getId(),
+                        'DELETE',
+                        json_encode(array()),
+                        'middleware'
+                    );
+
+                    if ($curlResult['status'] !== 200) {
+                        // Delete did't not work, so mark the channel for re-push.
+                        $channel->setLastPushHash(null);
+                    } else {
+                        // Channel delete success, so empty last push screens.
+                        $channel->setLastPushScreens(json_encode([]));
+                    }
+                }
+            }
         }
 
         // Push shared channels
-        $sharedChannels = $doctrine->getRepository('Os2DisplayCoreBundle:SharedChannel')->findAll();
+        $sharedChannels = $this->doctrine->getRepository(
+            'Os2DisplayCoreBundle:SharedChannel'
+        )->findAll();
 
         foreach ($sharedChannels as $sharedChannel) {
-            $data = $serializer->serialize(
+            $data = $this->serializer->serialize(
                 $sharedChannel,
                 'json',
                 SerializationContext::create()
