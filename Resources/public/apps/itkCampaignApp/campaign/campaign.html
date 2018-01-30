@@ -109,18 +109,21 @@
                  data-ng-click="removeScreen(screen)"
                  src="bundles/os2displayadmin/images/icons/cancel-icon.png">
             <ik-screen class="overview--channel-container"
-                       ik-screen="screen"></ik-screen>
+                       ik-screen="screen">{{ screen.title }}</ik-screen>
           </div>
-        </div>
-        <div id="campaign-screen-groups" class="screens">
           <div class="overview--screen"
                data-ng-repeat="screenGroup in campaign.screen_groups">
             <img class="overview--channel-remove"
                  data-ng-click="removeScreenGroup(screenGroup)"
                  src="bundles/os2displayadmin/images/icons/cancel-icon.png">
-            {{ screenGroup.title }}
+            
+            <div class="overview--screengroup-container">
+                {{ screenGroup.title }}
+            </div>
+
           </div>
         </div>
+        
       </div>
     </div>
     <div class="row campaign-actions">
