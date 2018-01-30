@@ -273,7 +273,7 @@ class MiddlewareCommunication extends BaseService
                     );
 
                     if ($curlResult['status'] !== 200) {
-                        // Delete did't not work, so mark the channel for re-push.
+                        // Delete did't not work, so mark the channel for re-push by removing last push hash.
                         $channel->setLastPushHash(null);
                     } else {
                         // Channel delete success, so empty last push screens.
