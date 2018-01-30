@@ -115,6 +115,9 @@ class CampaignManager
 
     private function normalizeData($data)
     {
+        if (isset($data['title'])) {
+            $data['title'] = trim($data['title']);
+        }
         if (isset($data['schedule_from'])) {
             $data['schedule_from'] = $this->getDatetime($data['schedule_from']);
         }

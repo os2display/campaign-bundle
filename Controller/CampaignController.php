@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/api/campaign")
- * @Rest\View(serializerGroups={"api"})
+ * @Rest\View(serializerGroups={"campaign"})
  */
 class CampaignController extends ApiController
 {

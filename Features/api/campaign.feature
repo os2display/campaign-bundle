@@ -39,6 +39,48 @@ Feature: campaign
       []
       """
 
+  Scenario: Create campaign with no title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
+  Scenario: Create campaign with empty title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": "",
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
+
+  Scenario: Create campaign with blank title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": " ",
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
   Scenario: Create campaign
     When I sign in with username "user" and password "user"
     And I add "content-type" header equal to "application/json"
@@ -61,8 +103,8 @@ Feature: campaign
     And the JSON node "" should have 1 element
     And the JSON node "[0].id" should be equal to 1
     And the JSON node "[0].title" should be equal to "The first campaign"
-    And the JSON node "[0].schedule_from" should be equal to "2001-01-01T00:00:00+0100"
-    And the JSON node "[0].schedule_to" should be equal to "2001-01-31T00:00:00+0100"
+    And the JSON node "[0].schedule_from" should be equal to "2001-01-01T00:00:00+0000"
+    And the JSON node "[0].schedule_to" should be equal to "2001-01-31T00:00:00+0000"
 
   Scenario: Update campaign
     When I sign in with username "user" and password "user"
