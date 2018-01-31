@@ -43,16 +43,16 @@
                        data-ng-if="!sortOrder">arrow_drop_up</i>
                   </a>
                 </th>
-                <th scope="col" class="w-20"><a
+                <th scope="col" class="w-20 d-none d-md-table-cell"><a
                     href="">{{ 'campaign_overview.fields.screens' | translate }}</a>
                 </th>
                 <th scope="col" class="w-5"><a
                     href="">{{ 'campaign_overview.fields.status' | translate }}</a>
                 </th>
-                <th scope="col" class="w-15"><a
+                <th scope="col" class="w-15 d-none d-md-table-cell"><a
                     href="">{{ 'campaign_overview.fields.from' | translate }}</a>
                 </th>
-                <th scope="col" class="w-15"><a
+                <th scope="col" class="w-15 d-none d-md-table-cell"><a
                     href="">{{ 'campaign_overview.fields.to' | translate }}</a>
                 </th>
                 <th scope="col" class="w-10"><a
@@ -72,7 +72,7 @@
                 <td class="name"><a
                     data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</a>
                 </td>
-                <td class="screens">
+                <td class="screens d-none d-md-table-cell">
                   <div class="textcrop">
                     <span ng-repeat="screen in campaign.screens">
                       {{ screen.title }}{{ !$last ? ', ' : ''}}
@@ -92,8 +92,8 @@
                       class="badge-indicator {{campaign.status}}"></span> {{ 'campaign.status.' + campaign.status | translate }}
                   </div>
                 </td>
-                <td class="date-start">{{campaign.schedule_from | date:'HH:mm dd/MM/yy' }}</td>
-                <td class="date-end">{{campaign.schedule_to | date:'HH:mm dd/MM/yy' }}</td>
+                <td class="date-start d-none d-md-table-cell">{{campaign.schedule_from | date:'HH:mm dd/MM/yy' }}</td>
+                <td class="date-end d-none d-md-table-cell">{{campaign.schedule_to | date:'HH:mm dd/MM/yy' }}</td>
                 <td class="tools"><a
                     data-ng-href="{{'/#/campaign/' + campaign.id}}"><i
                     class="material-icons">edit</i></a></td>
