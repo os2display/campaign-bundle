@@ -34,6 +34,10 @@
         "addscreen": {
             "title": "Tilføj skærme",
             "description": "Vælg skærmene du vil aktivere kampagnen på ved at markere dem nedenfor. Luk derefter vinduet."
+        },
+        "addgroup": {
+            "title": "Tilføj gruppe",
+            "description": "Vælg gruppen af skærme du vil aktivere kampagnen på ved at markere den nedenfor. Luk derefter vinduet."
         }
     }
   },
