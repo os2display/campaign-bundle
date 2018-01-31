@@ -301,4 +301,25 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
     {
         $this->channelPushedToScreen($arg1, $arg2, false);
     }
+
+    /**
+     * @When I clear utility service
+     */
+    public function clearUtilityService() {
+        $this->container->get('os2display.utility_service')->clear();
+    }
+
+    /**
+     * @When I clear all channels
+     */
+    public function clearAllChannels() {
+        $channels = $this->doctrine->getRepository('Os2DisplayCoreBundle:Channel')->findAll();
+
+        foreach ($channels as $channel) {
+            $channel->setLastPushHash(null);
+            $channel->setLastPushScreens([]);
+        }
+
+        $this->doctrine->getManager()->flush();
+    }
 }

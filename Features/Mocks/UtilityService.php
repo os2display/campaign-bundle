@@ -18,6 +18,11 @@ class UtilityService extends \Os2Display\CoreBundle\Services\UtilityService
     {
     }
 
+    public function clear()
+    {
+      $this->requests = [];
+    }
+
     public function getLastRequest()
     {
         return end($this->requests);
