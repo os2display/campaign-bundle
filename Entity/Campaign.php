@@ -42,7 +42,7 @@ class Campaign extends ApiEntity implements GroupableEntity
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"campaign", "api-bulk", "screen"})
      */
     private $id;
 
@@ -50,7 +50,7 @@ class Campaign extends ApiEntity implements GroupableEntity
      * Title.
      *
      * @ORM\Column(name="title", type="string")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"campaign", "screen"})
      * @Assert\NotBlank()
      */
     private $title;
@@ -59,27 +59,27 @@ class Campaign extends ApiEntity implements GroupableEntity
      * Description.
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"campaign", "screen"})
      */
     private $description;
 
     /**
      * @ORM\Column(name="schedule_from", type="datetime")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"campaign", "screen"})
      * @Assert\DateTime()
      */
     private $scheduleFrom;
 
     /**
      * @ORM\Column(name="schedule_to", type="datetime")
-     * @Groups({"api", "api-bulk", "screen"})
+     * @Groups({"campaign", "screen"})
      * @Assert\DateTime()
      */
     private $scheduleTo;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Groups({"api", "api-bulk"})
+     * @Groups({"campaign"})
      * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Channel")
      * @ORM\JoinTable(name="ik_campaign_channel")
      */
@@ -87,7 +87,7 @@ class Campaign extends ApiEntity implements GroupableEntity
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Groups({"api", "api-bulk"})
+     * @Groups({"campaign"})
      * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Screen")
      * @ORM\JoinTable(name="ik_campaign_screen")
      */
@@ -95,7 +95,7 @@ class Campaign extends ApiEntity implements GroupableEntity
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @Groups({"api", "api-bulk"})
+     * @Groups({"campaign"})
      * @ORM\ManyToMany(targetEntity="Os2Display\CoreBundle\Entity\Group")
      * @ORM\JoinTable(name="ik_campaign_group")
      */
