@@ -132,8 +132,25 @@
             @include transition-in(box-shadow);
         }
     }
+    .overview--screengroup-container {
+        width: 300px;
+        height: 168px;
+        border: 2px solid $gray-300;
+        background: $white;
+        @include transition-out(box-shadow);
+        &:hover {
+            box-shadow: 0 0 16px rgba(0,0,0,.16);
+            @include transition-in(box-shadow);
+        }
+    }
   }
   .overview--channel-link.is-selected .overview--overlay {
       z-index: 10;
   }
+}
+
+/* Fix placeholder text in contenteditable */
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
 }

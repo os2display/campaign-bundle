@@ -41,7 +41,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             // Load all accessible campaign entities.
             $scope.getEntities('campaign').then(
                 function (campaigns) {
-                    $scope.campaigns = campaigns;
+                    // @TODO: Fix this so the API call returns an array instead of an object.
+                    $scope.campaigns = Object.keys(campaigns).map(function (key) { return campaigns[key]; });;
 
                     var now = parseInt(new Date() / 1000);
 
