@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\Screen;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Defines application features from the specific context.
@@ -195,7 +196,7 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
      */
     public function iPrintAllTheUtilityServiceCurlCalls()
     {
-        print_r(
+        var_dump(
             $this->container->get('os2display.utility_service')->getAllRequests(
             )
         );
@@ -220,10 +221,12 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
 
     private function createScreen(array $data)
     {
-        $repository = $this->doctrine->getManager()->getRepository(
+        $manager = $this->doctrine->getManager();
+
+        $repository = $manager->getRepository(
             Screen::class
         );
-        $channelRepository = $this->doctrine->getManager()->getRepository(
+        $channelRepository = $manager->getRepository(
             Channel::class
         );
 
@@ -235,20 +238,28 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
             $screen->setModifiedAt($data['modified_at']);
             $screen->setToken('123');
             $screen->setActivationCode('123');
-            $screen->setDescription('123');
+            $screen->setDescription('312');
 
-            foreach ([$data['channel']] as $channel) {
-                $channel = $channelRepository->findOneBy(['id' => $channel]);
+            $manager->persist($screen);
 
-                $csr = new ChannelScreenRegion();
-                $csr->setChannel($channel);
-                $csr->setScreen($screen);
-                $csr->setRegion(0);
-                $this->doctrine->getManager()->persist($csr);
+            if (!empty($data['channel'])) {
+                foreach ([$data['channel']] as $channel) {
+                    $channel = $channelRepository->findOneBy(
+                        ['id' => $channel]
+                    );
+
+                    $csr = new ChannelScreenRegion();
+                    $csr->setChannel($channel);
+                    $csr->setScreen($screen);
+                    $csr->setRegion(1);
+                    $manager->persist($csr);
+
+                    $channel->addChannelScreenRegion($csr);
+                    $screen->addChannelScreenRegion($csr);
+                }
             }
 
-            $this->doctrine->getManager()->persist($screen);
-            $this->doctrine->getManager()->flush();
+            $manager->flush();
         }
     }
 
@@ -271,19 +282,29 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $res = false;
 
         foreach ($requests as $request) {
-            if (explode('https://middleware.os2display.vm/api/channel/', $request['url'])[1] == $channel) {
-                $data = json_decode($request['data']);
-                if (in_array($screen, $data->screens)) {
-                    $res = true;
+            if (explode(
+                    'https://middleware.os2display.vm/api/channel/',
+                    $request['url']
+                )[1] == $channel) {
+                if ($request['method'] == 'POST') {
+                    $data = json_decode($request['data']);
+                    if (in_array($screen, $data->screens)) {
+                        $res = true;
+                        break;
+                    }
                 }
             }
         }
 
-        $this->assertEquals($res, $result, sprintf(
-            'The channel "%s" should' . (!$result ? ' not' : '')  . ' be pushed to screen "%s"',
-            $channel,
-            $screen
-        ));
+        $this->assertEquals(
+            $res,
+            $result,
+            sprintf(
+                'The channel "%s" should'.(!$result ? ' not' : '').' be pushed to screen "%s"',
+                $channel,
+                $screen
+            )
+        );
     }
 
     /**
@@ -300,5 +321,128 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
     public function channelShouldNotBePushedToScreen($arg1, $arg2)
     {
         $this->channelPushedToScreen($arg1, $arg2, false);
+    }
+
+    private function channelPushedToScreenRegion(
+        $channel,
+        $screen,
+        $region,
+        $result = true
+    ) {
+        $requests = $this->container->get('os2display.utility_service')
+            ->getAllRequests('middleware');
+
+        $res = false;
+
+        foreach ($requests as $request) {
+            if (explode(
+                    'https://middleware.os2display.vm/api/channel/',
+                    $request['url']
+                )[1] == $channel) {
+                if ($request['method'] == 'POST') {
+                    $data = json_decode($request['data']);
+
+                    foreach ($data->regions as $dataRegion) {
+                        if ($dataRegion->region == $region && $dataRegion->screen == $screen) {
+                            $res = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->assertEquals(
+            $res,
+            $result,
+            sprintf(
+                'The channel "%s" should'.(!$result ? ' not' : '').' be pushed to screen "%s" in region "%s"',
+                $channel,
+                $screen,
+                $region
+            )
+        );
+    }
+
+    /**
+     * @Then channel :arg1 should be pushed to screen :arg2 region :arg3
+     */
+    public function channelShouldBePushedToScreenRegion($arg1, $arg2, $arg3)
+    {
+        $this->channelPushedToScreenRegion($arg1, $arg2, $arg3);
+    }
+
+    /**
+     * @Then channel :arg1 should not be pushed to screen :arg2 region :arg3
+     */
+    public function channelShouldNotBePushedToScreenRegion($arg1, $arg2, $arg3)
+    {
+        $this->channelPushedToScreenRegion($arg1, $arg2, $arg3, false);
+    }
+
+    /**
+     * @When I clear utility service
+     */
+    public function clearUtilityService()
+    {
+        $this->container->get('os2display.utility_service')->clear();
+    }
+
+    /**
+     * @When I clear all channels
+     */
+    public function clearAllChannels()
+    {
+        $channels = $this->doctrine->getRepository(
+            'Os2DisplayCoreBundle:Channel'
+        )->findAll();
+
+        foreach ($channels as $channel) {
+            $channel->setLastPushHash(null);
+            $channel->setLastPushScreens([]);
+        }
+
+        $this->doctrine->getManager()->flush();
+    }
+
+    /**
+     * @When I print all channel screen regions
+     */
+    public function iPrintAllChannelScreenRegions()
+    {
+        $csrs = $this->doctrine->getRepository(
+            'Os2DisplayCoreBundle:ChannelScreenRegion'
+        )->findAll();
+        var_dump($csrs);
+    }
+
+    /**
+     * @When I add channel screen region with channel :arg1 screen :arg2 region :arg3
+     */
+    public function iAddChannelScreenRegionWithChannelScreenRegion(
+        $arg1,
+        $arg2,
+        $arg3
+    ) {
+        $screenRepository = $this->doctrine->getManager()->getRepository(
+            Screen::class
+        );
+        $channelRepository = $this->doctrine->getManager()->getRepository(
+            Channel::class
+        );
+
+        $channel = $channelRepository->findOneBy(['id' => $arg1]);
+        $screen = $screenRepository->findOneBy(['id' => $arg2]);
+
+        $csr = new ChannelScreenRegion();
+        $csr->setChannel($channel);
+        $csr->setScreen($screen);
+        $csr->setRegion($arg3);
+        $this->doctrine->getManager()->persist($csr);
+
+        $channel->addChannelScreenRegion($csr);
+        $screen->addChannelScreenRegion($csr);
+
+        $this->doctrine->getManager()->flush();
     }
 }
