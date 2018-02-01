@@ -25,7 +25,7 @@ Feature: campaign
     And I get all the utility service curl calls with prefix middleware
     Then curl calls should equal:
       | url                                            | method | data                                                                                                                                                    | prefix     |
-      | https://middleware.os2display.vm/api/channel/1 | POST   | {"title":"Channel 1","data":{"id":1,"slides":[],"schedule_repeat_days":[]},"regions":[{"screen":1,"region":0}],"screens":[1],"schedule_repeat_days":[]} | middleware |
+      | https://middleware.os2display.vm/api/channel/1 | POST   | {"title":"Channel 1","data":{"id":1,"slides":[],"schedule_repeat_days":[]},"regions":[{"screen":1,"region":1}],"screens":[1],"schedule_repeat_days":[]} | middleware |
     And channel 1 should be pushed to screen 1
     And channel 2 should not be pushed to screen 1
     And I clear utility service
@@ -42,13 +42,22 @@ Feature: campaign
     {
       "title": "The first campaign",
       "schedule_from": "2001-01-01",
-      "schedule_to": "2001-01-31",
+      "schedule_to": "2041-01-31",
       "groups": [],
       "channels": [3],
+      "screen_groups": [],
       "screens": [1]
     }
     """
     And the response status code should be 201
+
+    And I send a "GET" request to "/api/channel"
+    And print last JSON response
+
+    And I send a "GET" request to "/api/screen"
+    And print last JSON response
+
+    And I print all channel screen regions
 
     And I call pushToScreens
     And I print all the utility service curl calls

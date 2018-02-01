@@ -82,6 +82,13 @@ class MiddlewareCommunication extends BaseService
         return $screenIds;
     }
 
+    private function getScreenIdsFromData($data)
+    {
+        $decoded = json_decode($data);
+
+        return $decoded->screens;
+    }
+
     /**
      * Push a Channel or a SharedChannel to the middleware.
      *
@@ -96,13 +103,45 @@ class MiddlewareCommunication extends BaseService
      */
     public function pushChannel($channel, $data, $id, $force)
     {
+
+        /* Move to pushChannel
+        // Get screen ids.
+        $screenIds = $this->getScreenIdsOnChannel($channel);
+        if (count($screenIds) > 0) {
+                *****
+        } else {
+            if (!is_null($channel->getLastPushHash())) {
+                // Channel don't have any screens, so delete from the middleware. This
+                // will automatically remove it from any screen connected to the
+                // middleware that displays is currently.
+                $curlResult = $this->utilityService->curl(
+                    $this->middlewarePath.'/channel/'.$channel->getId(),
+                    'DELETE',
+                    json_encode(array()),
+                    'middleware'
+                );
+
+                if ($curlResult['status'] !== 200) {
+                    // Delete did't not work, so mark the channel for re-push by removing last push hash.
+                    $channel->setLastPushHash(null);
+                } else {
+                    // Channel delete success, so empty last push screens.
+                    $channel->setLastPushScreens(json_encode([]));
+                }
+            }
+        }
+
+        */
+
         // Calculate hash of content, used to avoid unnecessary push.
         $sha1 = sha1($data);
 
         // Check if the channel should be pushed.
         if ($force || $sha1 !== $channel->getLastPushHash()) {
             // Get screen ids.
-            $screenIds = $this->getScreenIdsOnChannel($channel);
+            //$screenIds = $this->getScreenIdsOnChannel($channel);
+
+            $screenIds = $this->getScreenIdsFromData($data);
 
             // Only push channel if it's attached to a least one screen. If no screen
             // is attached then channel will be deleted from the middleware and
@@ -158,198 +197,6 @@ class MiddlewareCommunication extends BaseService
                     $channel->setLastPushHash(null);
                 }
             } else {
-                // Channel don't have any screens, so delete from the middleware. This
-                // will automatically remove it from any screen connected to the
-                // middleware that displays is currently.
-                $curlResult = $this->utilityService->curl(
-                    $this->middlewarePath.'/channel/'.$id,
-                    'DELETE',
-                    json_encode(array()),
-                    'middleware'
-                );
-
-                if ($curlResult['status'] !== 200) {
-                    // Delete did't not work, so mark the channel for re-push.
-                    $channel->setLastPushHash(null);
-                } else {
-                    // Channel delete push'ed, so set meta-data about screens to empty
-                    // array, which is the current screen array.
-                    $channel->setLastPushScreens(json_encode($screenIds));
-                }
-            }
-        }
-    }
-
-    /**
-     * Should the channel be pushed?
-     *
-     * @param $channel
-     * @return bool
-     */
-    private function channelShouldBePushed($channel)
-    {
-        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
-            if (is_null($channel->getLastPushHash()) ||
-                empty($channel->getLastPushScreens())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function getCampaignScreenIds($carry, $item)
-    {
-        foreach ($item->getChannels() as $channel) {
-            $carry[] = $channel->getId();
-        }
-        foreach ($item->getScreenGroups() as $group) {
-            $groupings = $group->getGrouping();
-
-            foreach ($groupings as $grouping) {
-                $carry[] = $grouping->getEntityId();
-            }
-        }
-
-        return $carry;
-    }
-
-    /**
-     * Removes ChannelScreenRegions that are affected by Campaigns.
-     * Adds ChannelsScreenRegions that applies to campaigns.
-     */
-    private function applyCampaigns()
-    {
-        $now = new \DateTime();
-
-        $queryBuilder = $this->doctrine
-            ->getManager()
-            ->createQueryBuilder();
-
-        $campaigns = $queryBuilder->select('campaign')
-            ->from(Campaign::class, 'campaign')
-            ->where(
-                ':now between campaign.scheduleFrom and campaign.scheduleTo'
-            )
-            ->setParameter('now', $now)
-            ->getQuery()->getResult();
-
-        // Get id of all screens that are affected by campaigns.
-        $campaignsScreenIds = array_reduce(
-            $campaigns,
-            function ($carry, $item) {
-                foreach ($item->getChannels() as $channel) {
-                    $carry[] = $channel->getId();
-                }
-                foreach ($item->getScreenGroups() as $group) {
-                    $groupings = $group->getGrouping();
-
-                    foreach ($groupings as $grouping) {
-                        $carry[] = $grouping->getEntityId();
-                    }
-                }
-
-                return $carry;
-            },
-            []
-        );
-
-        // Remove duplicates.
-        $campaignsScreenIds = array_unique($campaignsScreenIds);
-
-        // Find all ChannelScreenRegions where campaigns apply.
-        $queryBuilder = $this->doctrine
-            ->getManager()
-            ->createQueryBuilder();
-        $campaignCSR =
-            $queryBuilder->select('c')
-                ->from(ChannelScreenRegion::class, 'c')
-                ->where('c.region = 1')
-                ->andWhere(
-                    $queryBuilder->expr()->in('c.screen', $campaignsScreenIds)
-                )
-                ->getQuery()->getResult();
-
-        // Add ChannelScreenRegions for all campaigns.
-        foreach ($campaigns as $campaign) {
-            $campaignChannels = $campaign->getChannels();
-
-            $campaignChannelIds = [];
-            foreach ($campaignChannels as $campaignChannel) {
-                $campaignChannelIds[] = $campaignChannel->getId();
-            }
-
-            $campaignScreenIds = array_unique($this->getCampaignScreenIds([], $campaign));
-
-            foreach ($campaignScreenIds as $screenId) {
-                foreach ($campaignChannelIds as $channelId) {
-                    $channel = $this->entityManager
-                        ->getRepository('Os2DisplayCoreBundle:Channel')
-                        ->findOneById($channelId);
-                    $screen = $this->entityManager
-                        ->getRepository('Os2DisplayCoreBundle:Screen')
-                        ->findOneById($screenId);
-
-                    $newCSR = new ChannelScreenRegion();
-                    $newCSR->setRegion(1);
-                    $newCSR->setChannel($channel);
-                    $newCSR->setScreen($screen);
-                }
-            }
-        }
-    }
-
-    /**
-     * Pushes the channels for each screen to the middleware.
-     *
-     * Campaigns only apply to region 1 of screens.
-     *
-     * @param boolean $force
-     *   Should the push to screen be forced, even though the content has previously been pushed to the middleware?
-     */
-    public function pushToScreens($force = false)
-    {
-        $p1 = $this->doctrine->getRepository(
-            'Os2DisplayCoreBundle:ChannelScreenRegion'
-        )->findAll();
-
-        $this->applyCampaigns();
-
-        $p2 = $this->doctrine->getRepository(
-            'Os2DisplayCoreBundle:ChannelScreenRegion'
-        )->findAll();
-
-        $p3 = 1;
-
-        $queryBuilder = $this->entityManager
-            ->createQueryBuilder();
-
-        // @TODO: Optimize which channels should be examined.
-        // Get channels that are currently pushed to screens,
-        // or should be pushed to screens.
-        $activeChannels =
-            $queryBuilder->select('c')
-                ->from(Channel::class, 'c')
-                ->getQuery()->getResult();
-
-        foreach ($activeChannels as $channel) {
-            if (!$this->channelShouldBePushed($channel)) {
-                continue;
-            }
-
-            // Get screen ids.
-            $screenIds = $this->getScreenIdsOnChannel($channel);
-
-            if (count($screenIds) > 0) {
-                $data = $this->serializer->serialize(
-                    $channel,
-                    'json',
-                    SerializationContext::create()
-                        ->setGroups(array('middleware'))
-                );
-
-                $this->pushChannel($channel, $data, $channel->getId(), $force);
-            } else {
                 if (!is_null($channel->getLastPushHash())) {
                     // Channel don't have any screens, so delete from the middleware. This
                     // will automatically remove it from any screen connected to the
@@ -371,11 +218,260 @@ class MiddlewareCommunication extends BaseService
                 }
             }
         }
+    }
+
+    private function campaignsApply($channel)
+    {
+        $now = new \DateTime();
+
+        $queryBuilder = $this->doctrine
+            ->getManager()
+            ->createQueryBuilder();
+
+        $campaigns = $queryBuilder->select('campaign')
+            ->from(Campaign::class, 'campaign')
+            ->where(
+                ':now between campaign.scheduleFrom and campaign.scheduleTo'
+            )
+            ->andWhere(
+                ':channel member of campaign.channels'
+            )
+            ->setParameter('channel', $channel)
+            ->setParameter('now', $now)
+            ->getQuery()->getResult();
+
+        return count($campaigns) > 0;
+    }
+
+    /**
+     * Should the channel be pushed?
+     *
+     * @param $channel
+     * @return bool
+     */
+    private function channelShouldBePushed($channel)
+    {
+        // @TODO: Add check for No active campaigns.
+        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
+            // If no campaigns apply and it has not been pushed before.
+            if (!$this->campaignsApply($channel) &&
+                (
+                    is_null($channel->getLastPushHash()) ||
+                    empty($channel->getLastPushScreens()))
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the screens the campaign affects.
+     *
+     * @param $campaign
+     * @return array
+     */
+    private function getCampaignScreenIds($campaign)
+    {
+        $screenIds = [];
+
+        foreach ($campaign->getScreens() as $screen) {
+            $screenIds[] = $screen->getId();
+        }
+        foreach ($campaign->getScreenGroups() as $group) {
+            $groupings = $group->getGrouping();
+
+            foreach ($groupings as $grouping) {
+                $screenIds[] = $grouping->getEntityId();
+            }
+        }
+
+        return array_unique($screenIds);
+    }
+
+    /**
+     * Get the campaign channel ids.
+     *
+     * @param $campaign
+     * @return array
+     */
+    private function getCampaignChannelIds($campaign)
+    {
+        $campaignChannels = $campaign->getChannels();
+
+        $campaignChannelIds = [];
+        foreach ($campaignChannels as $campaignChannel) {
+            $campaignChannelIds[] = $campaignChannel->getId();
+        }
+
+        return $campaignChannelIds;
+    }
+
+    private function calculateCampaignChanges($activeChannels)
+    {
+        $results = [];
+
+        $now = new \DateTime();
+
+        $queryBuilder = $this->doctrine
+            ->getManager()
+            ->createQueryBuilder();
+
+        $campaigns = $queryBuilder->select('campaign')
+            ->from(Campaign::class, 'campaign')
+            ->where(
+                ':now between campaign.scheduleFrom and campaign.scheduleTo'
+            )
+            ->setParameter('now', $now)
+            ->getQuery()->getResult();
+
+        $channelScreenRegions = $this->doctrine->getRepository(
+            'Os2DisplayCoreBundle:ChannelScreenRegion'
+        )->findAll();
+
+        // Create results array from all ChannelScreenRegions.
+        foreach ($channelScreenRegions as $csr) {
+            $channelId = $csr->getChannel()->getId();
+            $region = $csr->getRegion();
+            $screenId = $csr->getScreen()->getId();
+
+            if (!isset($results[$channelId])) {
+                $results[$channelId] = [
+                    'screens' => [],
+                    'regions' => [],
+                ];
+            }
+
+            $results[$channelId]['screens'] = array_unique(
+                array_merge($results[$channelId]['screens'], [$screenId])
+            );
+            $results[$channelId]['regions'][] = (object)[
+                'screen' => $screenId,
+                'region' => $region,
+            ];
+        }
+
+        // Modify results array based on active campaigns.
+        foreach ($campaigns as $campaign) {
+            $campaignChannelIds = $this->getCampaignChannelIds($campaign);
+            $campaignScreenIds = $this->getCampaignScreenIds($campaign);
+
+            // Remove all regions that are affected by the campaigns.
+            foreach ($results as $channelId => &$result) {
+                foreach ($result['regions'] as $key => $region) {
+                    if ($region->region === 1) {
+                        if (in_array($region->screen, $campaignScreenIds)) {
+                            unset($result['regions'][$key]);
+                            $result['regions'] = array_values(
+                                $result['regions']
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Add all regions and screens that come from campaigns.
+            foreach ($campaignChannelIds as $campaignChannelId) {
+                foreach ($campaignScreenIds as $campaignScreenId) {
+                    if (!isset($results[$campaignChannelId])) {
+                        $results[$campaignChannelId] = [
+                            'screens' => [],
+                            'regions' => [],
+                        ];
+                    }
+
+                    $results[$campaignChannelId]['screens'] = array_unique(
+                        array_merge(
+                            $results[$campaignChannelId]['screens'],
+                            [$campaignScreenId]
+                        )
+                    );
+                    $results[$campaignChannelId]['regions'][] = (object)[
+                        'screen' => $campaignScreenId,
+                        'region' => 1,
+                    ];
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Pushes the channels for each screen to the middleware.
+     *
+     * Campaigns only apply to region 1 of screens.
+     *
+     * @param boolean $force
+     *   Should the push to screen be forced, even though the content has previously been pushed to the middleware?
+     */
+    public function pushToScreens($force = false)
+    {
+        $queryBuilder = $this->entityManager
+            ->createQueryBuilder();
+
+        // @TODO: Optimize which channels should be examined.
+        // Get channels that are currently pushed to screens,
+        // or should be pushed to screens.
+        $activeChannels =
+            $queryBuilder->select('c')
+                ->from(Channel::class, 'c')
+                ->getQuery()->getResult();
+
+        $campaignChanges = $this->calculateCampaignChanges($activeChannels);
+
+        foreach ($activeChannels as $channel) {
+            var_dump("active channel: ".$channel->getId());
+
+            if (!$this->channelShouldBePushed($channel)) {
+                var_dump('ignore channel');
+                continue;
+            }
+
+            $data = $this->serializer->serialize(
+                $channel,
+                'json',
+                SerializationContext::create()
+                    ->setGroups(array('middleware'))
+            );
+
+
+            var_dump("-- before --");
+            var_dump($data);
+
+            // If campaign changes are set, apply them to channel.
+            if (isset($campaignChanges[$channel->getId()])) {
+                $dataArray = json_decode($data);
+
+                $dataArray->regions =
+                    $campaignChanges[$channel->getId()]['regions'];
+
+                $dataArray->screens = [];
+
+                foreach ($dataArray->regions as $region) {
+                    $dataArray->screens = array_merge(
+                        $dataArray->screens,
+                        [$region->screen]
+                    );
+                }
+
+                $data = json_encode($dataArray);
+            }
+
+            var_dump("-- after --");
+            var_dump($data);
+            var_dump(json_encode($campaignChanges));
+
+            $this->pushChannel($channel, $data, $channel->getId(), $force);
+        }
 
         // Push shared channels
         $sharedChannels = $this->doctrine->getRepository(
             'Os2DisplayCoreBundle:SharedChannel'
         )->findAll();
+
+        // @TODO: Remove shared channels if a campaign is applied to the screens the shared channel is a part of.
 
         foreach ($sharedChannels as $sharedChannel) {
             $data = $this->serializer->serialize(
