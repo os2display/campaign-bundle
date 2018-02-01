@@ -50,9 +50,7 @@ class MiddlewareCommunication extends BaseService
         parent::__construct($container, $templateService, $utilityService);
 
         $this->middlewarePath =
-            $this->container->getParameter(
-                'middleware_host'
-            ).
+            $this->container->getParameter('middleware_host').
             $this->container->getParameter('middleware_path');
         $this->doctrine = $this->container->get('doctrine');
         $this->serializer = $this->container->get('jms_serializer');
@@ -103,44 +101,12 @@ class MiddlewareCommunication extends BaseService
      */
     public function pushChannel($channel, $data, $id, $force)
     {
-
-        /* Move to pushChannel
-        // Get screen ids.
-        $screenIds = $this->getScreenIdsOnChannel($channel);
-        if (count($screenIds) > 0) {
-                *****
-        } else {
-            if (!is_null($channel->getLastPushHash())) {
-                // Channel don't have any screens, so delete from the middleware. This
-                // will automatically remove it from any screen connected to the
-                // middleware that displays is currently.
-                $curlResult = $this->utilityService->curl(
-                    $this->middlewarePath.'/channel/'.$channel->getId(),
-                    'DELETE',
-                    json_encode(array()),
-                    'middleware'
-                );
-
-                if ($curlResult['status'] !== 200) {
-                    // Delete did't not work, so mark the channel for re-push by removing last push hash.
-                    $channel->setLastPushHash(null);
-                } else {
-                    // Channel delete success, so empty last push screens.
-                    $channel->setLastPushScreens(json_encode([]));
-                }
-            }
-        }
-
-        */
-
         // Calculate hash of content, used to avoid unnecessary push.
         $sha1 = sha1($data);
 
         // Check if the channel should be pushed.
         if ($force || $sha1 !== $channel->getLastPushHash()) {
             // Get screen ids.
-            //$screenIds = $this->getScreenIdsOnChannel($channel);
-
             $screenIds = $this->getScreenIdsFromData($data);
 
             // Only push channel if it's attached to a least one screen. If no screen
@@ -209,14 +175,18 @@ class MiddlewareCommunication extends BaseService
                     );
 
                     if ($curlResult['status'] !== 200) {
-                        // Delete did't not work, so mark the channel for re-push by removing last push hash.
+                        // Delete did't not work, so mark the channel for
+                        // re-push of DELETE by removing last push hash.
                         $channel->setLastPushHash(null);
                     } else {
-                        // Channel delete success, so empty last push screens.
+                        // Channel delete success, so empty last pushed screens.
                         $channel->setLastPushScreens(json_encode([]));
                     }
                 }
             }
+
+            // Save changes to database.
+            $this->entityManager->flush();
         }
     }
 
@@ -251,7 +221,6 @@ class MiddlewareCommunication extends BaseService
      */
     private function channelShouldBePushed($channel)
     {
-        // @TODO: Add check for No active campaigns.
         if (count($this->getScreenIdsOnChannel($channel)) === 0) {
             // If no campaigns apply and it has not been pushed before.
             if (!$this->campaignsApply($channel) &&
@@ -422,10 +391,7 @@ class MiddlewareCommunication extends BaseService
         $campaignChanges = $this->calculateCampaignChanges($activeChannels);
 
         foreach ($activeChannels as $channel) {
-            var_dump("active channel: ".$channel->getId());
-
             if (!$this->channelShouldBePushed($channel)) {
-                var_dump('ignore channel');
                 continue;
             }
 
@@ -435,10 +401,6 @@ class MiddlewareCommunication extends BaseService
                 SerializationContext::create()
                     ->setGroups(array('middleware'))
             );
-
-
-            var_dump("-- before --");
-            var_dump($data);
 
             // If campaign changes are set, apply them to channel.
             if (isset($campaignChanges[$channel->getId()])) {
@@ -458,10 +420,6 @@ class MiddlewareCommunication extends BaseService
 
                 $data = json_encode($dataArray);
             }
-
-            var_dump("-- after --");
-            var_dump($data);
-            var_dump(json_encode($campaignChanges));
 
             $this->pushChannel($channel, $data, $channel->getId(), $force);
         }

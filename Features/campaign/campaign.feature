@@ -11,6 +11,7 @@ Feature: campaign
     And the following screens exist:
       | title    | channel | created_at | modified_at |
       | Screen 1 | 1       | 0          | 0           |
+      | Screen 2 |         | 0          | 0           |
     And the following users exist:
       | username | password | roles                                      | groups |
       | user     | user     | ROLE_USER, ROLE_CAMPAIGN_ADMIN, ROLE_ADMIN |        |
@@ -32,7 +33,7 @@ Feature: campaign
     And I call pushToScreens
     And I get all the utility service curl calls with prefix middleware
     Then curl calls should equal:
-      | url                                            | method | data                                                                                                                                                    | prefix     |
+      | url | method | data | prefix |
 
   Scenario: Assert that campaign will take over other channels
     When I clear all channels
@@ -50,21 +51,37 @@ Feature: campaign
     }
     """
     And the response status code should be 201
-
-    And I send a "GET" request to "/api/channel"
-    And print last JSON response
-
-    And I send a "GET" request to "/api/screen"
-    And print last JSON response
-
-    And I print all channel screen regions
-
     And I call pushToScreens
-    And I print all the utility service curl calls
+#    And I print all the utility service curl calls
     And I get all the utility service curl calls with prefix middleware
     Then channel 1 should not be pushed to screen 1
     And channel 2 should not be pushed to screen 1
     And channel 3 should be pushed to screen 1
+
+  # Assumes campaign created in above scenario
+  Scenario: Assert that campaign will only take over region 1
+    When I clear all channels
+    And I clear utility service
+    And I add channel screen region with channel 1 screen 1 region 2
+    And I add channel screen region with channel 2 screen 1 region 3
+    And I add channel screen region with channel 3 screen 1 region 4
+    And I call pushToScreens
+    And I get all the utility service curl calls with prefix middleware
+    Then channel 1 should be pushed to screen 1
+    And channel 2 should be pushed to screen 1
+    And channel 3 should be pushed to screen 1
+    And channel 1 should not be pushed to screen 1 region 1
+    And channel 1 should be pushed to screen 1 region 2
+    And channel 2 should be pushed to screen 1 region 3
+    And channel 3 should be pushed to screen 1 region 4
+
+  # Assumes above scenario has run
+  Scenario: Assert no push after already pushing content
+    When I clear utility service
+    And I call pushToScreens
+    And I get all the utility service curl calls with prefix middleware
+    Then curl calls should equal:
+      | url | method | data | prefix |
 
   @dropSchema
   Scenario: Drop schema
