@@ -60,6 +60,30 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
             }
         });
 
+        busService.$on('menuApp.requestHamburgerMenuItems', function requestHamburgerMenuItems (event, args) {
+            busService.$emit('menuApp.returnHamburgerMenuItems', [
+                    {
+                        title: $translate.instant('menu.campaign'),
+                        weight: 5,
+                        items: [
+                            {
+                                title: 'Oversigt',
+                                route: '/#/campaign',
+                                activeFilter: '/campaign',
+                                weight: 1
+                            },
+                            {
+                                title: 'Opret kanal',
+                                route: '/#/campaign/create',
+                                activeFilter: '/campaign/create',
+                                weight: 2
+                            }
+                        ]
+                    }
+                ]
+            );
+        });
+
         // Listen for sub menu requests
         busService.$on('menuApp.requestSubMenuItems', function (event, data) {
             var items = [];
@@ -88,7 +112,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 
                 if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
                     var message = apiData.active_campaigns.reduce(function (sum, campaign) {
-                        return sum + '<p>' + $translate.instant('messages.active_campaign_short', { title: campaign.title}) + ' ' + $filter('date')(campaign.schedule_to, 'medium') + ' </p>';
+                        return sum + '<p>' + $translate.instant('messages.active_campaign_short', {title: campaign.title}) + ' ' + $filter('date')(campaign.schedule_to, 'medium') + ' </p>';
                     }, '');
 
                     var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';

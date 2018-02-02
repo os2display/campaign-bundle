@@ -49,9 +49,9 @@
             display: table;
         }
     }
-    
+
     .popup--dialog {
-        max-width: 90%;
+        max-width: 1260px;
     }
     .overview--section, .overview--filter, .overview--sorting, .overview--channels, .overview--groups {
         max-width: 100%;
@@ -73,7 +73,7 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
-    
+
     .overview--filter-label, .overview--sort-label, .overview--label {
         font-weight: bold;
         overflow: hidden;
@@ -81,9 +81,9 @@
         width: 100%;
         display: block;
     }
-    
+
     .xdsoft_datetimepicker .xdsoft_label {
         z-index: 10;
     }
-    
+
 }
