@@ -38,3 +38,7 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+  os2display.campaign.subscriber.roles:
+    class: Itk\CampaignBundle\Event\RolesSubscriber
+    tags:
+      - { name: kernel.event_subscriber }
