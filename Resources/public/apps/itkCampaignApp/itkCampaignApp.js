@@ -47,7 +47,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 
         // Register listener for requests for Main Menu items
         busService.$on('menuApp.requestMainMenuItems', function requestMainMenuItems (event, args) {
-            if (userService.hasRole('ROLE_ADMIN')) {
+            if (userService.hasRole('ROLE_CAMPAIGN_ADMIN')) {
                 busService.$emit('menuApp.returnMainMenuItems', [
                     {
                         title: $translate.instant('menu.campaign'),
@@ -88,7 +88,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
         busService.$on('menuApp.requestSubMenuItems', function (event, data) {
             var items = [];
 
-            if (userService.hasRole('ROLE_ADMIN')) {
+            if (userService.hasRole('ROLE_CAMPAIGN_ADMIN')) {
                 items.push({
                     title: $translate.instant('menu.campaign_create'),
                     path: '#/campaign/create',

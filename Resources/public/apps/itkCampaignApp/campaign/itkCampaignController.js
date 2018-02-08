@@ -18,7 +18,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
 
         // Check role.
         // @TODO: Replace with new CAMPAIGN role.
-        if (!$scope.requireRole('ROLE_ADMIN')) {
+        if (!$scope.requireRole('ROLE_CAMPAIGN_ADMIN')) {
             busService.$emit('log.error', {
                 timeout: 5000,
                 cause: 403,
