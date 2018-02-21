@@ -104,11 +104,14 @@ class MiddlewareCommunication extends BaseService
         // Calculate hash of content, used to avoid unnecessary push.
         $sha1 = sha1($data);
 
-        // Check if the channel should be pushed.
-        if ($force || $sha1 !== $channel->getLastPushHash()) {
-            // Get screen ids.
-            $screenIds = $this->getScreenIdsFromData($data);
+        // Get screen ids.
+        $screenIds = $this->getScreenIdsFromData($data);
+        $lastPushScreens = json_decode($channel->getLastPushScreens());
 
+        // Check if the channel should be pushed.
+        if ($force ||
+            $sha1 != $channel->getLastPushHash() ||
+            $screenIds != $lastPushScreens) {
             // Only push channel if it's attached to a least one screen. If no screen
             // is attached then channel will be deleted from the middleware and
             // $lastPushTime will be reset later on in this function.
@@ -168,7 +171,7 @@ class MiddlewareCommunication extends BaseService
                     // will automatically remove it from any screen connected to the
                     // middleware that displays is currently.
                     $curlResult = $this->utilityService->curl(
-                        $this->middlewarePath.'/channel/'.$channel->getId(),
+                        $this->middlewarePath.'/channel/'.$id,
                         'DELETE',
                         json_encode(array()),
                         'middleware'
@@ -277,7 +280,12 @@ class MiddlewareCommunication extends BaseService
         return $campaignChannelIds;
     }
 
-    private function calculateCampaignChanges($activeChannels)
+    /**
+     * Calculates the changes to channel data [.screens and .regions fields].
+     *
+     * @return array
+     */
+    private function calculateCampaignChanges()
     {
         $results = [];
 
@@ -301,7 +309,14 @@ class MiddlewareCommunication extends BaseService
 
         // Create results array from all ChannelScreenRegions.
         foreach ($channelScreenRegions as $csr) {
-            $channelId = $csr->getChannel()->getId();
+            if (!is_null($csr->getChannel())) {
+                $channelId = $csr->getChannel()->getId();
+            } elseif (!is_null($csr->getSharedChannel())) {
+                $channelId = $csr->getSharedChannel()->getUniqueId();
+            } else {
+                continue;
+            }
+
             $region = $csr->getRegion();
             $screenId = $csr->getScreen()->getId();
 
@@ -321,6 +336,8 @@ class MiddlewareCommunication extends BaseService
             ];
         }
 
+        $before = $results;
+
         // Modify results array based on active campaigns.
         foreach ($campaigns as $campaign) {
             $campaignChannelIds = $this->getCampaignChannelIds($campaign);
@@ -329,7 +346,8 @@ class MiddlewareCommunication extends BaseService
             // Remove all regions that are affected by the campaigns.
             foreach ($results as $channelId => &$result) {
                 foreach ($result['regions'] as $key => $region) {
-                    if ($region->region === 1) {
+                    if ($region->region === 1 &&
+                        !(isset($region->added_by_campaign) && $region->added_by_campaign == true)) {
                         if (in_array($region->screen, $campaignScreenIds)) {
                             unset($result['regions'][$key]);
                             $result['regions'] = array_values(
@@ -359,6 +377,7 @@ class MiddlewareCommunication extends BaseService
                     $results[$campaignChannelId]['regions'][] = (object)[
                         'screen' => $campaignScreenId,
                         'region' => 1,
+                        'added_by_campaign' => true,
                     ];
                 }
             }
@@ -388,7 +407,7 @@ class MiddlewareCommunication extends BaseService
                 ->from(Channel::class, 'c')
                 ->getQuery()->getResult();
 
-        $campaignChanges = $this->calculateCampaignChanges($activeChannels);
+        $campaignChanges = $this->calculateCampaignChanges();
 
         foreach ($activeChannels as $channel) {
             if (!$this->channelShouldBePushed($channel)) {
@@ -416,6 +435,8 @@ class MiddlewareCommunication extends BaseService
                         $dataArray->screens,
                         [$region->screen]
                     );
+
+                    $dataArray->screens = array_unique($dataArray->screens);
                 }
 
                 $data = json_encode($dataArray);
@@ -428,8 +449,6 @@ class MiddlewareCommunication extends BaseService
         $sharedChannels = $this->doctrine->getRepository(
             'Os2DisplayCoreBundle:SharedChannel'
         )->findAll();
-
-        // @TODO: Remove shared channels if a campaign is applied to the screens the shared channel is a part of.
 
         foreach ($sharedChannels as $sharedChannel) {
             $data = $this->serializer->serialize(
@@ -447,6 +466,25 @@ class MiddlewareCommunication extends BaseService
 
             if ($data === null) {
                 continue;
+            }
+
+            // If campaign changes are set, apply them to channel.
+            if (isset($campaignChanges[$sharedChannel->getUniqueId()])) {
+                $dataArray = json_decode($data);
+
+                $dataArray->regions =
+                    $campaignChanges[$sharedChannel->getUniqueId()]['regions'];
+
+                $dataArray->screens = [];
+
+                foreach ($dataArray->regions as $region) {
+                    $dataArray->screens = array_merge(
+                        $dataArray->screens,
+                        [$region->screen]
+                    );
+                }
+
+                $data = json_encode($dataArray);
             }
 
             $this->pushChannel(
