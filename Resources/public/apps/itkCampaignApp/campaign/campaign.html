@@ -6,7 +6,8 @@
         <label for="campaign-name"
                class="input-title">{{ 'campaign.fields.name' | translate}}</label>
         <input type="text" name="campaign-name" id="campaign-name"
-               ng-model="campaign.title" class="input-type-text col-md-7" placeholder="{{ 'campaign.fields.name_placeholder' | translate}}">
+               ng-model="campaign.title" class="input-type-text col-md-7"
+               placeholder="{{ 'campaign.fields.name_placeholder' | translate}}">
         <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
       </div>
     </div>
@@ -15,7 +16,8 @@
         <label for="campaign-description"
                class="input-title">{{ 'campaign.fields.description' | translate}}</label>
         <div id="campaign-description" class="input-type-textarea col-md-7"
-        contenteditable="true" data-ng-model="campaign.description" placeholder="{{ 'campaign.fields.description_placeholder' | translate}}">
+             contenteditable="true" data-ng-model="campaign.description"
+             placeholder="{{ 'campaign.fields.description_placeholder' | translate}}">
         </div>
         <p class="input-help">{{ 'campaign.fields.description_help' | translate}}</p>
       </div>
@@ -55,7 +57,7 @@
         </div>
       </div>
     </div>
-    <div class="row campaign-channels">
+    <div class="row campaign-channels listview-table">
       <div class="col-md-12">
         <label for="campaign-channels" class="input-title">
           {{ 'campaign.fields.channels' | translate }}
@@ -64,27 +66,46 @@
           {{ 'campaign.fields.channels_help' | translate }}
         </p>
         <div class="btn-group">
-            <button class="input-btn-add" data-ng-click="addChannels()">
-                <i class="material-icons">add </i>
-                {{ 'type.channel' | translate }}
-            </button>
+          <button class="input-btn-add" data-ng-click="addChannels()">
+            <i class="material-icons">add </i>
+            {{ 'type.channel' | translate }}
+          </button>
         </div>
         <div id="campaign-channels" class="channels">
-          <div class="overview--channel channel-remove"
-               data-ng-repeat="channel in campaign.channels">
-            <img class="overview--channel-remove"
-                 data-ng-click="removeChannel(channel)"
-                 src="bundles/os2displayadmin/images/icons/cancel-icon.png">
-            <ik-channel class="overview--channel-container"
-                        ik-channel="channel"
-                        ik-width="300"
-                        ik-single-slide="false"></ik-channel>
-
-          </div>
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="w-80">
+                {{ 'fields.title' | translate }}
+              </th>
+              <th scope="col" class="w-10"><a
+                  href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+              </th>
+            </tr>
+            </thead>
+            <tbody data-ng-if="!loading">
+            <tr data-ng-repeat="channel in campaign.channels">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeChannel(channel)">
+              </td>
+              <td class="name"><a
+                  data-ng-href="{{'/#/channel/' + channel.id}}">{{channel.title}}</a>
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/channel/' + channel.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <div class="row campaign-screens">
+    <div class="row campaign-screens listview-table">
       <div class="col-md-12">
         <label for="campaign-screens" class="input-title">
           {{ 'campaign.fields.screens' | translate }}
@@ -93,37 +114,69 @@
           {{ 'campaign.fields.screens_help' | translate }}
         </p>
         <div class="btn-group">
-            <button class="input-btn-add" data-ng-click="addScreens()">
+          <button class="input-btn-add" data-ng-click="addScreens()">
             <i class="material-icons">add </i>
             {{ 'type.screen' | translate }}
-            </button>
-            <button class="input-btn-add" data-ng-click="addScreenGroups()">
+          </button>
+          <button class="input-btn-add" data-ng-click="addScreenGroups()">
             <i class="material-icons">add </i>
             {{ 'type.screen_group' | translate }}
-            </button>
+          </button>
         </div>
         <div id="campaign-screens" class="screens">
-          <div class="overview--screen"
-               data-ng-repeat="screen in campaign.screens">
-            <img class="overview--channel-remove"
-                 data-ng-click="removeScreen(screen)"
-                 src="bundles/os2displayadmin/images/icons/cancel-icon.png">
-            <ik-screen class="overview--channel-container"
-                       ik-screen="screen">{{ screen.title }}</ik-screen>
-          </div>
-          <div class="overview--screen"
-               data-ng-repeat="screenGroup in campaign.screen_groups">
-            <img class="overview--channel-remove"
-                 data-ng-click="removeScreenGroup(screenGroup)"
-                 src="bundles/os2displayadmin/images/icons/cancel-icon.png">
-            
-            <div class="overview--screengroup-container">
-                {{ screenGroup.title }}
-            </div>
-
-          </div>
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th scope="col" class="w-10"></th>
+              <th scope="col" class="w-60">
+                {{ 'fields.title' | translate }}
+              </th>
+              <th scope="col" class="w-20"><a
+                  href="">{{ 'fields.type' | translate }}</a>
+              </th>
+              <th scope="col" class="w-10"><a
+                  href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+              </th>
+            </tr>
+            </thead>
+            <tbody data-ng-if="!loading">
+            <tr data-ng-repeat="screen in campaign.screens">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeScreen(screen)">
+              </td>
+              <td class="name"><a
+                  data-ng-href="{{'/#/screen/' + screen.id}}">{{screen.title}}</a>
+              </td>
+              <td class="screens d-none d-md-table-cell">
+                {{ 'type.screen' | translate }}
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/screen/' + channel.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            <tr data-ng-repeat="screenGroup in campaign.screen_groups">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeScreenGroup(screenGroup)">
+              </td>
+              <td class="name">{{screenGroup.title}}</td>
+              <td class="screens d-none d-md-table-cell">
+                {{ 'type.screen_group' | translate }}
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/admin/group/' + screenGroup.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-        
       </div>
     </div>
     <div class="row campaign-actions">

@@ -81,6 +81,10 @@
       "no_results": "Ingen resultater."
     }
   },
+  "fields": {
+    "title": "Navn",
+    "type": "Type"
+  },
   "menu": {
     "campaign": "Kampagner",
     "campaign_create": "Opret kampagne"
