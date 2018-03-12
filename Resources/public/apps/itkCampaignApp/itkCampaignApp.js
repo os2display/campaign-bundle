@@ -111,9 +111,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                 var apiData = data.entity.api_data;
 
                 if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
-                    var message = apiData.active_campaigns.reduce(function (sum, campaign) {
-                        return sum + '<p>' + $translate.instant('messages.active_campaign_short', {title: campaign.title}) + ' ' + $filter('date')(campaign.schedule_to, 'medium') + ' </p>';
-                    }, '');
+                    var message = '<p>' + $translate.instant('messages.active_campaign_exists') + '</p>';
 
                     var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';
 
@@ -138,7 +136,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 
                 if (apiData && apiData.active_campaigns && apiData.active_campaigns.length > 0) {
                     var message = apiData.active_campaigns.reduce(function (sum, campaign) {
-                        return sum + '<p>' + $translate.instant('messages.active_campaign') + ' ' + $filter('date')(campaign.schedule_to, 'H:mm d/M/yyyy') + ' (' + $translate.instant('messages.active_campaign_see') + '<a href="/#/campaign/' + campaign.id + '">' + campaign.title + '</a>)</p>';
+                        return sum + '<p>' + $translate.instant('messages.active_campaign') + $filter('date')(campaign.schedule_from, 'd/M/yyyy H:mm') + ' - ' + $filter('date')(campaign.schedule_to, 'd/M/yyyy H:mm') + ' (<a href="/#/campaign/' + campaign.id + '">' + campaign.title + '</a>)</p>';
                     }, '');
 
                     var html =

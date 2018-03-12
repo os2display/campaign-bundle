@@ -26,9 +26,10 @@ class ApiDataService
               ->where(':now between c.scheduleFrom and c.scheduleTo')
               ->andWhere($queryBuilder->expr()->orX(
                 ':screen member of c.screens',
-                ':screen member of c.screenGroups'
+                ':groups member of c.screenGroups'
               ))
               ->setParameter('screen', $entity)
+              ->setParameter('groups', $entity->getGroups())
               ->setParameter('now', new \DateTime())
               ->getQuery()->getResult();
 

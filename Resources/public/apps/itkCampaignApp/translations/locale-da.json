@@ -90,9 +90,10 @@
     "campaign_create": "Opret kampagne"
   },
   "messages": {
-    "active_campaign": "Aktiv kampagne slutter",
+    "active_campaign": "Aktiv kampagne fra ",
     "active_campaign_see": "Kampagne: ",
     "active_campaign_short": "Aktiv kampagne '{{title}}' slutter",
+    "active_campaign_exists": "Aktiv kampagne",
     "campaign_created": "Kampagnen blev oprettet",
     "campaign_created_error": "Kampagnen blev ikke gemt",
     "campaign_load_error": "Kampagnen kunne ikke hentes",
