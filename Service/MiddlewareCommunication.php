@@ -26,7 +26,7 @@ use Os2Display\CoreBundle\Services\MiddlewareCommunication as BaseService;
  */
 class MiddlewareCommunication extends BaseService
 {
-    // @TODO: Move these to constructor dependecy injection, instead of using container.
+    // @TODO: Move these to constructor dependency injection, instead of using container.
     protected $middlewarePath;
     protected $doctrine;
     protected $serializer;
@@ -80,6 +80,12 @@ class MiddlewareCommunication extends BaseService
         return $screenIds;
     }
 
+    /**
+     * Get Screen Ids from json_encoded channel data.
+     *
+     * @param string $data The json encoded channel data.
+     * @return mixed
+     */
     private function getScreenIdsFromData($data)
     {
         $decoded = json_decode($data);
@@ -106,7 +112,20 @@ class MiddlewareCommunication extends BaseService
 
         // Get screen ids.
         $screenIds = $this->getScreenIdsFromData($data);
-        $lastPushScreens = json_decode($channel->getLastPushScreens());
+
+        $lastPushScreens = $channel->getLastPushScreens();
+
+        // Make sure last push screen is an array.
+        if (!is_array($lastPushScreens)) {
+            // Backwards compatibility conversion.
+            if (is_string($lastPushScreens) && $decoded = json_decode($lastPushScreens)) {
+                $lastPushScreens = $decoded;
+            } else {
+                $lastPushScreens = [];
+            }
+
+            $channel->setLastPushScreens($lastPushScreens);
+        }
 
         // Check if the channel should be pushed.
         if ($force ||
@@ -125,18 +144,11 @@ class MiddlewareCommunication extends BaseService
 
                 // If the result was delivered, update the last hash.
                 if ($curlResult['status'] === 200) {
-                    $lastPushScreens = $channel->getLastPushScreens();
-
                     // Push deletes to the middleware if a channel has been on a screen previously,
                     // but now has been removed.
                     $updatedScreensFailed = false;
 
-                    $lastPushScreensArray = array();
-                    if (!empty($lastPushScreens)) {
-                        $lastPushScreensArray = json_decode($lastPushScreens);
-                    }
-
-                    foreach ($lastPushScreensArray as $lastPushScreenId) {
+                    foreach ($lastPushScreens as $lastPushScreenId) {
                         if (!in_array($lastPushScreenId, $screenIds)) {
                             $curlResult = $this->utilityService->curl(
                                 $this->middlewarePath.'/channel/'.$id.'/screen/'.$lastPushScreenId,
@@ -154,7 +166,7 @@ class MiddlewareCommunication extends BaseService
                     // If the delete process was successful, update last push information.
                     // else set values to NULL to ensure new push.
                     if (!$updatedScreensFailed) {
-                        $channel->setLastPushScreens(json_encode($screenIds));
+                        $channel->setLastPushScreens($screenIds);
                         $channel->setLastPushHash($sha1);
                     } else {
                         // Removing channel from some screens have failed, hence mark the
@@ -183,7 +195,7 @@ class MiddlewareCommunication extends BaseService
                         $channel->setLastPushHash(null);
                     } else {
                         // Channel delete success, so empty last pushed screens.
-                        $channel->setLastPushScreens(json_encode([]));
+                        $channel->setLastPushScreens([]);
                     }
                 }
             }
@@ -193,6 +205,12 @@ class MiddlewareCommunication extends BaseService
         }
     }
 
+    /**
+     * Is the channel affected by a campaign?
+     *
+     * @param Channel $channel The channel.
+     * @return bool
+     */
     private function campaignsApply($channel)
     {
         $now = new \DateTime();
@@ -335,8 +353,6 @@ class MiddlewareCommunication extends BaseService
                 'region' => $region,
             ];
         }
-
-        $before = $results;
 
         // Modify results array based on active campaigns.
         foreach ($campaigns as $campaign) {

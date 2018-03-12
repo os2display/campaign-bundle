@@ -83,5 +83,114 @@ Feature: campaign
     Then curl calls should equal:
       | url | method | data | prefix |
 
+  Scenario: Check that campaign with screen group is applied to the given channel
+    When I send a "POST" request to "/api/group" with body:
+      """
+      {
+        "title": "The first group"
+      }
+      """
+    And the response status code should be 201
+    And I send a "POST" request to "/api/channel" with body:
+      """
+      {
+        "id": null,
+        "title": "Channel 4",
+        "slides": [],
+        "screens": [],
+        "groups": [],
+        "orientation": "",
+        "created_at": 1507280950,
+        "sharing_indexes": [],
+        "schedule_repeat_days": []
+      }
+      """
+    And the response status code should be 200
+    And I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen in group",
+        "description": "Description of The first screen",
+        "groups": [1]
+      }
+      """
+    And the response status code should be 200
+
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen 2 in group",
+        "description": "Description",
+        "groups": [1]
+      }
+      """
+    And the response status code should be 200
+
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And the response status code should be 200
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": "Second campaign",
+      "schedule_from": "2002-01-01",
+      "schedule_to": "2039-01-31",
+      "groups": [],
+      "channels": [4],
+      "screen_groups": [1],
+      "screens": []
+    }
+    """
+    And the response status code should be 201
+
+    And I clear utility service
+    And I call pushToScreens
+
+    And channel 4 should not be pushed to screen 1
+    And channel 4 should not be pushed to screen 2
+    And channel 4 should be pushed to screen 3
+    And channel 4 should be pushed to screen 4
+
+  Scenario: When I change the campaign to and old date, it should be removed from screens
+    And I send a "PUT" request to "/api/campaign/2" with body:
+    """
+    {
+      "id": 2,
+      "schedule_to": "2003-01-31"
+    }
+    """
+    And the response status code should be 200
+    And I clear utility service
+    And I call pushToScreens
+    And channel 4 should be deleted from middleware
+
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "PUT" request to "/api/campaign/2" with body:
+    """
+    {
+      "id": 2,
+      "schedule_to": "2033-01-31"
+    }
+    """
+    And I clear utility service
+    And I call pushToScreens
+
+    And channel 4 should not be pushed to screen 1
+    And channel 4 should not be pushed to screen 2
+    And channel 4 should be pushed to screen 3
+    And channel 4 should be pushed to screen 4
+
+
   @dropSchema
   Scenario: Drop schema

@@ -323,6 +323,37 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $this->channelPushedToScreen($arg1, $arg2, false);
     }
 
+    /**
+     * @Then channel :arg1 should be deleted from middleware
+     */
+    public function channelShouldBeDeletedFromMiddleware($arg1) {
+        $requests = $this->container->get('os2display.utility_service')
+            ->getAllRequests('middleware');
+
+        $res = false;
+
+        foreach ($requests as $request) {
+            if (explode(
+                    'https://middleware.os2display.vm/api/channel/',
+                    $request['url']
+                )[1] == $arg1) {
+                if ($request['method'] == 'DELETE') {
+                    $res = true;
+                    break;
+                }
+            }
+        }
+
+        $this->assertEquals(
+            $res,
+            true,
+            sprintf(
+                'The channel "%s" should be removed from the middleware',
+                $arg1
+            )
+        );
+    }
+
     private function channelPushedToScreenRegion(
         $channel,
         $screen,
