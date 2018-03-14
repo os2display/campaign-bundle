@@ -36,6 +36,9 @@
                    data-ng-model="campaign.schedule_from" datetime-picker=""
                    config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
 
+            <input type="text"
+                   data-ng-model="campaign.schedule_from" datetime-picker-text="">
+
             <p class="input-help">{{ 'campaign.fields.schedule_from_help' | translate }}</p>
           </div>
           <div class="col-md-1 d-none d-md-block">
@@ -51,6 +54,9 @@
             <input type="text"
                    data-ng-model="campaign.schedule_to" datetime-picker=""
                    data-config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+
+            <input type="text"
+                   data-ng-model="campaign.schedule_to" datetime-picker-text="">
 
             <p class="input-help">{{ 'campaign.fields.schedule_to_help' | translate }}</p>
           </div>
