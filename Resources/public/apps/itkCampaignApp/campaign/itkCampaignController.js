@@ -186,8 +186,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
         }
 
         function convertCampaignDatesToUTC (campaign) {
-            campaign.schedule_from = new Date(campaign.schedule_from * 1000).toUTCString();
-            campaign.schedule_to = new Date(campaign.schedule_to * 1000).toUTCString();
+            campaign.schedule_from = new Date(campaign.schedule_from * 1000).toISOString();
+            campaign.schedule_to = new Date(campaign.schedule_to * 1000).toISOString();
 
             return campaign;
         }
