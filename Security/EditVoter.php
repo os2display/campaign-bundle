@@ -13,7 +13,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class EditVoter extends Voter {
+class EditVoter extends Voter
+{
     protected $manager;
     protected $decisionManager;
     protected $securityManager;
@@ -24,30 +25,35 @@ class EditVoter extends Voter {
     const DELETE = 'DELETE';
     const READ_LIST = 'LIST';
 
-    public function __construct(EntityManagerInterface $manager, AccessDecisionManagerInterface $decisionManager, SecurityManager $securityManager) {
+    public function __construct(EntityManagerInterface $manager, AccessDecisionManagerInterface $decisionManager, SecurityManager $securityManager)
+    {
         $this->manager = $manager;
         $this->decisionManager = $decisionManager;
         $this->securityManager = $securityManager;
     }
 
-    protected function supports($attribute, $subject) {
+    protected function supports($attribute, $subject)
+    {
         return in_array($attribute, [self::CREATE, self::READ, self::UPDATE, self::DELETE, self::READ_LIST]);
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    {
         if ($this->decisionManager->decide($token, [Roles::ROLE_ADMIN])) {
-            return TRUE;
+            return true;
         }
 
         $user = $token->getUser();
         if (!$user instanceof User) {
             // the user must be logged in; if not, deny access
-            return FALSE;
+            return false;
         }
 
         switch ($attribute) {
             case self::CREATE:
-                        header('Content-type: text/plain'); echo var_export(['attribute' => $attribute], true); die(__FILE__.':'.__LINE__.':'.__METHOD__);
+                        header('Content-type: text/plain');
+                echo var_export(['attribute' => $attribute], true);
+                die(__FILE__.':'.__LINE__.':'.__METHOD__);
 
                 return false;
 

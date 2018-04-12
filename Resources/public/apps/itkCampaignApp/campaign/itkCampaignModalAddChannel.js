@@ -15,17 +15,17 @@ angular.module('itkCampaignApp').controller('ItkCampaignModalAddChannel', [
             $timeout(function () {
                 var index = null;
 
-                channels.forEach(function (slideChannel, channelIndex) {
+                $scope.channels.forEach(function (slideChannel, channelIndex) {
                     if (channel.id === slideChannel.id) {
                         index = channelIndex;
                     }
                 });
 
                 if (index !== null) {
-                    channels.splice(index, 1);
+                    $scope.channels.splice(index, 1);
                 }
                 else {
-                    channels.push(channel);
+                    $scope.channels.push(channel);
                 }
             });
         }

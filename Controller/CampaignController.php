@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/api/campaign")
- * @Rest\View(serializerGroups={"api"})
+ * @Rest\View(serializerGroups={"campaign"})
  */
 class CampaignController extends ApiController
 {
@@ -92,16 +92,15 @@ class CampaignController extends ApiController
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
      * @return Campaign
      */
-    public function editAction(Request $request, Campaign $campaign) {
+    public function editAction(Request $request, Campaign $campaign)
+    {
         $data = $this->getData($request);
 
         try {
             $campaign = $this->get('os2display.campaign_manager')->updateCampaign($campaign, $data);
-        }
-        catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             throw new HttpDataException(Codes::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
-        }
-        catch (DuplicateEntityException $e) {
+        } catch (DuplicateEntityException $e) {
             throw new HttpDataException(Codes::HTTP_CONFLICT, $data, 'Duplicate campaign', $e);
         }
 
@@ -119,12 +118,13 @@ class CampaignController extends ApiController
      * @param \Os2Display\CoreBundle\Entity\Campaign $campaign
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, Campaign $campaign) {
+    public function deleteAction(Request $request, Campaign $campaign)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($campaign);
         $em->flush();
 
-        return $this->view(NULL, Codes::HTTP_NO_CONTENT);
+        return $this->view(null, Codes::HTTP_NO_CONTENT);
     }
 
     // @FIXME: Hook into ApiController's method.

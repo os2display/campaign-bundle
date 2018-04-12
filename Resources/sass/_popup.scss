@@ -1,39 +1,89 @@
 .itk-campaign {
-  .popup {
-    z-index: 1000;
-    text-align: left;
-  }
+    .popup {
+        z-index: 1000;
+        text-align: left;
+        h1 {
+            margin-top: 0;
+            margin-right: 2em;
+        }
+        .btn {
+            &-close {
+                position: absolute;
+                top: .5em;
+                right: 4em;
+                background: transparent;
+                border: none;
+                line-height: 3.1em;
+                color: $blue;
+                i {
+                    color: $blue;
+                    width: 2em;
+                    height: 2em;
+                    margin-left: .5em;
+                    border-radius: 50%;
+                    padding-top: .4em;
+                    background: $white;
+                    border: 2px solid $blue;
+                    position: absolute;
+                }
+                &:hover {
+                    color: $blue-dark;
+                    i {
+                        color: $blue-dark;
+                        border-color: $blue-dark;
+                    }
+                }
+                &:focus {
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+        }
+        .modal-content {
+            margin-top: 2em;
+        }
+        .modal-actions {
+            margin-top: 2em;
+        }
+        .table-responsive {
+            display: table;
+        }
+    }
 
-  .popup--dialog {
-    max-width: 90%;
-  }
+    .popup--dialog {
+        max-width: 1260px;
+    }
+    .overview--section, .overview--filter, .overview--sorting, .overview--channels, .overview--groups {
+        max-width: 100%;
+    }
+    .overview--filter-field {
+        border: 1px solid #ddd;
+        display: block;
+        min-height: 1.25em;
+        width: 100%;
+        padding: .75em;
+        color: #222;
+        background-color: #fff;
+        -webkit-border-radius: .4em;
+        -moz-border-radius: .4em;
+        -ms-border-radius: .4em;
+        -o-border-radius: .4em;
+        border-radius: .4em;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 
-  .overview--filter-field {
-    border: 1px solid #ddd;
-    display: block;
-    min-height: 1.25em;
-    width: 100%;
-    padding: .75em;
-    color: #222;
-    background-color: #fff;
-    -webkit-border-radius: .4em;
-    -moz-border-radius: .4em;
-    -ms-border-radius: .4em;
-    -o-border-radius: .4em;
-    border-radius: .4em;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+    .overview--filter-label, .overview--sort-label, .overview--label {
+        font-weight: bold;
+        overflow: hidden;
+        text-align: left;
+        width: 100%;
+        display: block;
+    }
 
-  .overview--filter-label, .overview--sort-label, .overview--label {
-    font-weight: bold;
-    overflow: hidden;
-    text-align: left;
-    width: 100%;
-  }
+    .xdsoft_datetimepicker .xdsoft_label {
+        z-index: 10;
+    }
 
-  .xdsoft_datetimepicker .xdsoft_label {
-    z-index: 10;
-  }
 }

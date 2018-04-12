@@ -5,12 +5,12 @@ Feature: campaign
   I need to be able to …
 
   Background:
-    Given the following groups exist:
-      | title   |
-      | Group 1 |
-      | Group 2 |
-      | Group 3 |
-      | Group 4 |
+    Given the following 'Os2Display\CoreBundle\Entity\Group' entities exist:
+      | id | title   |
+      |  1 | Group 1 |
+      |  2 | Group 2 |
+      |  3 | Group 3 |
+      |  4 | Group 4 |
 
     And the following users exist:
       | username | password | roles                          | groups                                 |
@@ -39,6 +39,48 @@ Feature: campaign
       []
       """
 
+  Scenario: Create campaign with no title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
+  Scenario: Create campaign with empty title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": "",
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
+
+  Scenario: Create campaign with blank title
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": " ",
+      "schedule_from": "2001-01-01",
+      "schedule_to": "2001-01-31",
+      "groups": [1]
+    }
+    """
+    Then the response status code should be 400
+
   Scenario: Create campaign
     When I sign in with username "user" and password "user"
     And I add "content-type" header equal to "application/json"
@@ -61,8 +103,8 @@ Feature: campaign
     And the JSON node "" should have 1 element
     And the JSON node "[0].id" should be equal to 1
     And the JSON node "[0].title" should be equal to "The first campaign"
-    And the JSON node "[0].schedule_from" should be equal to "2001-01-01T00:00:00+0100"
-    And the JSON node "[0].schedule_to" should be equal to "2001-01-31T00:00:00+0100"
+    And the JSON node "[0].schedule_from" should be equal to "2001-01-01T00:00:00+0000"
+    And the JSON node "[0].schedule_to" should be equal to "2001-01-31T00:00:00+0000"
 
   Scenario: Update campaign
     When I sign in with username "user" and password "user"
@@ -188,6 +230,57 @@ Feature: campaign
     And the JSON node "" should have 1 element
     And the JSON node "[0].id" should be equal to 1
     And the JSON node "[0].title" should be equal to "The first campaign (updated)"
+
+  Scenario: Add screen groups to campaign
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "PUT" request to "/api/campaign/1" with body:
+    """
+    {
+      "screen_groups": [1,3]
+    }
+    """
+    Then the response status code should be 200
+
+    When I sign in with username "user" and password "user"
+    And I send a "GET" request to "/api/campaign/1"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON node "screen_groups" should have 1 elements
+
+  Scenario: Add screen groups to campaign
+    When I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+    And I send a "PUT" request to "/api/campaign/1" with body:
+    """
+    {
+      "screen_groups": [2,1]
+    }
+    """
+    Then the response status code should be 200
+
+    When I sign in with username "user" and password "user"
+    And I send a "GET" request to "/api/campaign/1"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON node "screen_groups" should have 2 elements
+
+  Scenario: Add screen groups to campaign
+    When I sign in with username "user2" and password "user2"
+    And I add "content-type" header equal to "application/json"
+    And I send a "PUT" request to "/api/campaign/1" with body:
+    """
+    {
+      "screen_groups": [1,4]
+    }
+    """
+    Then the response status code should be 200
+
+    When I sign in with username "user" and password "user"
+    And I send a "GET" request to "/api/campaign/1"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON node "screen_groups" should have 3 elements
 
   Scenario: Remove campaign
     When I sign in with username "user" and password "user"

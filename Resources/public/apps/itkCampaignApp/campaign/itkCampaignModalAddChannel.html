@@ -1,11 +1,15 @@
 <div class="itk-campaign">
   <popup>
-    <div>
+    <button class="btn btn-close" ng-click="closeModal()">{{ 'common.action.close' | translate }}<i class="material-icons">close</i></button>
+    <h1>{{ 'campaign.modal.addchannel.title' | translate }}</h1>
+    <p>{{ 'campaign.modal.addchannel.description' | translate }}</p>
+    <div class="modal-content">
       <ik-channel-overview ik-selected-channels="channels"
                            ik-hide-filters="true"
                            ik-overlay="true"></ik-channel-overview>
     </div>
-    <a class="button-link" title="Annullér" ng-click="closeModal()">
-      {{ 'common.action.finish' | translate }}</a>
+    <div class="modal-actions">
+        <button class="button-link confirm" ng-click="closeModal()">{{ 'common.action.finish' | translate }}</button>
+    </div>
   </popup>
 </div>

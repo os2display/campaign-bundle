@@ -8,7 +8,8 @@ angular.module('itkCampaignApp').directive('contenteditable', function () {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, element, attrs, ngModel) {
-            function read () {
+            function read()
+            {
                 ngModel.$setViewValue(element.html());
             }
 

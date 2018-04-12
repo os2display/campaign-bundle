@@ -9,14 +9,27 @@ default:
       bundle: ItkCampaignBundle
       paths:
         - Features/campaign/
-        - Features/api/
+      contexts:
+        - Os2Display\CoreBundle\Features\Context\FeatureContext: ["@doctrine"]
+        - Itk\CampaignBundle\Features\Context\CampaignContext: ["@doctrine"]
+        - Behat\MinkExtension\Context\MinkContext
+        - behatch:context:rest
+        - behatch:context:json
+      filters:
+        tags: '@campaign'
+    api_features:
+      mink_session: default
+      type: symfony_bundle
+      bundle: Os2DisplayCoreBundle
+      paths:
+          - Features/api/
       contexts:
         - Os2Display\CoreBundle\Features\Context\FeatureContext: ["@doctrine"]
         - Behat\MinkExtension\Context\MinkContext
         - behatch:context:rest
         - behatch:context:json
       filters:
-        tags: @campaign
+        tags: '@api'
 
   extensions:
     Behat\Symfony2Extension:

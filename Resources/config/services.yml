@@ -25,3 +25,20 @@ services:
     # public: false
     tags:
       - { name: security.voter }
+
+  os2display.campaign.service.api_data:
+    class: Itk\CampaignBundle\Service\ApiDataService
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  os2display.campaign.subscriber.api_data:
+    class: Itk\CampaignBundle\Event\ApiDataSubscriber
+    arguments:
+      - '@os2display.campaign.service.api_data'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  os2display.campaign.subscriber.roles:
+    class: Itk\CampaignBundle\Event\RolesSubscriber
+    tags:
+      - { name: kernel.event_subscriber }

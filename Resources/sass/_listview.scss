@@ -15,6 +15,10 @@
                 line-height: 60px;
                 color: $black;
                 @include transition-in(color);
+
+                &.inactive {
+                    color: $gray-500;
+                }
             }
             &:hover {
                 background: $gray-300;
@@ -29,10 +33,14 @@
             }
             &-delete {
                 border-left: 1px solid $gray-300;
+
+
             }
         }
     }
     &-table {
+        text-align: left;
+
         table.table {
             border-bottom: 1px solid $gray-300;
             thead {
@@ -101,6 +109,14 @@
                                     margin: 0 4px 2px 2px;
                                     &.active {
                                         background-color: $green;
+                                    }
+                                    // @TODO: Pick color.
+                                    &.future {
+                                        background-color: $yellow;
+                                    }
+                                    // @TODO: Pick color.
+                                    &.expired {
+                                        background-color: $red;
                                     }
                                 }
                             }
