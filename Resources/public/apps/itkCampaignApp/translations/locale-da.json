@@ -1,0 +1,123 @@
+{
+  "action": {
+    "campaign_save": "Gem din kampagne",
+    "save": "Gem"
+  },
+  "campaign": {
+    "fields": {
+      "name": "Kampagnenavn",
+      "name_placeholder": "Min kampagne 1",
+      "name_help": "Vælg et unikt og genkendeligt navn til kampagnen",
+      "description": "Beskrivelse",
+      "description_placeholder": "Beskrivelse af min kampagne 1",
+      "description_help": "Vælg en kort beskrivelse af kampagnen",
+      "schedule": "Planlægning",
+      "schedule_from": "Fra",
+      "schedule_from_help": "Vælg hvornår kampagnen skal starte",
+      "schedule_to": "Til",
+      "schedule_to_help": "Vælg hvornår kampagnen skal slutte",
+      "channels": "Kanaler",
+      "channels_help": "Vælg kanalerne der skal vises i kampagnen",
+      "screens": "Skærme",
+      "screens_help": "Vælg skærme eller grupper af skærme der skal vises i kampagnen"
+    },
+    "status": {
+      "active": "Aktiv",
+      "future": "Fremtidig",
+      "expired": "Udløbet"
+    },
+    "modal": {
+        "addchannel": {
+            "title": "Tilføj kanaler",
+            "description": "Vælg kanalerne du vil tilføje ved at markere dem nedenfor. Luk derefter vinduet."
+        },
+        "addscreen": {
+            "title": "Tilføj skærme",
+            "description": "Vælg skærmene du vil aktivere kampagnen på ved at markere dem nedenfor. Luk derefter vinduet."
+        },
+        "addgroup": {
+            "title": "Tilføj gruppe",
+            "description": "Vælg gruppen af skærme du vil aktivere kampagnen på ved at markere den nedenfor. Luk derefter vinduet."
+        }
+    }
+  },
+  "campaign_modal_add_screen_group": {
+    "fields": {
+      "group": "Gruppenavn",
+      "screens_in_group": "Skærme i gruppen"
+    }
+  },
+  "campaign_overview": {
+    "fields": {
+      "name": "Kampagnenavn",
+      "screens": "Skærme",
+      "screens_and_screen_groups": "Skærme og skærmgrupper",
+      "status": "Status",
+      "from": "Start",
+      "to": "Slut",
+      "tools": "Værktøjer"
+    },
+      "help": {
+        "title": "Hjælp til kampagner",
+        "description": "Med kampagner har du mulighed for helt at overtage en eller flere skærme, som i forvejen et opsat til at vise indholde fra kanaler. Således vil alt andet indhold end den givne kampagne være skjult i hele kampagne perioenden. Efter kampagne perionden vil skærmene vende tilbage til det opringeligt planlagte indhold.",
+        "close": "Luk vinduet"
+        },
+    "filter_placeholder": "Filtrér",
+    "confirm_delete": "Bekræft at du vil slette følgende kampagner:"
+  },
+  "common": {
+    "action": {
+      "cancel": "Annullér",
+      "confirm": "Bekræft",
+      "finish": "Afslut",
+      "close": "Luk"
+    },
+    "error": {
+      "could_not_load_results": "Kunne ikke hente søgeresultater.",
+      "forbidden": "Du har ikke adgang til denne side",
+      "not_found": "Siden blev ikke fundet"
+    },
+    "messages": {
+      "no_results": "Ingen resultater."
+    }
+  },
+  "fields": {
+    "title": "Navn",
+    "type": "Type"
+  },
+  "menu": {
+    "campaign": "Kampagner",
+    "campaign_create": "Opret kampagne"
+  },
+  "messages": {
+    "active_campaign": "Aktiv kampagne fra ",
+    "active_campaign_see": "Kampagne: ",
+    "active_campaign_short": "Aktiv kampagne '{{title}}' slutter",
+    "active_campaign_exists": "Aktiv kampagne",
+    "campaign_created": "Kampagnen blev oprettet",
+    "campaign_created_error": "Kampagnen blev ikke gemt",
+    "campaign_load_error": "Kampagnen kunne ikke hentes",
+    "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
+    "campaign_updated_error": "Kampagnen blev ikke gemt",
+    "campaign_delete_success": "Kampagnerne blev slettet",
+    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke"
+  },
+  "screen_list": {
+    "filter": "Filtrér på:",
+    "filter_placeholder": "Angiv del af titlen for at filtrere listen",
+    "sort": "Sorter på:",
+    "sort_newest": "Nyeste",
+    "sort_oldest": "Ældste",
+    "sort_alphabetic": "A-Å",
+    "fields": {
+      "screen": "Skærm",
+      "description": "Beskrivelse",
+      "in_group": "Er med i gruppe"
+    }
+  },
+  "type": {
+    "channel": "Kanal",
+    "screen": "Skærm",
+    "screen_group": "Gruppe"
+  }
+}

@@ -1,0 +1,204 @@
+<div class="itk-campaign container">
+  <div data-ng-if="campaign !== null">
+
+    <div class="row campaign-name">
+      <div class="col-md-12">
+        <label for="campaign-name"
+               class="input-title">{{ 'campaign.fields.name' | translate}}</label>
+        <input type="text" name="campaign-name" id="campaign-name"
+               ng-model="campaign.title" class="input-type-text col-md-7"
+               placeholder="{{ 'campaign.fields.name_placeholder' | translate}}">
+        <p class="input-help">{{ 'campaign.fields.name_help' | translate}}</p>
+      </div>
+    </div>
+    <div class="row campaign-description">
+      <div class="col-md-12">
+        <label for="campaign-description"
+               class="input-title">{{ 'campaign.fields.description' | translate}}</label>
+        <div id="campaign-description" class="input-type-textarea col-md-7"
+             contenteditable="true" data-ng-model="campaign.description"
+             placeholder="{{ 'campaign.fields.description_placeholder' | translate}}">
+        </div>
+        <p class="input-help">{{ 'campaign.fields.description_help' | translate}}</p>
+      </div>
+    </div>
+    <div class="row campaign-schedule">
+      <div class="col-md-12">
+        <label
+            class="input-title">{{ 'campaign.fields.schedule' | translate}}</label>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-sub-title">
+              <p>{{ 'campaign.fields.schedule_from' | translate}}</p>
+            </div>
+
+            <input type="text"
+                   data-ng-model="campaign.schedule_from" datetime-picker=""
+                   config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+
+            <input type="text"
+                   data-ng-model="campaign.schedule_from" datetime-picker-text="">
+
+            <p class="input-help">{{ 'campaign.fields.schedule_from_help' | translate }}</p>
+          </div>
+          <div class="col-md-1 d-none d-md-block">
+                    <span class="align-middle">
+                        <i class="material-icons">arrow_forward</i>
+                    </span>
+          </div>
+          <div class="col-md-4">
+            <div class="input-sub-title">
+              <p>{{ 'campaign.fields.schedule_to' | translate}}</p>
+            </div>
+
+            <input type="text"
+                   data-ng-model="campaign.schedule_to" datetime-picker=""
+                   data-config="{lang: 'da', format: 'd/m/Y H:i', inline: true, scrollMonth: false, scrollTime: false}">
+
+            <input type="text"
+                   data-ng-model="campaign.schedule_to" datetime-picker-text="">
+
+            <p class="input-help">{{ 'campaign.fields.schedule_to_help' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row campaign-channels listview-table">
+      <div class="col-md-12">
+        <label for="campaign-channels" class="input-title">
+          {{ 'campaign.fields.channels' | translate }}
+        </label>
+        <p class="input-help">
+          {{ 'campaign.fields.channels_help' | translate }}
+        </p>
+        <div class="btn-group">
+          <button class="input-btn-add" data-ng-click="addChannels()">
+            <i class="material-icons">add </i>
+            {{ 'type.channel' | translate }}
+          </button>
+        </div>
+        <div id="campaign-channels" class="channels">
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="w-80">
+                {{ 'fields.title' | translate }}
+              </th>
+              <th scope="col" class="w-10"><a
+                  href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+              </th>
+            </tr>
+            </thead>
+            <tbody data-ng-if="!loading">
+            <tr data-ng-repeat="channel in campaign.channels">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeChannel(channel)">
+              </td>
+              <td class="name"><a
+                  data-ng-href="{{'/#/channel/' + channel.id}}">{{channel.title}}</a>
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/channel/' + channel.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row campaign-screens listview-table">
+      <div class="col-md-12">
+        <label for="campaign-screens" class="input-title">
+          {{ 'campaign.fields.screens' | translate }}
+        </label>
+        <p class="input-help">
+          {{ 'campaign.fields.screens_help' | translate }}
+        </p>
+        <div class="btn-group">
+          <button class="input-btn-add" data-ng-click="addScreens()">
+            <i class="material-icons">add </i>
+            {{ 'type.screen' | translate }}
+          </button>
+          <button class="input-btn-add" data-ng-click="addScreenGroups()">
+            <i class="material-icons">add </i>
+            {{ 'type.screen_group' | translate }}
+          </button>
+        </div>
+        <div id="campaign-screens" class="screens">
+          <table class="table">
+            <thead class="thead-light">
+            <tr>
+              <th scope="col" class="w-10"></th>
+              <th scope="col" class="w-60">
+                {{ 'fields.title' | translate }}
+              </th>
+              <th scope="col" class="w-20"><a
+                  href="">{{ 'fields.type' | translate }}</a>
+              </th>
+              <th scope="col" class="w-10"><a
+                  href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+              </th>
+            </tr>
+            </thead>
+            <tbody data-ng-if="!loading">
+            <tr data-ng-repeat="screen in campaign.screens">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeScreen(screen)">
+              </td>
+              <td class="name"><a
+                  data-ng-href="{{'/#/screen/' + screen.id}}">{{screen.title}}</a>
+              </td>
+              <td class="screens d-none d-md-table-cell">
+                {{ 'type.screen' | translate }}
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/screen/' + screen.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            <tr data-ng-repeat="screenGroup in campaign.screen_groups">
+              <td>
+                <input type="checkbox" name=""
+                       checked="checked"
+                       ng-click="removeScreenGroup(screenGroup)">
+              </td>
+              <td class="name">{{screenGroup.title}}</td>
+              <td class="screens d-none d-md-table-cell">
+                {{ 'type.screen_group' | translate }}
+              </td>
+              <td class="tools">
+                <a data-ng-href="{{'/#/admin/group/' + screenGroup.id}}">
+                  <i class="material-icons">edit</i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row campaign-actions">
+      <div class="col-md-12">
+        <label class="input-title">
+          {{ 'action.campaign_save' | translate }}
+        </label>
+        <div class="create-slide--buttons">
+          <form data-ng-submit="save()" data-ng-show="!loading"
+                class="create-slide--form ng-pristine ng-valid">
+            <input type="submit" class="create-slide--button"
+                   value="{{ 'action.save' | translate }}">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spinner overview--spinner" data-ng-show="loading"></div>
+</div>

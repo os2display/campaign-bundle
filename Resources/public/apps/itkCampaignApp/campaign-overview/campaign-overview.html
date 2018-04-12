@@ -1,0 +1,109 @@
+<div class="itk-campaign container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="search" style="margin-bottom: 30px;">
+        <input type="text" class="input"
+               placeholder="{{ 'campaign_overview.filter_placeholder' | translate }}"
+               data-ng-model="search.title"/>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="listview">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="listview-tools">
+              <a data-ng-click="help()" class="tool tool-help"
+                 data-tooltip="Help">
+                <i class="material-icons">help</i>
+              </a>
+              <a data-ng-click="deleteCampaigns()"
+                 class="tool tool-delete float-right">
+                <i class="material-icons" data-ng-class="{'inactive': !showDelete()}">delete</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row listview-table">
+          <div class="col-md-12">
+            <table class="table table-hover table-responsive">
+              <thead class="thead-light">
+              <tr>
+                <th scope="col" class=""><input type="checkbox" name="" id=""
+                                                data-ng-model="allCheckbox"
+                                                data-ng-click="clickAllCheckbox()">
+                </th>
+                <th scope="col" class="">
+                  <a data-ng-click="flipSortOrder()">
+                    {{ 'campaign_overview.fields.name' | translate }}
+                    <i class="material-icons"
+                       data-ng-if="sortOrder">arrow_drop_down</i>
+                    <i class="material-icons"
+                       data-ng-if="!sortOrder">arrow_drop_up</i>
+                  </a>
+                </th>
+                <th scope="col" class="w-20 d-none d-md-table-cell"><a
+                    href="">{{ 'campaign_overview.fields.screens' | translate }}</a>
+                </th>
+                <th scope="col" class="w-5"><a
+                    href="">{{ 'campaign_overview.fields.status' | translate }}</a>
+                </th>
+                <th scope="col" class="w-15 d-none d-md-table-cell"><a
+                    href="">{{ 'campaign_overview.fields.from' | translate }}</a>
+                </th>
+                <th scope="col" class="w-15 d-none d-md-table-cell"><a
+                    href="">{{ 'campaign_overview.fields.to' | translate }}</a>
+                </th>
+                <th scope="col" class="w-10"><a
+                    href="">{{ 'campaign_overview.fields.tools' | translate }}</a>
+                </th>
+              </tr>
+              </thead>
+              <tbody data-ng-if="!loading">
+              <tr data-ng-repeat="campaign in campaigns | filter:search | orderBy:(sortOrder ? '' : '-') + 'title'"
+                  data-ng-class="{'table-active': selectedCampaigns[campaign.id]}">
+                <td class="checkbox">
+                  <input type="checkbox" name="" id="campaign-{{campaign.id}}"
+                         class="js-campaign-checkbox"
+                         data-ng-click="clickCheckbox()"
+                         data-ng-model="selectedCampaigns[campaign.id]">
+                </td>
+                <td class="name"><a
+                    data-ng-href="{{'/#/campaign/' + campaign.id}}">{{campaign.title}}</a>
+                </td>
+                <td class="screens d-none d-md-table-cell">
+                  <div class="textcrop">
+                    <span ng-repeat="screen in campaign.screens">
+                      {{ screen.title }}{{ !$last ? ', ' : ''}}
+                    </span>
+                    <span ng-repeat="group in campaign.screen_groups">
+                      {{ group.title }}{{ !$last ? ', ' : ''}}
+                    </span>
+                  </div>
+                  <!-- @TODO:
+                  <div class="showmore">
+                    <a href=""><i class="material-icons">more_vert</i></a>
+                  </div>
+                  -->
+                </td>
+                <td class="status">
+                  <div class="badge badge-secondary"><span
+                      class="badge-indicator {{campaign.status}}"></span> {{ 'campaign.status.' + campaign.status | translate }}
+                  </div>
+                </td>
+                <td class="date-start d-none d-md-table-cell">{{campaign.schedule_from | date:'HH:mm dd/MM/yy' }}</td>
+                <td class="date-end d-none d-md-table-cell">{{campaign.schedule_to | date:'HH:mm dd/MM/yy' }}</td>
+                <td class="tools"><a
+                    data-ng-href="{{'/#/campaign/' + campaign.id}}"><i
+                    class="material-icons">edit</i></a></td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="spinner overview--spinner" data-ng-show="loading"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

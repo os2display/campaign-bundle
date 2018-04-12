@@ -1,0 +1,158 @@
+.listview {
+    &-tools {
+        background: $gray-200;
+        height: 100%;
+        .tool {
+            width: 60px;
+            height: 60px;
+            display: block;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            float: left;
+            @include transition-in(background);
+            i {
+                line-height: 60px;
+                color: $black;
+                @include transition-in(color);
+
+                &.inactive {
+                    color: $gray-500;
+                }
+            }
+            &:hover {
+                background: $gray-300;
+                @include transition-out(background);
+                i {
+                    color: $blue;
+                    @include transition-out(color);
+                }
+            }
+            &-help {
+                border-right: 1px solid $gray-300;
+            }
+            &-delete {
+                border-left: 1px solid $gray-300;
+
+
+            }
+        }
+    }
+    &-table {
+        text-align: left;
+
+        table.table {
+            border-bottom: 1px solid $gray-300;
+            thead {
+                th {
+                    font-size: .85rem;
+                    text-align: left;
+                    text-transform: uppercase;
+                    white-space: nowrap;
+                    padding-top: 1.2rem;
+                    padding-bottom: 1rem;
+                    a {
+                        color: $gray-700;
+                        i {
+                            line-height: 0.5;
+                        }
+                    }
+                }
+                th:last-child {
+                    text-align: right;
+                }
+            }
+            tbody {
+                tr {
+                    @include transition-out(background);
+                    td {
+                        color: $black;
+                        font-size: .85rem;
+                        padding-top: 1.3rem;
+                        padding-bottom: 1rem;
+                        &.name {
+                            font-weight: bold;
+                            font-size: 1rem;
+                            a {
+                                color: $black;
+                            }
+                        }
+                        &.screens {
+                            .textcrop {
+                                white-space: nowrap;
+                                max-width: 150px;
+                                overflow: hidden;
+                                text-overflow:ellipsis;
+                                float: left;
+                            }
+                            .showmore {
+                                float: left;
+                                a {
+                                    color: $black;
+                                    &:hover {
+                                        color: $blue;
+                                    }
+                                }
+                            }
+                        }
+                        &.status {
+                            .badge {
+                                font-size: .85rem;
+                                font-weight: 400;
+                                color: $black;
+                                background-color: $gray-400;
+                                &-indicator {
+                                    width: 5px;
+                                    height: 5px;
+                                    display: inline-block;
+                                    border-radius: 50%;
+                                    margin: 0 4px 2px 2px;
+                                    &.active {
+                                        background-color: $green;
+                                    }
+                                    // @TODO: Pick color.
+                                    &.future {
+                                        background-color: $yellow;
+                                    }
+                                    // @TODO: Pick color.
+                                    &.expired {
+                                        background-color: $red;
+                                    }
+                                }
+                            }
+                        }
+                        &.tools {
+                            a {
+                                opacity: 0;
+                                color: $black;
+                                @include transition-out(opacity);
+                                &:hover {
+                                    color: $blue;
+                                }
+                            }
+                        }
+                    }
+                    td:last-child {
+                        text-align: right;
+                    }
+                    &.table-active {
+                        border-left: 3px solid $blue-darker;
+                    }
+                    &.table-active, &:hover {
+                        td {
+                            &.tools {
+                                a {
+                                    opacity: 1;
+                                    @include transition-in(opacity);
+                                }
+                            }
+                        }
+                    }
+                    &:hover {
+                        @include transition-in(background);
+                    }
+                }
+            }
+        }
+    }
+}

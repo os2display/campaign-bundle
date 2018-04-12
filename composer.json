@@ -1,0 +1,22 @@
+{
+    "name": "itk-os2display/campaign-bundle",
+    "description": "Os2Display campaigns",
+    "type": "symfony-bundle",
+    "require": {
+        "os2display/core-bundle": "^1.0",
+        "stof/doctrine-extensions-bundle": "^1.3"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "^2.3",
+        "behat/mink-extension": "^2.2",
+        "behat/symfony2-extension": "^2.1",
+        "behat/mink-selenium2-driver": "^1.3",
+        "behat/mink-browserkit-driver": "^1.3",
+        "behatch/contexts": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Itk\\CampaignBundle\\": ""
+        }
+    }
+}

@@ -1,0 +1,33 @@
+assets:
+  css:
+    - bundles/itkcampaign/assets/build/itkcampaign.min.css
+  js_prod:
+    - bundles/itkcampaign/assets/build/itkcampaign.min.js
+
+apps:
+  itkCampaignApp:
+    container: true
+    files:
+      - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignApp.js
+      - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignModalBase.js
+      - bundles/itkcampaign/apps/itkCampaignApp/directives/contenteditable.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewController.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewModalDelete.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignController.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.js
+      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.js
+      - bundles/itkcampaign/apps/itkCampaignApp/directives/screenList/itkScreenList.js
+    dependencies:
+      - ngRoute
+      - ngAnimate
+      - ngSanitize
+      - busModule
+      - mainModule
+      - bw.paging
+      - pascalprecht.translate
+      - datetimePicker
+      - angularModalService
+      - styleguideComponentsModule
+      - ikShared
+

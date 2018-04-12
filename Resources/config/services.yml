@@ -1,0 +1,44 @@
+services:
+  # Overrides CoreBundle/Services/MiddlewareCommunication.
+  os2display.middleware.communication:
+    class: Itk\CampaignBundle\Service\MiddlewareCommunication
+    arguments: ['@service_container', '@os2display.template_service', '@os2display.utility_service']
+    tags:
+      - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
+
+  os2display.campaign_manager:
+    class: Itk\CampaignBundle\Service\CampaignManager
+    arguments:
+      - '@os2display.entity_service'
+      - '@os2display.security_manager'
+      - '@os2display.group_manager'
+      - '@doctrine.orm.entity_manager'
+      - '@os2display.entity_manager'
+
+  os2display.campaign_edit_voter:
+    class: Itk\CampaignBundle\Security\EditVoter
+    # parent: os2display.edit_voter
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@security.access.decision_manager'
+      - '@os2display.security_manager'
+    # public: false
+    tags:
+      - { name: security.voter }
+
+  os2display.campaign.service.api_data:
+    class: Itk\CampaignBundle\Service\ApiDataService
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  os2display.campaign.subscriber.api_data:
+    class: Itk\CampaignBundle\Event\ApiDataSubscriber
+    arguments:
+      - '@os2display.campaign.service.api_data'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  os2display.campaign.subscriber.roles:
+    class: Itk\CampaignBundle\Event\RolesSubscriber
+    tags:
+      - { name: kernel.event_subscriber }
