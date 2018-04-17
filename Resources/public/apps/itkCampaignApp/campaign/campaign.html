@@ -185,14 +185,14 @@
         </div>
       </div>
     </div>
+    <label class="input-title">
+      {{ 'action.campaign_save' | translate }}
+    </label>
     <div class="row campaign-actions">
       <div class="col-md-12">
-        <label class="input-title">
-          {{ 'action.campaign_save' | translate }}
-        </label>
         <div class="create-slide--buttons">
           <form data-ng-submit="save()" data-ng-show="!loading"
-                class="create-slide--form ng-pristine ng-valid">
+                class="create-slide--form">
             <input type="submit" class="create-slide--button"
                    value="{{ 'action.save' | translate }}">
           </form>

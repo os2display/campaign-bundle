@@ -6,7 +6,7 @@
   "campaign": {
     "fields": {
       "name": "Kampagnenavn",
-      "name_placeholder": "Min kampagne 1",
+      "name_placeholder": "F.eks. Min kampagne 1",
       "name_help": "Vælg et unikt og genkendeligt navn til kampagnen",
       "description": "Beskrivelse",
       "description_placeholder": "Beskrivelse af min kampagne 1",
@@ -94,13 +94,16 @@
     "active_campaign_see": "Kampagne: ",
     "active_campaign_short": "Aktiv kampagne '{{title}}' slutter",
     "active_campaign_exists": "Aktiv kampagne",
-    "campaign_created": "Kampagnen blev oprettet",
-    "campaign_created_error": "Kampagnen blev ikke gemt",
-    "campaign_load_error": "Kampagnen kunne ikke hentes",
-    "campaign_updated": "Ændringerne af kampagnen er blevet gemt",
-    "campaign_updated_error": "Kampagnen blev ikke gemt",
-    "campaign_delete_success": "Kampagnerne blev slettet",
-    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke"
+    "campaign_created": "Kampagnen blev oprettet.",
+    "campaign_created_error": "Kampagnen blev ikke gemt.",
+    "campaign_created_error_no_title": "Kampagnenavn ikke angivet. Giv kampagnen et navn og prøv igen.",
+    "campaign_created_error_duplicate": "Kampagnen blev ikke gemt! Navnet er allerede brugt i anden kampagne. Vælg et andet kampagnenavn og prøv igen.",
+    "campaign_load_error": "Kampagnen kunne ikke hentes.",
+    "campaign_updated": "Ændringerne af kampagnen er blevet gemt.",
+    "campaign_updated_error": "Kampagnen blev ikke gemt.",
+    "campaign_updated_error_duplicate": "Ændringerne af kampagnen blev ikke gemt! Navnet er allerede brugt i anden kampagne. Vælg et andet kampagnenavn og prøv igen.",
+    "campaign_delete_success": "Kampagnerne blev slettet.",
+    "campaign_delete_error": "Sletningen af kampagnerne lykkedes ikke."
   },
   "screen_list": {
     "filter": "Filtrér på:",

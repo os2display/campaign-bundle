@@ -4,8 +4,8 @@
  */
 
 angular.module('itkCampaignApp').controller('ItkCampaignController', [
-    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', 'userService',
-    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, userService) {
+    'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter',
+    function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter) {
         'use strict';
 
         $scope.loading = true;
@@ -196,11 +196,20 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
          * Save the campaign.
          */
         $scope.save = function () {
+            if (!$scope.campaign.title) {
+                busService.$emit('log.error', {
+                    cause: 400,
+                    msg: $translate('messages.campaign_created_error_no_title')
+                });
+
+                return;
+            }
+
+            $scope.loading = true;
+
             var campaign = angular.copy($scope.campaign);
 
             campaign = convertCampaignDatesToUTC(campaign);
-
-            $scope.loading = true;
 
             if ($scope.campaign.id === undefined) {
                 $scope.createEntity('campaign', campaign).then(
@@ -210,11 +219,19 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                             timeout: 3000,
                             msg: $translate('messages.campaign_created')
                         });
+
+                        $location.path('/campaign');
                     },
                     function (err) {
+                        var message = $translate('messages.campaign_created_error');
+
+                        if (err.code === 409) {
+                            message = $translate('messages.campaign_created_error_duplicate')
+                        }
+
                         busService.$emit('log.error', {
                             cause: err.code,
-                            msg: $translate('messages.campaign_created_error')
+                            msg: message
                         });
                     }
                 ).then(
@@ -232,11 +249,19 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
                             timeout: 3000,
                             msg: $translate('messages.campaign_updated')
                         });
+
+                        $location.path('/campaign');
                     },
                     function (err) {
+                        var message = $translate('messages.campaign_updated_error');
+
+                        if (err.code === 409) {
+                            message = $translate('messages.campaign_updated_error_duplicate')
+                        }
+
                         busService.$emit('log.error', {
                             cause: err.code,
-                            msg: $translate('messages.campaign_updated_error')
+                            msg: message
                         });
                     }
                 ).then(
