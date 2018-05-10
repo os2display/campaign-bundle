@@ -26,7 +26,6 @@ use Os2Display\CoreBundle\Services\MiddlewareCommunication as BaseService;
  */
 class MiddlewareCommunication extends BaseService
 {
-    // @TODO: Move these to constructor dependency injection, instead of using container.
     protected $middlewarePath;
     protected $doctrine;
     protected $serializer;
@@ -201,9 +200,8 @@ class MiddlewareCommunication extends BaseService
                     $channel->setLastPushHash(null);
                 }
             } else {
-                if (!is_null(
-                        $channel->getLastPushHash()
-                    ) || !empty($lastPushScreens)) {
+                if (!is_null($channel->getLastPushHash()) ||
+                    !empty($lastPushScreens)) {
                     // Channel don't have any screens, so delete from the middleware. This
                     // will automatically remove it from any screen connected to the
                     // middleware that displays is currently.
