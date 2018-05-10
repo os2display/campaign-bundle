@@ -143,7 +143,7 @@ class MiddlewareCommunication extends BaseService
                 );
 
                 // If the result was delivered, update the last hash.
-                if ($curlResult['status'] === 200) {
+                if ($curlResult['status'] == 200) {
                     // Push deletes to the middleware if a channel has been on a screen previously,
                     // but now has been removed.
                     $updatedScreensFailed = false;
@@ -157,7 +157,7 @@ class MiddlewareCommunication extends BaseService
                                 'middleware'
                             );
 
-                            if ($curlResult['status'] !== 200) {
+                            if ($curlResult['status'] != 200) {
                                 $updatedScreensFailed = true;
                             }
                         }
@@ -178,7 +178,7 @@ class MiddlewareCommunication extends BaseService
                     $channel->setLastPushHash(null);
                 }
             } else {
-                if (!is_null($channel->getLastPushHash())) {
+                if (!is_null($channel->getLastPushHash()) || !empty($lastPushScreens)) {
                     // Channel don't have any screens, so delete from the middleware. This
                     // will automatically remove it from any screen connected to the
                     // middleware that displays is currently.
@@ -189,8 +189,8 @@ class MiddlewareCommunication extends BaseService
                         'middleware'
                     );
 
-                    if ($curlResult['status'] !== 200) {
-                        // Delete did't not work, so mark the channel for
+                    if ($curlResult['status'] != 200) {
+                        // Delete did not work, so mark the channel for
                         // re-push of DELETE by removing last push hash.
                         $channel->setLastPushHash(null);
                     } else {
@@ -245,9 +245,8 @@ class MiddlewareCommunication extends BaseService
         if (count($this->getScreenIdsOnChannel($channel)) === 0) {
             // If no campaigns apply and it has not been pushed before.
             if (!$this->campaignsApply($channel) &&
-                (
-                    is_null($channel->getLastPushHash()) ||
-                    empty($channel->getLastPushScreens()))
+                is_null($channel->getLastPushHash()) &&
+                empty($channel->getLastPushScreens())
             ) {
                 return false;
             }
@@ -480,7 +479,7 @@ class MiddlewareCommunication extends BaseService
             $d->data->slides = json_decode($d->data->slides);
             $data = json_encode($d);
 
-            if ($data === null) {
+            if (is_null($data)) {
                 continue;
             }
 
