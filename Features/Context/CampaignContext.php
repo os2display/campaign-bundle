@@ -328,7 +328,8 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
     /**
      * @Then channel :arg1 should be deleted from middleware
      */
-    public function channelShouldBeDeletedFromMiddleware($arg1) {
+    public function channelShouldBeDeletedFromMiddleware($arg1)
+    {
         $requests = $this->container->get('os2display.utility_service')
             ->getAllRequests('middleware');
 
