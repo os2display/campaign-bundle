@@ -30,6 +30,7 @@ class MiddlewareCommunication extends BaseService
     protected $doctrine;
     protected $serializer;
     protected $entityManager;
+    protected $inMiddleware;
 
     /**
      * Constructor.
@@ -54,6 +55,7 @@ class MiddlewareCommunication extends BaseService
         $this->doctrine = $this->container->get('doctrine');
         $this->serializer = $this->container->get('jms_serializer');
         $this->entityManager = $this->doctrine->getManager();
+        $this->inMiddleware = false;
     }
 
     /**
@@ -75,7 +77,6 @@ class MiddlewareCommunication extends BaseService
                 $screenIds[] = $region->getScreen()->getId();
             }
         }
-
         return $screenIds;
     }
 
@@ -88,7 +89,6 @@ class MiddlewareCommunication extends BaseService
     private function getScreenIdsFromData($data)
     {
         $decoded = json_decode($data);
-
         return $decoded->screens;
     }
 
@@ -114,7 +114,8 @@ class MiddlewareCommunication extends BaseService
 
         $lastPushScreens = [];
 
-        // If middleware has delivered the current channels.
+        // If middleware has delivered the current channels, use that as last push screens.
+        // Else fallback to what is saved for the screen (backwards compatibility regarding middleware).
         if ($this->inMiddleware !== false) {
             $channelsInMiddleware = $this->inMiddleware->channels;
 
@@ -435,6 +436,7 @@ class MiddlewareCommunication extends BaseService
     public function pushToScreens($force = false)
     {
         $this->inMiddleware = $this->getChannelStatusFromMiddleware();
+        $idsInBackend = [];
 
         if ($this->inMiddleware === false) {
             $logger = $this->container->get('logger');
@@ -457,6 +459,8 @@ class MiddlewareCommunication extends BaseService
         $campaignChanges = $this->calculateCampaignChanges();
 
         foreach ($activeChannels as $channel) {
+            $idsInBackend[] = $channel->getId();
+
             if (!$this->channelShouldBePushed($channel)) {
                 continue;
             }
@@ -498,6 +502,8 @@ class MiddlewareCommunication extends BaseService
         )->findAll();
 
         foreach ($sharedChannels as $sharedChannel) {
+            $idsInBackend[] = $sharedChannel->getUniqueId();
+
             $data = $this->serializer->serialize(
                 $sharedChannel,
                 'json',
@@ -541,6 +547,38 @@ class MiddlewareCommunication extends BaseService
                 $force
             );
         }
+
+        // Remove all channels from middleware that is not in the backend.
+        if ($this->inMiddleware) {
+            foreach ($this->inMiddleware->channels as $channelInMiddleware) {
+                // If not in activeChannels and sharedChannels, remove it from
+                // middleware.
+                $key = array_search($channelInMiddleware->id, $idsInBackend);
+
+                if ($key === false) {
+                    $curlResult = $this->utilityService->curl(
+                        $this->middlewarePath.'/channel/'.$channelInMiddleware->id,
+                        'DELETE',
+                        json_encode(array()),
+                        'middleware'
+                    );
+
+                    if ($curlResult['status'] != 200) {
+                        $logger = $this->container->get('logger');
+                        $logger->info(
+                            'MiddlewareCommuncations (itk-campaign-bundle): Could not remove ghost channel from middleware.'
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    private function isJSON($string)
+    {
+        return is_string($string) &&
+        is_array(json_decode($string, true)) &&
+        (json_last_error() == JSON_ERROR_NONE) ? true : false;
     }
 
     /**
@@ -564,7 +602,11 @@ class MiddlewareCommunication extends BaseService
         if ($curlResult['status'] != 200) {
             return false;
         } else {
-            return json_decode($curlResult['content']);
+            if ($this->isJSON($curlResult['content'])) {
+                return json_decode($curlResult['content']);
+            } else {
+                return false;
+            }
         }
     }
 }

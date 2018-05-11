@@ -282,10 +282,12 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $res = false;
 
         foreach ($requests as $request) {
-            if (explode(
-                    'https://middleware.os2display.vm/api/channel/',
-                    $request['url']
-                )[1] == $channel) {
+            $explode = explode(
+                'https://middleware.os2display.vm/api/channel/',
+                $request['url']
+            );
+
+            if (count($explode) == 2 && $explode[1] == $channel) {
                 if ($request['method'] == 'POST') {
                     $data = json_decode($request['data']);
                     if (in_array($screen, $data->screens)) {
@@ -333,10 +335,12 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $res = false;
 
         foreach ($requests as $request) {
-            if (explode(
-                    'https://middleware.os2display.vm/api/channel/',
-                    $request['url']
-                )[1] == $arg1) {
+            $explode = explode(
+                'https://middleware.os2display.vm/api/channel/',
+                $request['url']
+            );
+
+            if (count($explode) == 2 && $explode[1] == $arg1) {
                 if ($request['method'] == 'DELETE') {
                     $res = true;
                     break;
@@ -366,10 +370,12 @@ class CampaignContext extends BaseContext implements Context, KernelAwareContext
         $res = false;
 
         foreach ($requests as $request) {
-            if (explode(
-                    'https://middleware.os2display.vm/api/channel/',
-                    $request['url']
-                )[1] == $channel) {
+            $explode = explode(
+                'https://middleware.os2display.vm/api/channel/',
+                $request['url']
+            );
+
+            if (count($explode) == 2 && $explode[1] == $channel) {
                 if ($request['method'] == 'POST') {
                     $data = json_decode($request['data']);
 

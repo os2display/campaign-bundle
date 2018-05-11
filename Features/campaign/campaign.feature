@@ -25,15 +25,17 @@ Feature: campaign
     When I call pushToScreens
     And I get all the utility service curl calls with prefix middleware
     Then curl calls should equal:
-      | url                                            | method | data                                                                                                                                                    | prefix     |
-      | https://middleware.os2display.vm/api/channel/1 | POST   | {"title":"Channel 1","data":{"id":1,"slides":[],"schedule_repeat_days":[]},"regions":[{"screen":1,"region":1}],"screens":[1],"schedule_repeat_days":[]} | middleware |
+      | url                                                                                   | method | data                                                                                                                                                    | prefix     |
+      | https://middleware.os2display.vm/api/status/channels/059d9d9c50e0c45b529407b183b6a02f | GET    | []                                                                                                                                                      | middleware |
+      | https://middleware.os2display.vm/api/channel/1                                        | POST   | {"title":"Channel 1","data":{"id":1,"slides":[],"schedule_repeat_days":[]},"regions":[{"screen":1,"region":1}],"screens":[1],"schedule_repeat_days":[]} | middleware |
     And channel 1 should be pushed to screen 1
     And channel 2 should not be pushed to screen 1
     And I clear utility service
     And I call pushToScreens
     And I get all the utility service curl calls with prefix middleware
     Then curl calls should equal:
-      | url | method | data | prefix |
+      | url                                                                                   | method | data | prefix     |
+      | https://middleware.os2display.vm/api/status/channels/059d9d9c50e0c45b529407b183b6a02f | GET    | []   | middleware |
 
   Scenario: Assert that campaign will take over other channels
     When I clear all channels
@@ -81,7 +83,8 @@ Feature: campaign
     And I call pushToScreens
     And I get all the utility service curl calls with prefix middleware
     Then curl calls should equal:
-      | url | method | data | prefix |
+      | url                                                                                   | method | data | prefix     |
+      | https://middleware.os2display.vm/api/status/channels/059d9d9c50e0c45b529407b183b6a02f | GET    | []   | middleware |
 
   Scenario: Check that campaign with screen group is applied to the given channel
     When I send a "POST" request to "/api/group" with body:
