@@ -4,6 +4,7 @@
 
 * Made save button sticky.
 * Fixed error messages.
+* Added watch parameter to datetime pickers.
 
 ## 1.0.0
 
