@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation\Groups;
 use Os2Display\CoreBundle\Entity\ApiEntity;
@@ -24,15 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="ik_campaign")
  * @ORM\Entity
- * @ORM\AttributeOverrides(
- *   @ORM\AttributeOverride(name="createdBy",
- *     column=@ORM\Column(name="user")
- *   )
- * )
  */
 class Campaign extends ApiEntity implements GroupableEntity
 {
-    use BlameableEntity;
     use TimestampableEntity;
     use Groupable;
 
@@ -54,6 +49,15 @@ class Campaign extends ApiEntity implements GroupableEntity
      * @Assert\NotBlank()
      */
     private $title;
+
+    /**
+     * User that created the channel.
+     *
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="Os2Display\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user")
+     */
+    private $user;
 
     /**
      * Description.
@@ -237,5 +241,21 @@ class Campaign extends ApiEntity implements GroupableEntity
     public function setScreenGroups($screenGroups)
     {
         $this->screenGroups = $screenGroups;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }
