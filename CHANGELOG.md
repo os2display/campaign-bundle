@@ -5,6 +5,7 @@
 * Made save button sticky.
 * Fixed error messages.
 * Added watch parameter to datetime pickers.
+* Changed blameable user field from string to reference.
 
 ## 1.0.0
 
