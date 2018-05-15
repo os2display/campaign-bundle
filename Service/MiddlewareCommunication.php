@@ -26,11 +26,11 @@ use Os2Display\CoreBundle\Services\MiddlewareCommunication as BaseService;
  */
 class MiddlewareCommunication extends BaseService
 {
-    // @TODO: Move these to constructor dependency injection, instead of using container.
     protected $middlewarePath;
     protected $doctrine;
     protected $serializer;
     protected $entityManager;
+    protected $inMiddleware;
 
     /**
      * Constructor.
@@ -55,6 +55,7 @@ class MiddlewareCommunication extends BaseService
         $this->doctrine = $this->container->get('doctrine');
         $this->serializer = $this->container->get('jms_serializer');
         $this->entityManager = $this->doctrine->getManager();
+        $this->inMiddleware = false;
     }
 
     /**
@@ -76,7 +77,6 @@ class MiddlewareCommunication extends BaseService
                 $screenIds[] = $region->getScreen()->getId();
             }
         }
-
         return $screenIds;
     }
 
@@ -89,7 +89,6 @@ class MiddlewareCommunication extends BaseService
     private function getScreenIdsFromData($data)
     {
         $decoded = json_decode($data);
-
         return $decoded->screens;
     }
 
@@ -113,18 +112,41 @@ class MiddlewareCommunication extends BaseService
         // Get screen ids.
         $screenIds = $this->getScreenIdsFromData($data);
 
-        $lastPushScreens = $channel->getLastPushScreens();
+        $lastPushScreens = [];
 
-        // Make sure last push screen is an array.
-        if (!is_array($lastPushScreens)) {
-            // Backwards compatibility conversion.
-            if (is_string($lastPushScreens) && $decoded = json_decode($lastPushScreens)) {
-                $lastPushScreens = $decoded;
-            } else {
-                $lastPushScreens = [];
+        // If middleware has delivered the current channels, use that as last push screens.
+        // Else fallback to what is saved for the screen (backwards compatibility regarding middleware).
+        if ($this->inMiddleware !== false) {
+            $channelsInMiddleware = $this->inMiddleware->channels;
+
+            $neededObjectArray = array_filter(
+                $channelsInMiddleware,
+                function ($e) use (&$id) {
+                    return $e->id == $id;
+                }
+            );
+
+            // Set last pushed screens for channel.
+            if (!empty($neededObjectArray)) {
+                $neededObject = array_pop($neededObjectArray);
+                $lastPushScreens = $neededObject->screens;
+                $channel->setLastPushScreens($lastPushScreens);
             }
+        } else {
+            $lastPushScreens = $channel->getLastPushScreens();
 
-            $channel->setLastPushScreens($lastPushScreens);
+            // Make sure last push screen is an array.
+            if (!is_array($lastPushScreens)) {
+                // Backwards compatibility conversion.
+                if (is_string($lastPushScreens) &&
+                    $decoded = json_decode(
+                        $lastPushScreens
+                    )) {
+                    $lastPushScreens = $decoded;
+                } else {
+                    $lastPushScreens = [];
+                }
+            }
         }
 
         // Check if the channel should be pushed.
@@ -143,13 +165,14 @@ class MiddlewareCommunication extends BaseService
                 );
 
                 // If the result was delivered, update the last hash.
-                if ($curlResult['status'] === 200) {
+                if ($curlResult['status'] == 200) {
                     // Push deletes to the middleware if a channel has been on a screen previously,
                     // but now has been removed.
-                    $updatedScreensFailed = false;
+                    $updatedScreensSuccess = true;
 
                     foreach ($lastPushScreens as $lastPushScreenId) {
                         if (!in_array($lastPushScreenId, $screenIds)) {
+                            // Remove channel from screen.
                             $curlResult = $this->utilityService->curl(
                                 $this->middlewarePath.'/channel/'.$id.'/screen/'.$lastPushScreenId,
                                 'DELETE',
@@ -157,15 +180,15 @@ class MiddlewareCommunication extends BaseService
                                 'middleware'
                             );
 
-                            if ($curlResult['status'] !== 200) {
-                                $updatedScreensFailed = true;
+                            if ($curlResult['status'] != 200) {
+                                $updatedScreensSuccess = false;
                             }
                         }
                     }
 
                     // If the delete process was successful, update last push information.
                     // else set values to NULL to ensure new push.
-                    if (!$updatedScreensFailed) {
+                    if ($updatedScreensSuccess) {
                         $channel->setLastPushScreens($screenIds);
                         $channel->setLastPushHash($sha1);
                     } else {
@@ -178,7 +201,8 @@ class MiddlewareCommunication extends BaseService
                     $channel->setLastPushHash(null);
                 }
             } else {
-                if (!is_null($channel->getLastPushHash())) {
+                if (!is_null($channel->getLastPushHash()) ||
+                    !empty($lastPushScreens)) {
                     // Channel don't have any screens, so delete from the middleware. This
                     // will automatically remove it from any screen connected to the
                     // middleware that displays is currently.
@@ -189,8 +213,8 @@ class MiddlewareCommunication extends BaseService
                         'middleware'
                     );
 
-                    if ($curlResult['status'] !== 200) {
-                        // Delete did't not work, so mark the channel for
+                    if ($curlResult['status'] != 200) {
+                        // Delete did not work, so mark the channel for
                         // re-push of DELETE by removing last push hash.
                         $channel->setLastPushHash(null);
                     } else {
@@ -245,9 +269,8 @@ class MiddlewareCommunication extends BaseService
         if (count($this->getScreenIdsOnChannel($channel)) === 0) {
             // If no campaigns apply and it has not been pushed before.
             if (!$this->campaignsApply($channel) &&
-                (
-                    is_null($channel->getLastPushHash()) ||
-                    empty($channel->getLastPushScreens()))
+                is_null($channel->getLastPushHash()) &&
+                empty($channel->getLastPushScreens())
             ) {
                 return false;
             }
@@ -412,6 +435,16 @@ class MiddlewareCommunication extends BaseService
      */
     public function pushToScreens($force = false)
     {
+        $this->inMiddleware = $this->getChannelStatusFromMiddleware();
+        $idsInBackend = [];
+
+        if ($this->inMiddleware === false) {
+            $logger = $this->container->get('logger');
+            $logger->info(
+                'MiddlewareCommuncations (itk-campaign-bundle): Could not get channels from middleware.'
+            );
+        }
+
         $queryBuilder = $this->entityManager
             ->createQueryBuilder();
 
@@ -426,6 +459,8 @@ class MiddlewareCommunication extends BaseService
         $campaignChanges = $this->calculateCampaignChanges();
 
         foreach ($activeChannels as $channel) {
+            $idsInBackend[] = $channel->getId();
+
             if (!$this->channelShouldBePushed($channel)) {
                 continue;
             }
@@ -467,6 +502,8 @@ class MiddlewareCommunication extends BaseService
         )->findAll();
 
         foreach ($sharedChannels as $sharedChannel) {
+            $idsInBackend[] = $sharedChannel->getUniqueId();
+
             $data = $this->serializer->serialize(
                 $sharedChannel,
                 'json',
@@ -480,7 +517,7 @@ class MiddlewareCommunication extends BaseService
             $d->data->slides = json_decode($d->data->slides);
             $data = json_encode($d);
 
-            if ($data === null) {
+            if (is_null($data)) {
                 continue;
             }
 
@@ -509,6 +546,67 @@ class MiddlewareCommunication extends BaseService
                 $sharedChannel->getUniqueId(),
                 $force
             );
+        }
+
+        // Remove all channels from middleware that is not in the backend.
+        if ($this->inMiddleware) {
+            foreach ($this->inMiddleware->channels as $channelInMiddleware) {
+                // If not in activeChannels and sharedChannels, remove it from
+                // middleware.
+                $key = array_search($channelInMiddleware->id, $idsInBackend);
+
+                if ($key === false) {
+                    $curlResult = $this->utilityService->curl(
+                        $this->middlewarePath.'/channel/'.$channelInMiddleware->id,
+                        'DELETE',
+                        json_encode(array()),
+                        'middleware'
+                    );
+
+                    if ($curlResult['status'] != 200) {
+                        $logger = $this->container->get('logger');
+                        $logger->info(
+                            'MiddlewareCommuncations (itk-campaign-bundle): Could not remove ghost channel from middleware.'
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    private function isJSON($string)
+    {
+        return is_string($string) &&
+        is_array(json_decode($string, true)) &&
+        (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+
+    /**
+     * Get channel status from middleware.
+     */
+    public function getChannelStatusFromMiddleware()
+    {
+        $middlewarePath =
+            $this->container->getParameter('middleware_host').
+            $this->container->getParameter('middleware_path');
+
+        $curlResult = $this->utilityService->curl(
+            $middlewarePath.
+            '/status/channels/'.
+            $this->container->getParameter('middleware_apikey'),
+            'GET',
+            json_encode(array()),
+            'middleware'
+        );
+
+        if ($curlResult['status'] != 200) {
+            return false;
+        } else {
+            if ($this->isJSON($curlResult['content'])) {
+                return json_decode($curlResult['content']);
+            } else {
+                return false;
+            }
         }
     }
 }
