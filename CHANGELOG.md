@@ -2,6 +2,8 @@
 
 ## in develop
 
+## 1.0.1
+
 * Made save button sticky.
 * Fixed error messages.
 * Added call to middleware to get which channels are in the middleware
