@@ -147,10 +147,16 @@
   .overview--channel-link.is-selected .overview--overlay {
       z-index: 10;
   }
-}
 
-/* Fix placeholder text in contenteditable */
-[contenteditable=true]:empty:before{
+  .campaign-actions {
+    position: sticky;
+    bottom: -25px;
+  }
+
+  /* Fix placeholder text in contenteditable */
+  [contenteditable=true]:empty:before{
     content: attr(placeholder);
     display: block; /* For Firefox */
+    color: $gray-700;
+  }
 }
