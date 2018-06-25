@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\Screen;
-use JMS\Serializer\SerializationContext;
 
 /**
  * Defines application features from the specific context.
