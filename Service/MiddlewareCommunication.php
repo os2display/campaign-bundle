@@ -8,7 +8,7 @@
 
 namespace Itk\CampaignBundle\Service;
 
-use JMS\Serializer\Context;
+use JMS\Serializer\SerializationContext;
 use Os2Display\CoreBundle\Entity\Channel;
 use Os2Display\CoreBundle\Entity\ChannelScreenRegion;
 use Os2Display\CoreBundle\Entity\SharedChannel;
@@ -468,7 +468,7 @@ class MiddlewareCommunication extends BaseService
             $data = $this->serializer->serialize(
                 $channel,
                 'json',
-                Context::create()
+                SerializationContext::create()
                     ->setGroups(array('middleware'))
             );
 
@@ -507,7 +507,7 @@ class MiddlewareCommunication extends BaseService
             $data = $this->serializer->serialize(
                 $sharedChannel,
                 'json',
-                Context::create()
+                SerializationContext::create()
                     ->setGroups(array('middleware'))
             );
 
