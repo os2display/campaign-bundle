@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\Features\Context;
+namespace Os2Display\CampaignBundle\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;

@@ -1,23 +1,23 @@
 assets:
   css:
-    - bundles/itkcampaign/assets/build/itkcampaign.min.css
+    - bundles/os2displaycampaign/assets/build/os2displaycampaign.min.css
   js_prod:
-    - bundles/itkcampaign/assets/build/itkcampaign.min.js
+    - bundles/os2displaycampaign/assets/build/os2displaycampaign.min.js
 
 apps:
-  itkCampaignApp:
+  campaignApp:
     container: true
     files:
-      - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignApp.js
-      - bundles/itkcampaign/apps/itkCampaignApp/itkCampaignModalBase.js
-      - bundles/itkcampaign/apps/itkCampaignApp/directives/contenteditable.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewController.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewModalDelete.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignController.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.js
-      - bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.js
-      - bundles/itkcampaign/apps/itkCampaignApp/directives/screenList/itkScreenList.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaignApp.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaignModalBase.js
+      - bundles/os2displaycampaign/apps/campaignApp/directives/contenteditable.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign-overview/campaignOverviewController.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign-overview/campaignOverviewModalDelete.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignController.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddChannel.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreen.js
+      - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreenGroup.js
+      - bundles/os2displaycampaign/apps/campaignApp/directives/screenList/os2displayScreenList.js
     dependencies:
       - ngRoute
       - ngAnimate

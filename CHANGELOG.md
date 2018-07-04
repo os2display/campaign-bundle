@@ -1,6 +1,8 @@
-# itk-os2display/campaign-bundle
+# os2display/campaign-bundle
 
 ## in develop
+
+* Renaming to Os2Display namespace instead of Itk.
 
 ## 1.0.1
 

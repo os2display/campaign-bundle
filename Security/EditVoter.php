@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\Security;
+namespace Os2Display\CampaignBundle\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Os2Display\CoreBundle\Entity\Group;

@@ -25,5 +25,5 @@ NelmioApiDocBundle:
     prefix:   /api/doc
 
 itk_campaign:
-    resource: "@ItkCampaignBundle/Resources/config/routing.yml"
+    resource: "@Os2DisplayCampaignBundle/Resources/config/routing.yml"
     prefix:   /

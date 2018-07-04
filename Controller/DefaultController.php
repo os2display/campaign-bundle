@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\Controller;
+namespace Os2Display\CampaignBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

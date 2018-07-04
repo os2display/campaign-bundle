@@ -6,7 +6,7 @@
 /**
  * Directive to show the Screen overview.
  */
-angular.module('itkCampaignApp').directive('itkScreenList', [
+angular.module('campaignApp').directive('itkScreenList', [
     'busService', '$translate',
     function (busService, $translate) {
         'use strict';
@@ -137,7 +137,7 @@ angular.module('itkCampaignApp').directive('itkScreenList', [
 
                 $scope.setSearchFilters();
             },
-            templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/directives/screenList/itkScreenList.html?' + window.config.version
+            templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/directives/screenList/itkScreenList.html?' + window.config.version
         };
     }
 ]);

@@ -1,7 +1,7 @@
 itk_campaign_homepage:
     path:     /campaign
-    defaults: { _controller: ItkCampaignBundle:Default:index }
+    defaults: { _controller: Os2DisplayCampaignBundle:Default:index }
 
 controllers:
-  resource: '@ItkCampaignBundle/Controller'
+  resource: '@Os2DisplayCampaignBundle/Controller'
   type: annotation

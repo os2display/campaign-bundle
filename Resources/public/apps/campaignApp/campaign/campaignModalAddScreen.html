@@ -1,11 +1,11 @@
-<div class="itk-campaign">
+<div class="os2display-campaign">
     <popup>
         <button class="btn btn-close" ng-click="closeModal()">{{ 'common.action.close' | translate }}<i class="material-icons">close</i></button>
         <h1>{{ 'campaign.modal.addscreen.title' | translate }}</h1>
         <p>{{ 'campaign.modal.addscreen.description' | translate }}</p>
         <div class="modal-content">
             <!-- TODO: Is it possible to show the list without the top toolbar(Help)? -->
-            <itk-screen-list selected-screens="screens" overlay="true"></itk-screen-list>
+            <os2display-screen-list selected-screens="screens" overlay="true"></os2display-screen-list>
         </div>
         <div class="modal-actions">
             <button class="button-link confirm" ng-click="closeModal()">{{ 'common.action.finish' | translate }}</button>

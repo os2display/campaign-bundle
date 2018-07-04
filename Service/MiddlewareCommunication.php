@@ -6,13 +6,13 @@
  * Contains the middleware communication service.
  */
 
-namespace Itk\CampaignBundle\Service;
+namespace Os2Display\CampaignBundle\Service;
 
 use JMS\Serializer\SerializationContext;
 use Os2Display\CoreBundle\Entity\Channel;
 use Os2Display\CoreBundle\Entity\ChannelScreenRegion;
 use Os2Display\CoreBundle\Entity\SharedChannel;
-use Itk\CampaignBundle\Entity\Campaign;
+use Os2Display\CampaignBundle\Entity\Campaign;
 use Symfony\Component\DependencyInjection\Container;
 use Os2Display\CoreBundle\Services\TemplateService;
 use Os2Display\CoreBundle\Services\UtilityService;
@@ -441,7 +441,7 @@ class MiddlewareCommunication extends BaseService
         if ($this->inMiddleware === false) {
             $logger = $this->container->get('logger');
             $logger->info(
-                'MiddlewareCommuncations (itk-campaign-bundle): Could not get channels from middleware.'
+                'MiddlewareCommuncations (os2display-campaign-bundle): Could not get channels from middleware.'
             );
         }
 
@@ -566,7 +566,7 @@ class MiddlewareCommunication extends BaseService
                     if ($curlResult['status'] != 200) {
                         $logger = $this->container->get('logger');
                         $logger->info(
-                            'MiddlewareCommuncations (itk-campaign-bundle): Could not remove ghost channel from middleware.'
+                            'MiddlewareCommuncations (os2display-campaign-bundle): Could not remove ghost channel from middleware.'
                         );
                     }
                 }

@@ -12,9 +12,9 @@ Add the git repository to "repositories" in `composer.json`.
 
 ```
 "repositories": {
-    "itk-os2display/campaign-bundle": {
+    "os2display/campaign-bundle": {
       "type": "vcs",
-      "url": "https://github.com/itk-os2display/campaign-bundle"
+      "url": "https://github.com/os2display/campaign-bundle"
     },
     ...
 }
@@ -23,17 +23,17 @@ Add the git repository to "repositories" in `composer.json`.
 Require the bundle with composer.
 
 ```sh
-composer require itk-os2display/campaign-bundle
+composer require os2display/campaign-bundle
 ```
 
-Enable the bundle in `AppKernel.php`, by adding ItkCampaignBundle to $bundles.
+Enable the bundle in `AppKernel.php`, by adding Os2DisplayCampaignBundle to $bundles.
 
 NB! This should be done after adding Os2Display/CoreBundle since,
 MiddlewareCommunications.php from CoreBundle is overridden in CampaignBundle.
 
 ```sh
 new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-new Itk\CampaignBundle\ItkCampaignBundle()
+new Os2Display\CampaignBundle\Os2DisplayCampaignBundle()
 ```
 
 Enable `timestampable` and `blameable` in your configuration:
