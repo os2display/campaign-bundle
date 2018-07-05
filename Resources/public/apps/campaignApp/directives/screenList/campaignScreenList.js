@@ -6,7 +6,7 @@
 /**
  * Directive to show the Screen overview.
  */
-angular.module('campaignApp').directive('itkScreenList', [
+angular.module('campaignApp').directive('campaignScreenList', [
     'busService', '$translate',
     function (busService, $translate) {
         'use strict';

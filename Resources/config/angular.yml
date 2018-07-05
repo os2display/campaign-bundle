@@ -1,6 +1,6 @@
 assets:
   css:
-    - bundles/os2displaycampaign/assets/build/os2displaycampaign.min.css
+    - bundles/os2displaycampaign/assets/build/campaign.min.css
   js_prod:
     - bundles/os2displaycampaign/assets/build/os2displaycampaign.min.js
 
@@ -17,7 +17,7 @@ apps:
       - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddChannel.js
       - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreen.js
       - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreenGroup.js
-      - bundles/os2displaycampaign/apps/campaignApp/directives/screenList/os2displayScreenList.js
+      - bundles/os2displaycampaign/apps/campaignApp/directives/screenList/campaignScreenList.js
     dependencies:
       - ngRoute
       - ngAnimate
