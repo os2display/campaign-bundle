@@ -137,7 +137,7 @@ angular.module('campaignApp').directive('campaignScreenList', [
 
                 $scope.setSearchFilters();
             },
-            templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/directives/screenList/itkScreenList.html?' + window.config.version
+            templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/directives/screenList/campaignScreenList.html?' + window.config.version
         };
     }
 ]);

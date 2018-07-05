@@ -116,9 +116,9 @@ angular.module('campaignApp').service('campaignAppSetup', [
                     var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';
 
                     var html =
-                        '<div class="os2display-campaign-info">' +
+                        '<div class="campaign-info">' +
                         '  <div tooltips tooltip-template="' + message + '" tooltip-side="top">' +
-                        '    <img class="os2display-campaign-info--icon" src="' + iconSource + '" title="">' +
+                        '    <img class="campaign-info--icon" src="' + iconSource + '" title="">' +
                         '  </div>' +
                         '</div>';
 
@@ -140,7 +140,7 @@ angular.module('campaignApp').service('campaignAppSetup', [
                     }, '');
 
                     var html =
-                        '<div class="message os2display-campaign-info--message">' +
+                        '<div class="message campaign-info--message">' +
                         '  <div class="message--inner is-info">' +
                         '    <div class="message--content">' +
                         message +
