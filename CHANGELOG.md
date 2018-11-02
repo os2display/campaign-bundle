@@ -2,6 +2,10 @@
 
 ## in develop
 
+## in hotfix/schedule_errors
+
+* Fixed issue where removing channel, screen or screenGroup messed up arrays.
+
 ## 1.0.1
 
 * Made save button sticky.
