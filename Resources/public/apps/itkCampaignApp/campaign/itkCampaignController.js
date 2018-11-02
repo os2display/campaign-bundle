@@ -17,7 +17,6 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
         var $translate = $filter('translate');
 
         // Check role.
-        // @TODO: Replace with new CAMPAIGN role.
         if (!$scope.requireRole('ROLE_CAMPAIGN_ADMIN')) {
             busService.$emit('log.error', {
                 timeout: 5000,

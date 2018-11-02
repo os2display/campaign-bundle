@@ -10,13 +10,11 @@ namespace Itk\CampaignBundle\Service;
 
 use JMS\Serializer\SerializationContext;
 use Os2Display\CoreBundle\Entity\Channel;
-use Os2Display\CoreBundle\Entity\ChannelScreenRegion;
 use Os2Display\CoreBundle\Entity\SharedChannel;
 use Itk\CampaignBundle\Entity\Campaign;
 use Symfony\Component\DependencyInjection\Container;
 use Os2Display\CoreBundle\Services\TemplateService;
 use Os2Display\CoreBundle\Services\UtilityService;
-
 use Os2Display\CoreBundle\Services\MiddlewareCommunication as BaseService;
 
 /**
@@ -41,6 +39,7 @@ class MiddlewareCommunication extends BaseService
      *   The template service.
      * @param UtilityService $utilityService
      *   The utility service.
+     * @throws \Exception
      */
     public function __construct(
         Container $container,
@@ -50,7 +49,7 @@ class MiddlewareCommunication extends BaseService
         parent::__construct($container, $templateService, $utilityService);
 
         $this->middlewarePath =
-            $this->container->getParameter('middleware_host').
+            $this->container->getParameter('middleware_host') .
             $this->container->getParameter('middleware_path');
         $this->doctrine = $this->container->get('doctrine');
         $this->serializer = $this->container->get('jms_serializer');
@@ -59,37 +58,181 @@ class MiddlewareCommunication extends BaseService
     }
 
     /**
-     * Find Id's of the screen using a channel.
-     *
-     * @param Channel|SharedChannel $channel
-     *   The Channel or SharedChannel to push.
-     *
-     * @return array
-     *   Id's of the screens that uses the channel.
+     * Get channel status from middleware.
      */
-    private function getScreenIdsOnChannel($channel)
+    public function getChannelStatusFromMiddleware()
     {
-        // Get screen ids.
-        $regions = $channel->getChannelScreenRegions();
-        $screenIds = array();
-        foreach ($regions as $region) {
-            if (!in_array($region->getScreen()->getId(), $screenIds)) {
-                $screenIds[] = $region->getScreen()->getId();
+        $middlewarePath =
+            $this->container->getParameter('middleware_host') .
+            $this->container->getParameter('middleware_path');
+
+        $curlResult = $this->utilityService->curl(
+            $middlewarePath .
+            '/status/channels/' .
+            $this->container->getParameter('middleware_apikey'),
+            'GET',
+            json_encode([]),
+            'middleware'
+        );
+
+        if ($curlResult['status'] != 200) {
+            return false;
+        } else {
+            if ($this->isJSON($curlResult['content'])) {
+                return json_decode($curlResult['content']);
+            } else {
+                return false;
             }
         }
-        return $screenIds;
     }
 
     /**
-     * Get Screen Ids from json_encoded channel data.
+     * Pushes the channels for each screen to the middleware.
      *
-     * @param string $data The json encoded channel data.
-     * @return mixed
+     * Campaigns only apply to region 1 of screens.
+     *
+     * @param boolean $force
+     *   Should the push to screen be forced, even though the content has previously been pushed to the middleware?
+     *
+     * @throws \Exception
      */
-    private function getScreenIdsFromData($data)
+    public function pushToScreens($force = false)
     {
-        $decoded = json_decode($data);
-        return $decoded->screens;
+        $this->inMiddleware = $this->getChannelStatusFromMiddleware();
+        $idsInBackend = [];
+
+        if ($this->inMiddleware === false) {
+            $logger = $this->container->get('logger');
+            $logger->info(
+                'MiddlewareCommunications (itk-campaign-bundle): Could not get channels from middleware.'
+            );
+        }
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        // @TODO: Optimize which channels should be examined.
+        // Get channels that are currently pushed to screens,
+        // or should be pushed to screens.
+        $activeChannels =
+            $queryBuilder->select('c')
+                ->from(Channel::class, 'c')
+                ->getQuery()->getResult();
+
+        $campaignChanges = $this->calculateCampaignChanges();
+
+        foreach ($activeChannels as $channel) {
+            $idsInBackend[] = $channel->getId();
+
+            if (!$this->channelShouldBePushed($channel)) {
+                continue;
+            }
+
+            $data = $this->serializer->serialize(
+                $channel,
+                'json',
+                SerializationContext::create()
+                    ->setGroups(['middleware'])
+            );
+
+            // If campaign changes are set, apply them to channel.
+            if (isset($campaignChanges[$channel->getId()])) {
+                $dataArray = json_decode($data);
+
+                $dataArray->regions = $campaignChanges[$channel->getId()]['regions'];
+
+                $dataArray->screens = [];
+
+                foreach ($dataArray->regions as $region) {
+                    $dataArray->screens = array_merge(
+                        $dataArray->screens,
+                        [$region->screen]
+                    );
+
+                    $dataArray->screens = array_unique($dataArray->screens);
+                }
+
+                $data = json_encode($dataArray);
+            }
+
+            $this->pushChannel($channel, $data, $channel->getId(), $force);
+        }
+
+        // Push shared channels
+        $sharedChannels = $this->doctrine->getRepository(
+            'Os2DisplayCoreBundle:SharedChannel'
+        )->findAll();
+
+        foreach ($sharedChannels as $sharedChannel) {
+            $idsInBackend[] = $sharedChannel->getUniqueId();
+
+            $data = $this->serializer->serialize(
+                $sharedChannel,
+                'json',
+                SerializationContext::create()
+                    ->setGroups(['middleware'])
+            );
+
+            // Hack to get slides encoded correctly
+            //   Issue with how the slides array is encoded in jms_serializer.
+            $d = json_decode($data);
+            $d->data->slides = json_decode($d->data->slides);
+            $data = json_encode($d);
+
+            if (is_null($data)) {
+                continue;
+            }
+
+            // If campaign changes are set, apply them to channel.
+            if (isset($campaignChanges[$sharedChannel->getUniqueId()])) {
+                $dataArray = json_decode($data);
+
+                $dataArray->regions =
+                    $campaignChanges[$sharedChannel->getUniqueId()]['regions'];
+
+                $dataArray->screens = [];
+
+                foreach ($dataArray->regions as $region) {
+                    $dataArray->screens = array_merge(
+                        $dataArray->screens,
+                        [$region->screen]
+                    );
+                }
+
+                $data = json_encode($dataArray);
+            }
+
+            $this->pushChannel(
+                $sharedChannel,
+                $data,
+                $sharedChannel->getUniqueId(),
+                $force
+            );
+        }
+
+        // Remove all channels from middleware that is not in the backend.
+        if ($this->inMiddleware) {
+            foreach ($this->inMiddleware->channels as $channelInMiddleware) {
+                // If not in activeChannels and sharedChannels, remove it from
+                // middleware.
+                $key = array_search($channelInMiddleware->id, $idsInBackend);
+
+                if ($key === false) {
+                    $curlResult = $this->utilityService->curl(
+                        $this->middlewarePath . '/channel/' . $channelInMiddleware->id,
+                        'DELETE',
+                        json_encode([]),
+                        'middleware'
+                    );
+
+                    if ($curlResult['status'] != 200) {
+                        $logger = $this->container->get('logger');
+                        $logger->info(
+                            'MiddlewareCommunications (itk-campaign-bundle): Could not remove ghost channel from middleware.'
+                        );
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -158,7 +301,7 @@ class MiddlewareCommunication extends BaseService
             // $lastPushTime will be reset later on in this function.
             if (count($screenIds) > 0) {
                 $curlResult = $this->utilityService->curl(
-                    $this->middlewarePath.'/channel/'.$id,
+                    $this->middlewarePath . '/channel/' . $id,
                     'POST',
                     $data,
                     'middleware'
@@ -174,9 +317,9 @@ class MiddlewareCommunication extends BaseService
                         if (!in_array($lastPushScreenId, $screenIds)) {
                             // Remove channel from screen.
                             $curlResult = $this->utilityService->curl(
-                                $this->middlewarePath.'/channel/'.$id.'/screen/'.$lastPushScreenId,
+                                $this->middlewarePath . '/channel/' . $id . '/screen/' . $lastPushScreenId,
                                 'DELETE',
-                                json_encode(array()),
+                                json_encode([]),
                                 'middleware'
                             );
 
@@ -207,9 +350,9 @@ class MiddlewareCommunication extends BaseService
                     // will automatically remove it from any screen connected to the
                     // middleware that displays is currently.
                     $curlResult = $this->utilityService->curl(
-                        $this->middlewarePath.'/channel/'.$id,
+                        $this->middlewarePath . '/channel/' . $id,
                         'DELETE',
-                        json_encode(array()),
+                        json_encode([]),
                         'middleware'
                     );
 
@@ -227,98 +370,6 @@ class MiddlewareCommunication extends BaseService
             // Save changes to database.
             $this->entityManager->flush();
         }
-    }
-
-    /**
-     * Is the channel affected by a campaign?
-     *
-     * @param Channel $channel The channel.
-     * @return bool
-     */
-    private function campaignsApply($channel)
-    {
-        $now = new \DateTime();
-
-        $queryBuilder = $this->doctrine
-            ->getManager()
-            ->createQueryBuilder();
-
-        $campaigns = $queryBuilder->select('campaign')
-            ->from(Campaign::class, 'campaign')
-            ->where(
-                ':now between campaign.scheduleFrom and campaign.scheduleTo'
-            )
-            ->andWhere(
-                ':channel member of campaign.channels'
-            )
-            ->setParameter('channel', $channel)
-            ->setParameter('now', $now)
-            ->getQuery()->getResult();
-
-        return count($campaigns) > 0;
-    }
-
-    /**
-     * Should the channel be pushed?
-     *
-     * @param $channel
-     * @return bool
-     */
-    private function channelShouldBePushed($channel)
-    {
-        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
-            // If no campaigns apply and it has not been pushed before.
-            if (!$this->campaignsApply($channel) &&
-                is_null($channel->getLastPushHash()) &&
-                empty($channel->getLastPushScreens())
-            ) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the screens the campaign affects.
-     *
-     * @param $campaign
-     * @return array
-     */
-    private function getCampaignScreenIds($campaign)
-    {
-        $screenIds = [];
-
-        foreach ($campaign->getScreens() as $screen) {
-            $screenIds[] = $screen->getId();
-        }
-        foreach ($campaign->getScreenGroups() as $group) {
-            $groupings = $group->getGrouping();
-
-            foreach ($groupings as $grouping) {
-                $screenIds[] = $grouping->getEntityId();
-            }
-        }
-
-        return array_unique($screenIds);
-    }
-
-    /**
-     * Get the campaign channel ids.
-     *
-     * @param $campaign
-     * @return array
-     */
-    private function getCampaignChannelIds($campaign)
-    {
-        $campaignChannels = $campaign->getChannels();
-
-        $campaignChannelIds = [];
-        foreach ($campaignChannels as $campaignChannel) {
-            $campaignChannelIds[] = $campaignChannel->getId();
-        }
-
-        return $campaignChannelIds;
     }
 
     /**
@@ -426,154 +477,103 @@ class MiddlewareCommunication extends BaseService
     }
 
     /**
-     * Pushes the channels for each screen to the middleware.
+     * Is the channel affected by a campaign?
      *
-     * Campaigns only apply to region 1 of screens.
-     *
-     * @param boolean $force
-     *   Should the push to screen be forced, even though the content has previously been pushed to the middleware?
+     * @param Channel $channel The channel.
+     * @return bool
      */
-    public function pushToScreens($force = false)
+    private function campaignsApply($channel)
     {
-        $this->inMiddleware = $this->getChannelStatusFromMiddleware();
-        $idsInBackend = [];
+        $now = new \DateTime();
 
-        if ($this->inMiddleware === false) {
-            $logger = $this->container->get('logger');
-            $logger->info(
-                'MiddlewareCommuncations (itk-campaign-bundle): Could not get channels from middleware.'
-            );
-        }
-
-        $queryBuilder = $this->entityManager
+        $queryBuilder = $this->doctrine
+            ->getManager()
             ->createQueryBuilder();
 
-        // @TODO: Optimize which channels should be examined.
-        // Get channels that are currently pushed to screens,
-        // or should be pushed to screens.
-        $activeChannels =
-            $queryBuilder->select('c')
-                ->from(Channel::class, 'c')
-                ->getQuery()->getResult();
+        $campaigns = $queryBuilder->select('campaign')
+            ->from(Campaign::class, 'campaign')
+            ->where(
+                ':now between campaign.scheduleFrom and campaign.scheduleTo'
+            )
+            ->andWhere(
+                ':channel member of campaign.channels'
+            )
+            ->setParameter('channel', $channel)
+            ->setParameter('now', $now)
+            ->getQuery()->getResult();
 
-        $campaignChanges = $this->calculateCampaignChanges();
-
-        foreach ($activeChannels as $channel) {
-            $idsInBackend[] = $channel->getId();
-
-            if (!$this->channelShouldBePushed($channel)) {
-                continue;
-            }
-
-            $data = $this->serializer->serialize(
-                $channel,
-                'json',
-                SerializationContext::create()
-                    ->setGroups(array('middleware'))
-            );
-
-            // If campaign changes are set, apply them to channel.
-            if (isset($campaignChanges[$channel->getId()])) {
-                $dataArray = json_decode($data);
-
-                $dataArray->regions =
-                    $campaignChanges[$channel->getId()]['regions'];
-
-                $dataArray->screens = [];
-
-                foreach ($dataArray->regions as $region) {
-                    $dataArray->screens = array_merge(
-                        $dataArray->screens,
-                        [$region->screen]
-                    );
-
-                    $dataArray->screens = array_unique($dataArray->screens);
-                }
-
-                $data = json_encode($dataArray);
-            }
-
-            $this->pushChannel($channel, $data, $channel->getId(), $force);
-        }
-
-        // Push shared channels
-        $sharedChannels = $this->doctrine->getRepository(
-            'Os2DisplayCoreBundle:SharedChannel'
-        )->findAll();
-
-        foreach ($sharedChannels as $sharedChannel) {
-            $idsInBackend[] = $sharedChannel->getUniqueId();
-
-            $data = $this->serializer->serialize(
-                $sharedChannel,
-                'json',
-                SerializationContext::create()
-                    ->setGroups(array('middleware'))
-            );
-
-            // Hack to get slides encoded correctly
-            //   Issue with how the slides array is encoded in jms_serializer.
-            $d = json_decode($data);
-            $d->data->slides = json_decode($d->data->slides);
-            $data = json_encode($d);
-
-            if (is_null($data)) {
-                continue;
-            }
-
-            // If campaign changes are set, apply them to channel.
-            if (isset($campaignChanges[$sharedChannel->getUniqueId()])) {
-                $dataArray = json_decode($data);
-
-                $dataArray->regions =
-                    $campaignChanges[$sharedChannel->getUniqueId()]['regions'];
-
-                $dataArray->screens = [];
-
-                foreach ($dataArray->regions as $region) {
-                    $dataArray->screens = array_merge(
-                        $dataArray->screens,
-                        [$region->screen]
-                    );
-                }
-
-                $data = json_encode($dataArray);
-            }
-
-            $this->pushChannel(
-                $sharedChannel,
-                $data,
-                $sharedChannel->getUniqueId(),
-                $force
-            );
-        }
-
-        // Remove all channels from middleware that is not in the backend.
-        if ($this->inMiddleware) {
-            foreach ($this->inMiddleware->channels as $channelInMiddleware) {
-                // If not in activeChannels and sharedChannels, remove it from
-                // middleware.
-                $key = array_search($channelInMiddleware->id, $idsInBackend);
-
-                if ($key === false) {
-                    $curlResult = $this->utilityService->curl(
-                        $this->middlewarePath.'/channel/'.$channelInMiddleware->id,
-                        'DELETE',
-                        json_encode(array()),
-                        'middleware'
-                    );
-
-                    if ($curlResult['status'] != 200) {
-                        $logger = $this->container->get('logger');
-                        $logger->info(
-                            'MiddlewareCommuncations (itk-campaign-bundle): Could not remove ghost channel from middleware.'
-                        );
-                    }
-                }
-            }
-        }
+        return count($campaigns) > 0;
     }
 
+    /**
+     * Should the channel be pushed?
+     *
+     * @param $channel
+     * @return bool
+     */
+    private function channelShouldBePushed($channel)
+    {
+        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
+            // If no campaigns apply and it has not been pushed before.
+            if (!$this->campaignsApply($channel) &&
+                is_null($channel->getLastPushHash()) &&
+                empty($channel->getLastPushScreens())
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the screens the campaign affects.
+     *
+     * @param $campaign
+     * @return array
+     */
+    private function getCampaignScreenIds($campaign)
+    {
+        $screenIds = [];
+
+        foreach ($campaign->getScreens() as $screen) {
+            $screenIds[] = $screen->getId();
+        }
+        foreach ($campaign->getScreenGroups() as $group) {
+            $groupings = $group->getGrouping();
+
+            foreach ($groupings as $grouping) {
+                $screenIds[] = $grouping->getEntityId();
+            }
+        }
+
+        return array_unique($screenIds);
+    }
+
+    /**
+     * Get the campaign channel ids.
+     *
+     * @param $campaign
+     * @return array
+     */
+    private function getCampaignChannelIds($campaign)
+    {
+        $campaignChannels = $campaign->getChannels();
+
+        $campaignChannelIds = [];
+        foreach ($campaignChannels as $campaignChannel) {
+            $campaignChannelIds[] = $campaignChannel->getId();
+        }
+
+        return $campaignChannelIds;
+    }
+
+    /**
+     * Determines if the string is valid json.
+     *
+     * @param $string
+     * @return bool
+     */
     private function isJSON($string)
     {
         return is_string($string) &&
@@ -582,31 +582,36 @@ class MiddlewareCommunication extends BaseService
     }
 
     /**
-     * Get channel status from middleware.
+     * Find Id's of the screen using a channel.
+     *
+     * @param Channel|SharedChannel $channel
+     *   The Channel or SharedChannel to push.
+     *
+     * @return array
+     *   Id's of the screens that uses the channel.
      */
-    public function getChannelStatusFromMiddleware()
+    private function getScreenIdsOnChannel($channel)
     {
-        $middlewarePath =
-            $this->container->getParameter('middleware_host').
-            $this->container->getParameter('middleware_path');
-
-        $curlResult = $this->utilityService->curl(
-            $middlewarePath.
-            '/status/channels/'.
-            $this->container->getParameter('middleware_apikey'),
-            'GET',
-            json_encode(array()),
-            'middleware'
-        );
-
-        if ($curlResult['status'] != 200) {
-            return false;
-        } else {
-            if ($this->isJSON($curlResult['content'])) {
-                return json_decode($curlResult['content']);
-            } else {
-                return false;
+        // Get screen ids.
+        $regions = $channel->getChannelScreenRegions();
+        $screenIds = [];
+        foreach ($regions as $region) {
+            if (!in_array($region->getScreen()->getId(), $screenIds)) {
+                $screenIds[] = $region->getScreen()->getId();
             }
         }
+        return $screenIds;
+    }
+
+    /**
+     * Get Screen Ids from json_encoded channel data.
+     *
+     * @param string $data The json encoded channel data.
+     * @return mixed
+     */
+    private function getScreenIdsFromData($data)
+    {
+        $decoded = json_decode($data);
+        return $decoded->screens;
     }
 }
