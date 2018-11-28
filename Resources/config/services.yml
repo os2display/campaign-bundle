@@ -42,3 +42,10 @@ services:
     class: Itk\CampaignBundle\Event\RolesSubscriber
     tags:
       - { name: kernel.event_subscriber }
+
+  os2display.campaign.subscriber.cleanup:
+    class: Itk\CampaignBundle\Event\CleanupSubscriber
+    arguments:
+    - '@doctrine.orm.entity_manager'
+    tags:
+    - { name: kernel.event_subscriber }
