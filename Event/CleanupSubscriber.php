@@ -46,17 +46,15 @@ class CleanupSubscriber implements EventSubscriberInterface
     {
         $entities = $event->getEntities();
 
-        if ($event->getType() == Channel::class) {
-            foreach ($entities as $key => $channel) {
-                $qb = $this->entityManager->createQueryBuilder();
-                $query = $qb->select('entity')
-                    ->from(Campaign::class, 'entity')
-                    ->where(':channel member of entity.channels')
-                    ->setParameter('channel', $channel);
+        foreach ($entities as $key => $channel) {
+            $qb = $this->entityManager->createQueryBuilder();
+            $query = $qb->select('entity')
+                ->from(Campaign::class, 'entity')
+                ->where(':channel member of entity.channels')
+                ->setParameter('channel', $channel);
 
-                if (count($query->getQuery()->getResult()) > 0) {
-                    unset($entities[$key]);
-                }
+            if (count($query->getQuery()->getResult()) > 0) {
+                unset($entities[$key]);
             }
         }
 
