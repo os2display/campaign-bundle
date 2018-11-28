@@ -2,6 +2,10 @@
 
 ## in develop
 
+## 1.1.0
+
+* Added event subscriber to Os2Display\CoreBundle\Events\CleanupEvent::EVENT_CLEANUP_CHANNELS to protect channels that are part of a campaign from being deleted. 
+
 ## 1.0.1
 
 * Made save button sticky.
