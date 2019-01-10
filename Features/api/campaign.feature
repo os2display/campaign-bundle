@@ -7,10 +7,10 @@ Feature: campaign
   Background:
     Given the following 'Os2Display\CoreBundle\Entity\Group' entities exist:
       | id | title   |
-      |  1 | Group 1 |
-      |  2 | Group 2 |
-      |  3 | Group 3 |
-      |  4 | Group 4 |
+      | 1  | Group 1 |
+      | 2  | Group 2 |
+      | 3  | Group 3 |
+      | 4  | Group 4 |
 
     And the following users exist:
       | username | password | roles                          | groups                                 |
@@ -19,14 +19,14 @@ Feature: campaign
       | user2    | user2    | ROLE_USER                      | 1: GROUP_ROLE_USER, 4: GROUP_ROLE_USER |
 
     And the following 'Os2Display\CoreBundle\Entity\Channel' entities identified by 'id' exist:
-      | id | title             |  createdAt | modifiedAt |
-      |  1 | The first channel | 2001-01-01 | 2001-01-01 |
-      |  3 | Channel 3         | 2001-01-01 | 2001-01-01 |
+      | id | title             | createdAt | modifiedAt |
+      | 1  | The first channel | 0         | 0          |
+      | 3  | Channel 3         | 1         | 1          |
 
     And the following 'Os2Display\CoreBundle\Entity\Screen' entities exist:
-      | id | title            | description | token      | activationCode |  createdAt | modifiedAt |
-      |  1 | The first screen | -           | screen-001 | activate-001   | 2001-01-01 | 2001-01-01 |
-      |  2 | Another screen   | -           | screen-002 | activate-002   | 2001-01-01 | 2001-01-01 |
+      | id | title            | description | token      | activationCode | createdAt | modifiedAt |
+      | 1  | The first screen | -           | screen-001 | 001            | 0         | 1          |
+      | 2  | Another screen   | -           | screen-002 | 002            | 1         | 1          |
 
   @createSchema
   Scenario: Get campaigns

@@ -162,7 +162,8 @@ Feature: campaign
     And channel 4 should be pushed to screen 3
     And channel 4 should be pushed to screen 4
 
-  Scenario: When I change the campaign to and old date, it should be removed from screens
+  Scenario: When I change the campaign to an old date, it should be removed from screens
+    When I add channel screen region with channel 1 screen 4 region 1
     And I send a "PUT" request to "/api/campaign/2" with body:
     """
     {
@@ -173,6 +174,8 @@ Feature: campaign
     And the response status code should be 200
     And I clear utility service
     And I call pushToScreens
+    And I print all the utility service curl calls
+    And channel 1 should be pushed to screen 4
     And channel 4 should be deleted from middleware
 
     # Reset user and content type.
@@ -188,12 +191,30 @@ Feature: campaign
     """
     And I clear utility service
     And I call pushToScreens
-
+    And I print all the utility service curl calls
     And channel 4 should not be pushed to screen 1
     And channel 4 should not be pushed to screen 2
     And channel 4 should be pushed to screen 3
     And channel 4 should be pushed to screen 4
+    And channel 1 should not be pushed to screen 4
 
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "PUT" request to "/api/campaign/2" with body:
+    """
+    {
+      "id": 2,
+      "schedule_to": "2003-01-31"
+    }
+    """
+    And the response status code should be 200
+    And I clear utility service
+    And I call pushToScreens
+    And I print all the utility service curl calls
+    And channel 4 should be deleted from middleware
+    And channel 1 should be pushed to screen 4
 
   @dropSchema
   Scenario: Drop schema
