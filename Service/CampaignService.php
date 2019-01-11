@@ -222,7 +222,7 @@ class CampaignService
             $campaignChannelIds = $this->getCampaignChannelIds($campaign);
             $campaignScreenIds = $this->getCampaignScreenIds($campaign);
 
-            // Remove all regions that are affected by the campaigns.
+            // Remove all regions (with id 1) that are affected by the campaigns.
             foreach ($results as $channelId => &$result) {
                 foreach ($result['regions'] as $key => $region) {
                     if ($region->region === 1 &&
@@ -247,17 +247,18 @@ class CampaignService
                         ];
                     }
 
-                    $results[$campaignChannelId]['screens'] = array_unique(
-                        array_merge(
-                            $results[$campaignChannelId]['screens'],
-                            [$campaignScreenId]
-                        )
-                    );
                     $results[$campaignChannelId]['regions'][] = (object)[
                         'screen' => $campaignScreenId,
                         'region' => 1,
                         'added_by_campaign' => true,
                     ];
+                }
+
+                $screenIds = [];
+
+                // Get screens from regions array.
+                foreach ($results[$campaignChannelId]['regions'] as $region) {
+                    $screenIds = array_unique(array_merge($screenIds, [$region['screen']]));
                 }
             }
         }
