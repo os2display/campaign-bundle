@@ -235,6 +235,13 @@ class CampaignService
                         }
                     }
                 }
+
+                // Set screens from regions array.
+                $screenIds = [];
+                foreach ($results[$channelId]['regions'] as $region) {
+                    $screenIds = array_unique(array_merge($screenIds, [$region->screen]));
+                }
+                $results[$channelId]['screens'] = $screenIds;
             }
 
             // Add all regions and screens that come from campaigns.
@@ -247,18 +254,18 @@ class CampaignService
                         ];
                     }
 
+                    $results[$campaignChannelId]['screens'] = array_unique(
+                        array_merge(
+                            $results[$campaignChannelId]['screens'],
+                            [$campaignScreenId]
+                        )
+                    );
+
                     $results[$campaignChannelId]['regions'][] = (object)[
                         'screen' => $campaignScreenId,
                         'region' => 1,
                         'added_by_campaign' => true,
                     ];
-                }
-
-                $screenIds = [];
-
-                // Get screens from regions array.
-                foreach ($results[$campaignChannelId]['regions'] as $region) {
-                    $screenIds = array_unique(array_merge($screenIds, [$region['screen']]));
                 }
             }
         }
