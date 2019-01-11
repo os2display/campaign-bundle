@@ -174,7 +174,6 @@ Feature: campaign
     And the response status code should be 200
     And I clear utility service
     And I call pushToScreens
-    And I print all the utility service curl calls
     And channel 1 should be pushed to screen 4
     And channel 4 should be deleted from middleware
 
@@ -191,7 +190,6 @@ Feature: campaign
     """
     And I clear utility service
     And I call pushToScreens
-    And I print all the utility service curl calls
     And channel 4 should not be pushed to screen 1
     And channel 4 should not be pushed to screen 2
     And channel 4 should be pushed to screen 3
@@ -212,7 +210,6 @@ Feature: campaign
     And the response status code should be 200
     And I clear utility service
     And I call pushToScreens
-    And I print all the utility service curl calls
     And channel 4 should be deleted from middleware
     And channel 1 should be pushed to screen 4
 
