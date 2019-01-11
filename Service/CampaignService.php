@@ -60,7 +60,8 @@ class CampaignService
      *
      * @param \Os2Display\CoreBundle\Events\PrePushChannelsEvent $event
      */
-    public function prePushChannels(PrePushChannelsEvent $event) {
+    public function prePushChannels(PrePushChannelsEvent $event)
+    {
         $this->campaignChanges = $this->calculateCampaignChanges();
     }
 
@@ -71,7 +72,8 @@ class CampaignService
      *
      * @param \Os2Display\CoreBundle\Events\PrePushChannelEvent $event
      */
-    public function prePushChannel(PrePushChannelEvent $event) {
+    public function prePushChannel(PrePushChannelEvent $event)
+    {
         $data = $event->getData();
 
         $this->applyCampaignToChannelData($event->getEntity()->getId(), $data);
@@ -86,7 +88,8 @@ class CampaignService
      *
      * @param \Os2Display\CoreBundle\Events\PostPushChannelsEvent $event
      */
-    public function postPushChannels(PostPushChannelsEvent $event) {
+    public function postPushChannels(PostPushChannelsEvent $event)
+    {
         $this->campaignChanges = null;
     }
 
@@ -109,19 +112,8 @@ class CampaignService
                 $screenIds[] = $region->getScreen()->getId();
             }
         }
-        return $screenIds;
-    }
 
-    /**
-     * Get Screen Ids from json_encoded channel data.
-     *
-     * @param string $data The json encoded channel data.
-     * @return mixed
-     */
-    private function getScreenIdsFromData($data)
-    {
-        $decoded = json_decode($data);
-        return $decoded->screens;
+        return $screenIds;
     }
 
     /**
@@ -151,27 +143,6 @@ class CampaignService
             ->getQuery()->getResult();
 
         return count($campaigns) > 0;
-    }
-
-    /**
-     * Should the channel be pushed?
-     *
-     * @param $channel
-     * @return bool
-     */
-    private function channelShouldBePushed($channel)
-    {
-        if (count($this->getScreenIdsOnChannel($channel)) === 0) {
-            // If no campaigns apply and it has not been pushed before.
-            if (!$this->campaignsApply($channel) &&
-                is_null($channel->getLastPushHash()) &&
-                empty($channel->getLastPushScreens())
-            ) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -216,9 +187,12 @@ class CampaignService
         return $campaignChannelIds;
     }
 
-    private function applyCampaignToChannelData($id, &$data) {
+    private function applyCampaignToChannelData($id, &$data)
+    {
         // If campaign changes are set, apply them to channel.
-        if (!is_null($this->campaignChanges) && isset($this->campaignChanges[$id])) {
+        if (!is_null(
+                $this->campaignChanges
+            ) && isset($this->campaignChanges[$id])) {
             $dataArray = json_decode($data);
 
             $dataArray->regions =
