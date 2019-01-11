@@ -236,11 +236,11 @@ class CampaignService
                     }
                 }
 
-                // Set screens from regions array.
-                $screenIds = [];
-                foreach ($results[$channelId]['regions'] as $region) {
-                    $screenIds = array_unique(array_merge($screenIds, [$region->screen]));
-                }
+                // Get screen ids from regions.
+                $screenIds = array_reduce($results[$channelId]['regions'], function ($carry, $item) {
+                    return array_unique(array_merge($carry, [$item->screen]));
+                }, []);
+
                 $results[$channelId]['screens'] = $screenIds;
             }
 
