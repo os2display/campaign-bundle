@@ -63,6 +63,8 @@ class CampaignService
     public function prePushChannels(PrePushChannelsEvent $event)
     {
         $this->campaignChanges = $this->calculateCampaignChanges();
+
+        $this->container->get('logger')->info("Calculated campaign changes: " . json_encode($this->campaignChanges));
     }
 
     /**
@@ -91,58 +93,6 @@ class CampaignService
     public function postPushChannels(PostPushChannelsEvent $event)
     {
         $this->campaignChanges = null;
-    }
-
-    /**
-     * Find Id's of the screen using a channel.
-     *
-     * @param Channel|SharedChannel $channel
-     *   The Channel or SharedChannel to push.
-     *
-     * @return array
-     *   Id's of the screens that uses the channel.
-     */
-    private function getScreenIdsOnChannel($channel)
-    {
-        // Get screen ids.
-        $regions = $channel->getChannelScreenRegions();
-        $screenIds = array();
-        foreach ($regions as $region) {
-            if (!in_array($region->getScreen()->getId(), $screenIds)) {
-                $screenIds[] = $region->getScreen()->getId();
-            }
-        }
-
-        return $screenIds;
-    }
-
-    /**
-     * Is the channel affected by a campaign?
-     *
-     * @param Channel $channel The channel.
-     * @return bool
-     */
-    private function campaignsApply($channel)
-    {
-        $now = new \DateTime();
-
-        $queryBuilder = $this->doctrine
-            ->getManager()
-            ->createQueryBuilder();
-
-        $campaigns = $queryBuilder->select('campaign')
-            ->from(Campaign::class, 'campaign')
-            ->where(
-                ':now between campaign.scheduleFrom and campaign.scheduleTo'
-            )
-            ->andWhere(
-                ':channel member of campaign.channels'
-            )
-            ->setParameter('channel', $channel)
-            ->setParameter('now', $now)
-            ->getQuery()->getResult();
-
-        return count($campaigns) > 0;
     }
 
     /**
