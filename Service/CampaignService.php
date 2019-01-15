@@ -229,12 +229,14 @@ class CampaignService
                         !(isset($region->added_by_campaign) && $region->added_by_campaign == true)) {
                         if (in_array($region->screen, $campaignScreenIds)) {
                             unset($result['regions'][$key]);
-                            $result['regions'] = array_values(
-                                $result['regions']
-                            );
                         }
                     }
                 }
+
+                // Reset array keys
+                $result['regions'] = array_values(
+                    $result['regions']
+                );
 
                 // Get screen ids from regions.
                 $screenIds = array_reduce($results[$channelId]['regions'], function ($carry, $item) {
