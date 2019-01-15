@@ -137,6 +137,14 @@ class CampaignService
         return $campaignChannelIds;
     }
 
+    /**
+     * Modifies the channel data with the campaign changes.
+     *
+     * @param int $id
+     *   Channel id.
+     * @param string $data
+     *   JSON string of data.
+     */
     private function applyCampaignToChannelData($id, &$data)
     {
         // If campaign changes are set, apply them to channel.
