@@ -3,7 +3,7 @@
  * Angular version of content editable.
  */
 
-angular.module('itkCampaignApp').directive('contenteditable', function () {
+angular.module('campaignApp').directive('contenteditable', function () {
     return {
         restrict: 'A',
         require: 'ngModel',

@@ -4,7 +4,7 @@
  */
 
 // @TODO: Cleanup DI.
-angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
+angular.module('campaignApp').controller('CampaignOverviewController', [
     'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter', '$q',
     function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter, $q) {
         'use strict';
@@ -86,8 +86,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/modalHelp.html',
-                controller: 'ItkCampaignModalBase'
+                templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/campaign-overview/modalHelp.html',
+                controller: 'CampaignModalBase'
             }).then(function (modal) {
                 modal.close.then(function () {
                     busService.$emit('bodyService.removeClass', 'is-locked');
@@ -128,8 +128,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignOverviewController', [
 
             // Prompt user for confirm.
             ModalService.showModal({
-                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign-overview/itkCampaignOverviewModalDelete.html',
-                controller: 'ItkCampaignOverviewModalDelete',
+                templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/campaign-overview/campaignOverviewModalDelete.html',
+                controller: 'CampaignOverviewModalDelete',
                 inputs: {
                     campaigns: selectedCampaigns
                 }

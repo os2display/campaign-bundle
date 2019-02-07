@@ -1,8 +1,8 @@
 <?php
 
-namespace Itk\CampaignBundle\Event;
+namespace Os2Display\CampaignBundle\Event;
 
-use Itk\CampaignBundle\Service\ApiDataService;
+use Os2Display\CampaignBundle\Service\ApiDataService;
 use Os2Display\CoreBundle\Events\ApiDataEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

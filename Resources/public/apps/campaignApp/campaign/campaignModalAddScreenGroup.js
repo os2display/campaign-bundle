@@ -3,7 +3,7 @@
  * @TODO
  */
 
-angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreenGroup', [
+angular.module('campaignApp').controller('CampaignModalAddScreenGroup', [
     'busService', '$scope', '$timeout', 'close', 'screenGroups', 'userService',
     function (busService, $scope, $timeout, close, screenGroups, userService) {
         'use strict';

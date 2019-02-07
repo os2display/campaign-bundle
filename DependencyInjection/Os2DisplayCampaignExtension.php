@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\DependencyInjection;
+namespace Os2Display\CampaignBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Os2Display\CoreBundle\DependencyInjection\Os2DisplayBaseExtension;
@@ -12,7 +12,7 @@ use Symfony\Component\Config\FileLocator;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ItkCampaignExtension extends Os2DisplayBaseExtension
+class Os2DisplayCampaignExtension extends Os2DisplayBaseExtension
 {
     /**
      * {@inheritdoc}

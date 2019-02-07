@@ -1,8 +1,8 @@
 <?php
 
-namespace Itk\CampaignBundle\Event;
+namespace Os2Display\CampaignBundle\Event;
 
-use Itk\CampaignBundle\Security\Roles;
+use Os2Display\CampaignBundle\Security\Roles;
 use Os2Display\CoreBundle\Events\RolesEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
