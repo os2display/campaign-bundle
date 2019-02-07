@@ -1,6 +1,6 @@
 # itk-os2display/campaign-bundle
 
-## in develop
+## 1.2.0
 
 * Refactored campaign bundle to react to events instead of overriding MiddlewareCommunications.
 * Fixed issues that resulted in campaigns not applying correctly to screens.
