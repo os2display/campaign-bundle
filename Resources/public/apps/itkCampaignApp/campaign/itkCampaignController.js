@@ -17,7 +17,6 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
         var $translate = $filter('translate');
 
         // Check role.
-        // @TODO: Replace with new CAMPAIGN role.
         if (!$scope.requireRole('ROLE_CAMPAIGN_ADMIN')) {
             busService.$emit('log.error', {
                 timeout: 5000,
@@ -104,7 +103,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             var index = $scope.campaign.channels.indexOf(channel);
 
             if (index !== -1) {
-                $scope.campaign.channels.splice(channel, 1);
+                $scope.campaign.channels.splice(index, 1);
             }
         };
 
@@ -139,7 +138,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             var index = $scope.campaign.screens.indexOf(screen);
 
             if (index !== -1) {
-                $scope.campaign.screens.splice(screen, 1);
+               $scope.campaign.screens.splice(index, 1);
             }
         };
 
@@ -174,7 +173,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             var index = $scope.campaign.screen_groups.indexOf(screenGroup);
 
             if (index !== -1) {
-                $scope.campaign.screen_groups.splice(screenGroup, 1);
+                $scope.campaign.screen_groups.splice(index, 1);
             }
         };
 

@@ -1,5 +1,9 @@
 # itk-os2display/campaign-bundle
 
+## 1.2.1
+
+* Fixed issue where removing channel, screen or screenGroup messed up arrays.
+
 ## 1.2.0
 
 * Refactored campaign bundle to react to events instead of overriding MiddlewareCommunications.
