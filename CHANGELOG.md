@@ -1,5 +1,9 @@
 # itk-os2display/campaign-bundle
 
+## 1.2.1
+
+* Fixed issue where removing channel, screen or screenGroup messed up arrays.
+
 ## 1.2.0
 
 * Refactored campaign bundle to react to events instead of overriding MiddlewareCommunications.
@@ -8,10 +12,6 @@
 ## 1.1.0
 
 * Added event subscriber to Os2Display\CoreBundle\Events\CleanupEvent::EVENT_CLEANUP_CHANNELS to protect channels that are part of a campaign from being deleted. 
-
-## in hotfix/schedule_errors
-
-* Fixed issue where removing channel, screen or screenGroup messed up arrays.
 
 ## 1.0.1
 
