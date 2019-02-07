@@ -4,11 +4,11 @@
  */
 
 // Create module and configure routing and translations.
-angular.module('itkCampaignApp').config([
+angular.module('campaignApp').config([
     '$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
         'use strict';
 
-        var appUrl = 'bundles/itkcampaign/apps/itkCampaignApp/';
+        var appUrl = 'bundles/os2displaycampaign/apps/campaignApp/';
 
         // Set up translations.
         $translateProvider
@@ -24,15 +24,15 @@ angular.module('itkCampaignApp').config([
         // Register routes
         $routeProvider
             .when('/campaign', {
-                controller: 'ItkCampaignOverviewController',
+                controller: 'CampaignOverviewController',
                 templateUrl: appUrl + 'campaign-overview/campaign-overview.html' + '?' + window.config.version
             })
             .when('/campaign/create', {
-                controller: 'ItkCampaignController',
+                controller: 'CampaignController',
                 templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
             })
             .when('/campaign/:id', {
-                controller: 'ItkCampaignController',
+                controller: 'CampaignController',
                 templateUrl: appUrl + 'campaign/campaign.html' + '?' + window.config.version
             });
     }
@@ -40,7 +40,7 @@ angular.module('itkCampaignApp').config([
 
 // Setup the app.
 // Register menu items.
-angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
+angular.module('campaignApp').service('campaignAppSetup', [
     'busService', 'userService', '$translate', '$filter',
     function (busService, userService, $translate, $filter) {
         'use strict';
@@ -116,9 +116,9 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                     var iconSource = 'bundles/os2displayadmin/images/icons/exclamation-icon.png';
 
                     var html =
-                        '<div class="itk-campaign-info">' +
+                        '<div class="campaign-info">' +
                         '  <div tooltips tooltip-template="' + message + '" tooltip-side="top">' +
-                        '    <img class="itk-campaign-info--icon" src="' + iconSource + '" title="">' +
+                        '    <img class="campaign-info--icon" src="' + iconSource + '" title="">' +
                         '  </div>' +
                         '</div>';
 
@@ -140,7 +140,7 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
                     }, '');
 
                     var html =
-                        '<div class="message itk-campaign-info--message">' +
+                        '<div class="message campaign-info--message">' +
                         '  <div class="message--inner is-info">' +
                         '    <div class="message--content">' +
                         message +
@@ -159,4 +159,4 @@ angular.module('itkCampaignApp').service('itkCampaignAppSetup', [
 ]);
 
 // Start the service.
-angular.module('itkCampaignApp').run(['itkCampaignAppSetup', angular.noop]);
+angular.module('campaignApp').run(['campaignAppSetup', angular.noop]);

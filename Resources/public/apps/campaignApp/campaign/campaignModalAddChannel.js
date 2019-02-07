@@ -3,7 +3,7 @@
  * @TODO
  */
 
-angular.module('itkCampaignApp').controller('ItkCampaignModalAddChannel', [
+angular.module('campaignApp').controller('CampaignModalAddChannel', [
     'busService', '$scope', '$timeout', 'close', 'channels',
     function (busService, $scope, $timeout, close, channels) {
         'use strict';

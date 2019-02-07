@@ -3,7 +3,7 @@
  * Controller for the campaign create/edit.
  */
 
-angular.module('itkCampaignApp').controller('ItkCampaignController', [
+angular.module('campaignApp').controller('CampaignController', [
     'busService', '$scope', '$timeout', 'ModalService', '$routeParams', '$location', '$controller', '$filter',
     function (busService, $scope, $timeout, ModalService, $routeParams, $location, $controller, $filter) {
         'use strict';
@@ -83,8 +83,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddChannel.html',
-                controller: 'ItkCampaignModalAddChannel',
+                templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddChannel.html',
+                controller: 'CampaignModalAddChannel',
                 inputs: {
                     channels: $scope.campaign.channels
                 }
@@ -118,8 +118,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreen.html',
-                controller: 'ItkCampaignModalAddScreen',
+                templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreen.html',
+                controller: 'CampaignModalAddScreen',
                 inputs: {
                     screens: $scope.campaign.screens
                 }
@@ -153,8 +153,8 @@ angular.module('itkCampaignApp').controller('ItkCampaignController', [
             busService.$emit('bodyService.addClass', 'is-locked');
 
             ModalService.showModal({
-                templateUrl: 'bundles/itkcampaign/apps/itkCampaignApp/campaign/itkCampaignModalAddScreenGroup.html',
-                controller: 'ItkCampaignModalAddScreenGroup',
+                templateUrl: 'bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreenGroup.html',
+                controller: 'CampaignModalAddScreenGroup',
                 inputs: {
                     screenGroups: $scope.campaign.screen_groups
                 }

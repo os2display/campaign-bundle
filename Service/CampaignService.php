@@ -2,7 +2,7 @@
 
 namespace Os2Display\CampaignBundle\Service;
 
-use Itk\CampaignBundle\Entity\Campaign;
+use Os2Display\CampaignBundle\Entity\Campaign;
 use Os2Display\CoreBundle\Events\PostPushChannelsEvent;
 use Os2Display\CoreBundle\Events\PrePushChannelEvent;
 use Os2Display\CoreBundle\Events\PrePushChannelsEvent;

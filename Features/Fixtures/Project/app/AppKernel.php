@@ -28,7 +28,7 @@ class AppKernel extends Kernel
             new Os2Display\MediaBundle\Os2DisplayMediaBundle(),
             new Os2Display\CoreBundle\Os2DisplayCoreBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Itk\CampaignBundle\Os2DisplayCampaignBundle(),
+            new Os2Display\CampaignBundle\Os2DisplayCampaignBundle(),
         ];
     }
 

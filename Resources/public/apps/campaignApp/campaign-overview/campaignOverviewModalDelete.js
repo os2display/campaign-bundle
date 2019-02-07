@@ -3,7 +3,7 @@
  * @TODO
  */
 
-angular.module('itkCampaignApp').controller('ItkCampaignOverviewModalDelete', [
+angular.module('campaignApp').controller('CampaignOverviewModalDelete', [
     'busService', '$scope', '$timeout', 'close', 'campaigns',
     function (busService, $scope, $timeout, close, campaigns) {
         'use strict';

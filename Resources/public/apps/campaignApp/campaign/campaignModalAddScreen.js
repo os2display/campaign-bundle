@@ -3,7 +3,7 @@
  * @TODO
  */
 
-angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreen', [
+angular.module('campaignApp').controller('CampaignModalAddScreen', [
     'busService', '$scope', '$timeout', 'close', 'screens',
     function (busService, $scope, $timeout, close, screens) {
         'use strict';
@@ -31,7 +31,7 @@ angular.module('itkCampaignApp').controller('ItkCampaignModalAddScreen', [
         }
 
         // Register event listener for clickSlide.
-        $scope.$on('itkScreenList.clickScreen', function (event, screen) {
+        $scope.$on('screenList.clickScreen', function (event, screen) {
             toggleScreen(screen);
         });
 

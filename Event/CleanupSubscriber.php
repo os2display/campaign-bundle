@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class CleanupSubscriber
- * @package Itk\CampaignBundle\Event
+ * @package Os2Display\CampaignBundle\Event
  */
 class CleanupSubscriber implements EventSubscriberInterface
 {
