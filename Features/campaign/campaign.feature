@@ -162,7 +162,8 @@ Feature: campaign
     And channel 4 should be pushed to screen 3
     And channel 4 should be pushed to screen 4
 
-  Scenario: When I change the campaign to and old date, it should be removed from screens
+  Scenario: When I change the campaign to an old date, it should be removed from screens
+    When I add channel screen region with channel 1 screen 4 region 1
     And I send a "PUT" request to "/api/campaign/2" with body:
     """
     {
@@ -173,6 +174,7 @@ Feature: campaign
     And the response status code should be 200
     And I clear utility service
     And I call pushToScreens
+    And channel 1 should be pushed to screen 4
     And channel 4 should be deleted from middleware
 
     # Reset user and content type.
@@ -188,12 +190,148 @@ Feature: campaign
     """
     And I clear utility service
     And I call pushToScreens
-
     And channel 4 should not be pushed to screen 1
     And channel 4 should not be pushed to screen 2
     And channel 4 should be pushed to screen 3
     And channel 4 should be pushed to screen 4
+    And channel 1 should not be pushed to screen 4
 
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "PUT" request to "/api/campaign/2" with body:
+    """
+    {
+      "id": 2,
+      "schedule_to": "2003-01-31"
+    }
+    """
+    And the response status code should be 200
+    And I clear utility service
+    And I call pushToScreens
+    And channel 4 should be deleted from middleware
+    And channel 1 should be pushed to screen 4
+
+  Scenario: (Bug fix) When campaign affects multiple screens, the regular content should be remove from all the affected screens.
+    When I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen 10",
+        "description": "Description",
+        "groups": []
+      }
+      """
+    And the response status code should be 200
+
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+
+    And I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen 11",
+        "description": "Description",
+        "groups": []
+      }
+      """
+    And the response status code should be 200
+
+    # Reset user and content type.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen 12",
+        "description": "Description",
+        "groups": []
+      }
+      """
+    And the response status code should be 200
+
+    # Reset.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen 13",
+        "description": "Description",
+        "groups": []
+      }
+      """
+    And the response status code should be 200
+
+    # Reset.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And I send a "POST" request to "/api/channel" with body:
+      """
+      {
+        "id": null,
+        "title": "Normal Channel",
+        "slides": [],
+        "screens": [],
+        "groups": [],
+        "orientation": "",
+        "created_at": 1507280950,
+        "sharing_indexes": [],
+        "schedule_repeat_days": []
+      }
+      """
+    And the response status code should be 200
+
+    And I add channel screen region with channel 5 screen 5 region 1
+    And I add channel screen region with channel 5 screen 6 region 1
+    And I add channel screen region with channel 5 screen 7 region 1
+    And I add channel screen region with channel 5 screen 8 region 1
+
+    And I clear utility service
+    And I call pushToScreens
+
+    Then channel 5 should be pushed to screen 5
+    And channel 5 should be pushed to screen 6
+    And channel 5 should be pushed to screen 7
+    And channel 5 should be pushed to screen 8
+
+    # Reset.
+    And I sign in with username "user" and password "user"
+    And I add "content-type" header equal to "application/json"
+
+    And the response status code should be 200
+    And I send a "POST" request to "/api/campaign" with body:
+    """
+    {
+      "title": "Third campaign",
+      "schedule_from": "2002-01-01",
+      "schedule_to": "2039-01-31",
+      "groups": [],
+      "channels": [3],
+      "screen_groups": [],
+      "screens": [6, 8]
+    }
+    """
+    And the response status code should be 201
+
+    And I clear utility service
+    And I call pushToScreens
+
+    Then channel 3 should be pushed to screen 6
+    And channel 3 should be pushed to screen 8
+    And channel 5 should be pushed to screen 5
+    And channel 5 should be pushed to screen 7
+    And channel 5 should not be pushed to screen 6
+    And channel 5 should not be pushed to screen 8
 
   @dropSchema
   Scenario: Drop schema
