@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\Security;
+namespace Os2Display\CampaignBundle\Security;
 
 /**
  * Class Roles.

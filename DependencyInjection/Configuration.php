@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\DependencyInjection;
+namespace Os2Display\CampaignBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

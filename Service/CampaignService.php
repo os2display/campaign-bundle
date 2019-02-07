@@ -1,15 +1,7 @@
 <?php
-/**
- * @file
- * This file is a part of the Os2DisplayCoreBundle.
- *
- * Contains the middleware communication service.
- */
 
-namespace Itk\CampaignBundle\Service;
+namespace Os2Display\CampaignBundle\Service;
 
-use Os2Display\CoreBundle\Entity\Channel;
-use Os2Display\CoreBundle\Entity\SharedChannel;
 use Itk\CampaignBundle\Entity\Campaign;
 use Os2Display\CoreBundle\Events\PostPushChannelsEvent;
 use Os2Display\CoreBundle\Events\PrePushChannelEvent;

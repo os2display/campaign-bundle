@@ -1,4 +1,4 @@
-# itk-os2display/campaign-bundle
+# os2display/campaign-bundle
 
 ## 1.2.1
 

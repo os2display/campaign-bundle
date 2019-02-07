@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\DependencyInjection;
+namespace Os2Display\CampaignBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Os2Display\CoreBundle\DependencyInjection\Os2DisplayBaseExtension;

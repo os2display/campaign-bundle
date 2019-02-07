@@ -1,10 +1,9 @@
 <?php
 
-namespace Itk\CampaignBundle\Event;
+namespace Os2Display\CampaignBundle\Event;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Itk\CampaignBundle\Entity\Campaign;
-use Os2Display\CoreBundle\Entity\Channel;
+use Os2Display\CampaignBundle\Entity\Campaign;
 use Os2Display\CoreBundle\Events\CleanupEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

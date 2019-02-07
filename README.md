@@ -26,14 +26,14 @@ Require the bundle with composer.
 composer require itk-os2display/campaign-bundle
 ```
 
-Enable the bundle in `AppKernel.php`, by adding ItkCampaignBundle to $bundles.
+Enable the bundle in `AppKernel.php`, by adding CampaignBundle to $bundles.
 
 NB! This should be done after adding Os2Display/CoreBundle since,
 MiddlewareCommunications.php from CoreBundle is overridden in CampaignBundle.
 
 ```sh
 new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-new Itk\CampaignBundle\ItkCampaignBundle()
+new Os2Display\CampaignBundle\Os2DisplayCampaignBundle()
 ```
 
 Enable `timestampable` and `blameable` in your configuration:
