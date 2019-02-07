@@ -1,5 +1,5 @@
 {
-    "name": "itk-os2display/campaign-bundle",
+    "name": "os2display/campaign-bundle",
     "description": "Os2Display campaigns",
     "type": "symfony-bundle",
     "require": {
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Itk\\CampaignBundle\\": ""
+            "Os2Display\\CampaignBundle\\": ""
         }
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Itk\CampaignBundle\Service;
+namespace Os2Display\CampaignBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Itk\CampaignBundle\Entity\Campaign;
+use Os2Display\CampaignBundle\Entity\Campaign;
 use Os2Display\CoreBundle\Entity\Channel;
 use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Exception\DuplicateEntityException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Itk\CampaignBundle\Features\Mocks;
+namespace Os2Display\CampaignBundle\Features\Mocks;
 
 use Os2Display\CoreBundle\Services\AuthenticationService;
 
