@@ -1,4 +1,8 @@
-# itk-os2display/campaign-bundle
+# os2display/campaign-bundle
+
+## 1.3.0
+
+* Renamed bundle to Os2DisplayCampaignBundle.
 
 ## 1.2.1
 

@@ -4,7 +4,7 @@
  * Contains the Campaign model.
  */
 
-namespace Itk\CampaignBundle\Entity;
+namespace Os2Display\CampaignBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Collections\ArrayCollection;
