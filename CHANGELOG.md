@@ -1,6 +1,13 @@
 # itk-os2display/campaign-bundle
 
-## in develop
+## 1.2.0
+
+* Refactored campaign bundle to react to events instead of overriding MiddlewareCommunications.
+* Fixed issues that resulted in campaigns not applying correctly to screens.
+
+## 1.1.0
+
+* Added event subscriber to Os2Display\CoreBundle\Events\CleanupEvent::EVENT_CLEANUP_CHANNELS to protect channels that are part of a campaign from being deleted. 
 
 ## in hotfix/schedule_errors
 

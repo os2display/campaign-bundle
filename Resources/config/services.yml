@@ -1,10 +1,11 @@
 services:
-  # Overrides CoreBundle/Services/MiddlewareCommunication.
-  os2display.middleware.communication:
-    class: Itk\CampaignBundle\Service\MiddlewareCommunication
-    arguments: ['@service_container', '@os2display.template_service', '@os2display.utility_service']
+  os2display.campaign.campaign_service:
+    class: Itk\CampaignBundle\Service\CampaignService
+    arguments: ['@service_container']
     tags:
-      - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
+      - { name: kernel.event_listener, event: os2display.core.pre_push_channels, method: prePushChannels }
+      - { name: kernel.event_listener, event: os2display.core.pre_push_channel, method: prePushChannel }
+      - { name: kernel.event_listener, event: os2display.core.post_push_channels, method: postPushChannels }
 
   os2display.campaign_manager:
     class: Itk\CampaignBundle\Service\CampaignManager
@@ -42,3 +43,10 @@ services:
     class: Itk\CampaignBundle\Event\RolesSubscriber
     tags:
       - { name: kernel.event_subscriber }
+
+  os2display.campaign.subscriber.cleanup:
+    class: Itk\CampaignBundle\Event\CleanupSubscriber
+    arguments:
+    - '@doctrine.orm.entity_manager'
+    tags:
+    - { name: kernel.event_subscriber }
