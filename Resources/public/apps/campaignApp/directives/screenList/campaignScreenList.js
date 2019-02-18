@@ -101,12 +101,12 @@ angular.module('campaignApp').directive('campaignScreenList', [
         };
 
         /**
-         * Emits the itkScreenList.clickScreen event.
+         * Emits the screenList.clickScreen event.
          *
          * @param screen
          */
         $scope.clickScreen = function clickScreen(screen) {
-          $scope.$emit('itkScreenList.clickScreen', screen);
+          $scope.$emit('screenList.clickScreen', screen);
         };
 
         /**
