@@ -18,7 +18,6 @@ apps:
       - bundles/os2displaycampaign/apps/campaignApp/campaign/campaignModalAddScreenGroup.js
       - bundles/os2displaycampaign/apps/campaignApp/directives/contenteditable.js
       - bundles/os2displaycampaign/apps/campaignApp/directives/screenList/campaignScreenList.js
-      - bundles/os2displaycampaign/apps/campaignApp/directives/screenList/screenList.js
     dependencies:
       - ngRoute
       - ngAnimate
