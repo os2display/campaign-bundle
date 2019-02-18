@@ -31,7 +31,7 @@ angular.module('campaignApp').controller('CampaignModalAddScreen', [
         }
 
         // Register event listener for clickSlide.
-        $scope.$on('itkScreenList.clickScreen', function (event, screen) {
+        $scope.$on('screenList.clickScreen', function (event, screen) {
             toggleScreen(screen);
         });
 
