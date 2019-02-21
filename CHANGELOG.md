@@ -1,5 +1,9 @@
 # os2display/campaign-bundle
 
+## 2.0.0
+
+* Symfony 3.4 upgrade.
+
 ## 1.3.0
 
 * Renamed bundle to Os2DisplayCampaignBundle.
@@ -15,7 +19,7 @@
 
 ## 1.1.0
 
-* Added event subscriber to Os2Display\CoreBundle\Events\CleanupEvent::EVENT_CLEANUP_CHANNELS to protect channels that are part of a campaign from being deleted. 
+* Added event subscriber to Os2Display\CoreBundle\Events\CleanupEvent::EVENT_CLEANUP_CHANNELS to protect channels that are part of a campaign from being deleted.
 
 ## 1.0.1
 

@@ -48,6 +48,7 @@ class CampaignManager
     public function createCampaign($data)
     {
         $campaign = new Campaign();
+        $campaign->setCreatedAt(new \DateTime());
 
         return $this->persistCampaign($campaign, $data);
     }

@@ -5,7 +5,7 @@
         <p>{{ 'campaign.modal.addscreen.description' | translate }}</p>
         <div class="modal-content">
             <!-- TODO: Is it possible to show the list without the top toolbar(Help)? -->
-            <screen-list selected-screens="screens" overlay="true"></screen-list>
+            <campaign-screen-list selected-screens="screens" overlay="true"></campaign-screen-list>
         </div>
         <div class="modal-actions">
             <button class="button-link confirm" ng-click="closeModal()">{{ 'common.action.finish' | translate }}</button>

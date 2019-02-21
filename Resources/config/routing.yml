@@ -1,7 +1,3 @@
-os2display_campaign_homepage:
-    path:     /campaign
-    defaults: { _controller: Os2DisplayCampaignBundle:Default:index }
-
 controllers:
   resource: '@Os2DisplayCampaignBundle/Controller'
   type: annotation

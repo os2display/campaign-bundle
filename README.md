@@ -26,7 +26,7 @@ Require the bundle with composer.
 composer require os2display/campaign-bundle
 ```
 
-Enable the bundle in `AppKernel.php`, by adding CampaignBundle to $bundles.
+Enable the bundle in `AppKernel.php`, by adding Os2DisplayCampaignBundle to $bundles.
 
 NB! This should be done after adding Os2Display/CoreBundle since,
 MiddlewareCommunications.php from CoreBundle is overridden in CampaignBundle.

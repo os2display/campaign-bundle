@@ -1,14 +1,9 @@
 <?php
-/**
- * @file
- * Contains campaign controller.
- */
 
 namespace Os2Display\CampaignBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Request\ParamFetcherInterface;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 use Os2Display\CampaignBundle\Entity\Campaign;
 use Os2Display\CoreBundle\Controller\ApiController;
 use Os2Display\CoreBundle\Exception\DuplicateEntityException;
@@ -60,9 +55,9 @@ class CampaignController extends ApiController
         try {
             $campaign = $this->get('os2display.campaign_manager')->createCampaign($data);
         } catch (ValidationException $e) {
-            throw new HttpDataException(Codes::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
+            throw new HttpDataException(Response::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
         } catch (DuplicateEntityException $e) {
-            throw new HttpDataException(Codes::HTTP_CONFLICT, $data, 'Duplicate campaign', $e);
+            throw new HttpDataException(Response::HTTP_CONFLICT, $data, 'Duplicate campaign', $e);
         }
 
         // Send response.
@@ -99,9 +94,9 @@ class CampaignController extends ApiController
         try {
             $campaign = $this->get('os2display.campaign_manager')->updateCampaign($campaign, $data);
         } catch (ValidationException $e) {
-            throw new HttpDataException(Codes::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
+            throw new HttpDataException(Response::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
         } catch (DuplicateEntityException $e) {
-            throw new HttpDataException(Codes::HTTP_CONFLICT, $data, 'Duplicate campaign', $e);
+            throw new HttpDataException(Response::HTTP_CONFLICT, $data, 'Duplicate campaign', $e);
         }
 
         return $this->setApiData($campaign);
@@ -124,7 +119,7 @@ class CampaignController extends ApiController
         $em->remove($campaign);
         $em->flush();
 
-        return $this->view(null, Codes::HTTP_NO_CONTENT);
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
     // @FIXME: Hook into ApiController's method.
