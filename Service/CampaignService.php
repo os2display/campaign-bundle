@@ -3,9 +3,11 @@
 namespace Os2Display\CampaignBundle\Service;
 
 use Os2Display\CampaignBundle\Entity\Campaign;
+use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Events\PostPushChannelsEvent;
 use Os2Display\CoreBundle\Events\PrePushChannelEvent;
 use Os2Display\CoreBundle\Events\PrePushChannelsEvent;
+use Os2Display\CoreBundle\Events\PrePushScreenSerializationEvent;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -42,6 +44,7 @@ class CampaignService
             PrePushChannelsEvent::EVENT_PRE_PUSH_CHANNELS => 'prePushChannels',
             PrePushChannelEvent::EVENT_PRE_PUSH_CHANNEL => 'prePushChannel',
             PostPushChannelsEvent::EVENT_POST_PUSH_CHANNELS => 'postPushChannels',
+            PrePushScreenSerializationEvent::NAME => 'prePushScreenSerialization'
         ];
     }
 
@@ -51,6 +54,7 @@ class CampaignService
      * Calculate campaign changes.
      *
      * @param \Os2Display\CoreBundle\Events\PrePushChannelsEvent $event
+     * @throws \Exception
      */
     public function prePushChannels(PrePushChannelsEvent $event)
     {
@@ -273,5 +277,79 @@ class CampaignService
         }
 
         return $results;
+    }
+
+    /**
+     * Modify which channels should be shown for screen.
+     *
+     * @param \Os2Display\CoreBundle\Events\PrePushScreenSerializationEvent $event
+     */
+    public function prePushScreenSerialization(PrePushScreenSerializationEvent $event)
+    {
+        $screenObject = $event->getScreenObject();
+
+        $screen =  $this->doctrine->getRepository(Screen::class)->findOneById($screenObject->screen->id);
+
+        $now = new \DateTime();
+
+        $queryBuilder = $this->doctrine->getManager()->createQueryBuilder();
+
+        $campaigns = $queryBuilder->select('campaign')
+            ->from(Campaign::class, 'campaign')
+            ->where(
+                ':now between campaign.scheduleFrom and campaign.scheduleTo'
+            )
+            ->andWhere($queryBuilder->expr()->orX(
+                ':screen member of campaign.screens',
+                ':groups member of campaign.screenGroups'
+            ))
+            ->setParameter('screen', $screen)
+            ->setParameter('groups', $screen->getGroups())
+            ->setParameter('now', $now)
+            ->getQuery()->getResult();
+
+        // If the screen is not affected by a campaign return.
+        if (count($campaigns) == 0) {
+            return;
+        }
+
+        // If the screen is affected by campaigns, remove the channels from
+        // region 1.
+        foreach ($screenObject->channels as $id => $channel) {
+            $regions = [];
+            foreach ($channel->regions as $region) {
+                if ($region != 1) {
+                    $region[] = $region;
+                }
+            }
+
+            $channel->regions = $regions;
+        }
+
+        // Only add channels that apply to a region.
+        $channels = [];
+        foreach ($screenObject->channels as $key => $channel) {
+            if (!empty($channel->regions)) {
+                $channels[$key] = $channel;
+            }
+        }
+
+        // Add campaign channels to screen object.
+        foreach ($campaigns as $campaign) {
+            $campaignChannels = $campaign->getChannels();
+            foreach ($campaignChannels as $channel) {
+                if (!isset($channels[$channel->getId()])) {
+                    $channels[$channel->getId()] = (object)[
+                        'regions' => [1],
+                        'added_by_campaign' => true,
+                    ];
+                }
+            }
+        }
+
+        $screenObject->channels = $channels;
+
+        // Set event variable.
+        $event->setScreenObject($screenObject);
     }
 }
