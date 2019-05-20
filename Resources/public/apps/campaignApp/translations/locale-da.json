@@ -59,7 +59,7 @@
     },
       "help": {
         "title": "Hjælp til kampagner",
-        "description": "Med kampagner har du mulighed for helt at overtage en eller flere skærme, som i forvejen et opsat til at vise indholde fra kanaler. Således vil alt andet indhold end den givne kampagne være skjult i hele kampagne perioenden. Efter kampagne perionden vil skærmene vende tilbage til det opringeligt planlagte indhold.",
+        "description": "Med kampagner har du mulighed for helt at overtage en eller flere skærme, som i forvejen er opsat til at vise indhold fra kanaler. Således vil alt andet indhold end den givne kampagne være skjult i hele kampagnens løbetid. Efter kampagnen er udløbet vil skærmene vende tilbage til det oprindeligt planlagte indhold.",
         "close": "Luk vinduet"
         },
     "filter_placeholder": "Filtrér",
