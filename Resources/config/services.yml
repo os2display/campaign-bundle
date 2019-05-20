@@ -6,6 +6,7 @@ services:
       - { name: kernel.event_listener, event: os2display.core.pre_push_channels, method: prePushChannels }
       - { name: kernel.event_listener, event: os2display.core.pre_push_channel, method: prePushChannel }
       - { name: kernel.event_listener, event: os2display.core.post_push_channels, method: postPushChannels }
+      - { name: kernel.event_listener, event: os2display.core.pre_push_screen_serialization, method: prePushScreenSerialization }
 
   os2display.campaign_manager:
     class: Os2Display\CampaignBundle\Service\CampaignManager
