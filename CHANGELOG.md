@@ -1,5 +1,12 @@
 # os2display/campaign-bundle
 
+## 2.1.0
+
+* Added support for screen-bundle.
+* Fixed gulp setup.
+* Changed campaign icon.
+* Fixed translation.
+
 ## 2.0.0
 
 * Symfony 3.4 upgrade.
